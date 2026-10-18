@@ -31,8 +31,11 @@ exports.verifyToken = async (req, res, next) => {
 exports.checkRole = (...roles) => {
   return (req, res, next) => {
     if (!req.user || !roles.includes(req.user.role)) {
-      return res.status(403).json({ success: false, message: 'Access denied. Insufficient permissions' });
+      return res.status(403).json({ success: false, message: 'Bạn không có quyền thực hiện hành động này' });
     }
     next();
   };
 };
+
+// alias hoac ham authorize de phan quyen (vi du: authorize('admin'))
+exports.authorize = exports.checkRole;
