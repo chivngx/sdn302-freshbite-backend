@@ -19,7 +19,10 @@ importers:
         version: 16.6.1
       express:
         specifier: ^4.19.2
-        version: 4.22.3(supports-color@5.5.0)
+        version: 4.22.3
+      express-validator:
+        specifier: ^7.3.2
+        version: 7.3.2
       helmet:
         specifier: ^7.1.0
         version: 7.2.0
@@ -28,10 +31,10 @@ importers:
         version: 9.0.3
       mongoose:
         specifier: ^8.3.1
-        version: 8.24.5(supports-color@5.5.0)
+        version: 8.24.5
       morgan:
         specifier: ^1.10.0
-        version: 1.12.1(supports-color@5.5.0)
+        version: 1.12.1
     devDependencies:
       nodemon:
         specifier: ^3.1.0
@@ -190,6 +193,10 @@ packages:
     resolution: {integrity: sha512-aIL5Fx7mawVa300al2BnEE4iNvo1qETxLrPI/o05L7z6go7fCw1J6EQmbK4FmJ2AS7kgVF/KEZWufBfdClMcPg==}
     engines: {node: '>= 0.6'}
 
+  express-validator@7.3.2:
+    resolution: {integrity: sha512-ctLw1Vl6dXVH62dIQMDdTAQkrh480mkFuG6/SGXOaVlwPNukhRAe7EgJIMJ2TSAni8iwHBRp530zAZE5ZPF2IA==}
+    engines: {node: '>= 8.0.0'}
+
   express@4.22.3:
     resolution: {integrity: sha512-Bdcs4+3qlpVlx2NRn6fgX2Ue2/gGRaPeawebgclM0ERSCqDpA+owF1fdPwjJUTAJWMTuAaxjDf+hzb0/4eKvvw==}
     engines: {node: '>= 0.10.0'}
@@ -318,6 +325,9 @@ packages:
 
   lodash.once@4.1.1:
     resolution: {integrity: sha512-Sb487aTOCr9drQVL8pIxOzVhafOjZN9UU54hiN8PU3uAiSV7lx1yYNpbNmex2PK6dSJoNTSJUUswT651yww3Mg==}
+
+  lodash@4.18.1:
+    resolution: {integrity: sha512-dMInicTPVE8d1e5otfwmmjlxkZoUpiVLwyeTdUsi/Caj/gfzzblBcCE5sRHV/AsjuCmxWrte2TNGSYuCeCq+0Q==}
 
   math-intrinsics@1.1.0:
     resolution: {integrity: sha512-/IXtbwEk5HTPyEwyKX6hGkYXxM9nbj64B+ilVJnC/R6B0pH5G4V3b0pVbL7DBj4tkhBAppbQUlf6F6Xl9LHu1g==}
@@ -563,6 +573,10 @@ packages:
     resolution: {integrity: sha512-pMZTvIkT1d+TFGvDOqodOclx0QWkkgi6Tdoa8gC8ffGAAqz9pzPTZWAybbsHHoED/ztMtkv/VoYTYyShUn81hA==}
     engines: {node: '>= 0.4.0'}
 
+  validator@13.15.35:
+    resolution: {integrity: sha512-TQ5pAGhd5whStmqWvYF4OjQROlmv9SMFVt37qoCBdqRffuuklWYQlCNnEs2ZaIBD1kZRNnikiZOS1eqgkar0iw==}
+    engines: {node: '>= 0.10'}
+
   vary@1.1.2:
     resolution: {integrity: sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==}
     engines: {node: '>= 0.8'}
@@ -609,11 +623,11 @@ snapshots:
 
   binary-extensions@2.3.0: {}
 
-  body-parser@1.20.8(supports-color@5.5.0):
+  body-parser@1.20.8:
     dependencies:
       bytes: 3.1.2
       content-type: 1.0.5
-      debug: 2.6.9(supports-color@5.5.0)
+      debug: 2.6.9
       depd: 2.0.0
       destroy: 1.2.0
       http-errors: 2.0.1
@@ -677,11 +691,9 @@ snapshots:
       object-assign: 4.1.1
       vary: 1.1.2
 
-  debug@2.6.9(supports-color@5.5.0):
+  debug@2.6.9:
     dependencies:
       ms: 2.0.0
-    optionalDependencies:
-      supports-color: 5.5.0
 
   debug@4.4.3(supports-color@5.5.0):
     dependencies:
@@ -721,21 +733,26 @@ snapshots:
 
   etag@1.8.1: {}
 
-  express@4.22.3(supports-color@5.5.0):
+  express-validator@7.3.2:
+    dependencies:
+      lodash: 4.18.1
+      validator: 13.15.35
+
+  express@4.22.3:
     dependencies:
       accepts: 1.3.8
       array-flatten: 1.1.1
-      body-parser: 1.20.8(supports-color@5.5.0)
+      body-parser: 1.20.8
       content-disposition: 0.5.4
       content-type: 1.0.5
       cookie: 0.7.2
       cookie-signature: 1.0.7
-      debug: 2.6.9(supports-color@5.5.0)
+      debug: 2.6.9
       depd: 2.0.0
       encodeurl: 2.0.0
       escape-html: 1.0.3
       etag: 1.8.1
-      finalhandler: 1.3.2(supports-color@5.5.0)
+      finalhandler: 1.3.2
       fresh: 0.5.2
       http-errors: 2.0.1
       merge-descriptors: 1.0.3
@@ -747,8 +764,8 @@ snapshots:
       qs: 6.16.0
       range-parser: 1.2.1
       safe-buffer: 5.2.1
-      send: 0.19.2(supports-color@5.5.0)
-      serve-static: 1.16.3(supports-color@5.5.0)
+      send: 0.19.2
+      serve-static: 1.16.3
       setprototypeof: 1.2.0
       statuses: 2.0.2
       type-is: 1.6.18
@@ -761,9 +778,9 @@ snapshots:
     dependencies:
       to-regex-range: 5.0.1
 
-  finalhandler@1.3.2(supports-color@5.5.0):
+  finalhandler@1.3.2:
     dependencies:
-      debug: 2.6.9(supports-color@5.5.0)
+      debug: 2.6.9
       encodeurl: 2.0.0
       escape-html: 1.0.3
       on-finished: 2.4.1
@@ -886,6 +903,8 @@ snapshots:
 
   lodash.once@4.1.1: {}
 
+  lodash@4.18.1: {}
+
   math-intrinsics@1.1.0: {}
 
   media-typer@0.3.0: {}
@@ -919,13 +938,13 @@ snapshots:
       bson: 6.10.4
       mongodb-connection-string-url: 3.0.2
 
-  mongoose@8.24.5(supports-color@5.5.0):
+  mongoose@8.24.5:
     dependencies:
       bson: 6.10.4
       kareem: 2.6.3
       mongodb: 6.20.0
       mpath: 0.9.0
-      mquery: 5.0.0(supports-color@5.5.0)
+      mquery: 5.0.0
       ms: 2.1.3
       sift: 17.1.3
     transitivePeerDependencies:
@@ -938,10 +957,10 @@ snapshots:
       - socks
       - supports-color
 
-  morgan@1.12.1(supports-color@5.5.0):
+  morgan@1.12.1:
     dependencies:
       basic-auth: 2.0.1
-      debug: 2.6.9(supports-color@5.5.0)
+      debug: 2.6.9
       depd: 2.0.0
       on-finished: 2.4.1
       on-headers: 1.1.0
@@ -950,7 +969,7 @@ snapshots:
 
   mpath@0.9.0: {}
 
-  mquery@5.0.0(supports-color@5.5.0):
+  mquery@5.0.0:
     dependencies:
       debug: 4.4.3(supports-color@5.5.0)
     transitivePeerDependencies:
@@ -1028,9 +1047,9 @@ snapshots:
 
   semver@7.8.5: {}
 
-  send@0.19.2(supports-color@5.5.0):
+  send@0.19.2:
     dependencies:
-      debug: 2.6.9(supports-color@5.5.0)
+      debug: 2.6.9
       depd: 2.0.0
       destroy: 1.2.0
       encodeurl: 2.0.0
@@ -1046,12 +1065,12 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  serve-static@1.16.3(supports-color@5.5.0):
+  serve-static@1.16.3:
     dependencies:
       encodeurl: 2.0.0
       escape-html: 1.0.3
       parseurl: 1.3.3
-      send: 0.19.2(supports-color@5.5.0)
+      send: 0.19.2
     transitivePeerDependencies:
       - supports-color
 
@@ -1123,6 +1142,8 @@ snapshots:
   unpipe@1.0.0: {}
 
   utils-merge@1.0.1: {}
+
+  validator@13.15.35: {}
 
   vary@1.1.2: {}
 
