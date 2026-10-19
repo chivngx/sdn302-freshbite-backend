@@ -57,6 +57,25 @@ sdn302-freshbite-backend/
 | `PUT` | `/api/auth/profile` | Bearer Token | Update profile info |
 | `PUT` | `/api/auth/change-password` | Bearer Token | Change password |
 
+## API Endpoints (Branches Module - Da Nang Stores)
+
+| Method | Endpoint | Access | Description |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/api/branches` | Public | Lấy danh sách 4 chi nhánh Đà Nẵng (hỗ trợ `?district=...`, `?search=...`, `?userLat=...&userLng=...` tính khoảng cách GPS) |
+| `GET` | `/api/branches/:id` | Public | Xem chi tiết 1 chi nhánh Đà Nẵng |
+| `POST` | `/api/branches` | Admin | Tạo mới chi nhánh (kèm validation tọa độ GPS, số điện thoại, quận ĐN) |
+| `PUT` | `/api/branches/:id` | Admin | Cập nhật thông tin chi nhánh |
+| `DELETE` | `/api/branches/:id` | Admin | Xóa chi nhánh (tự động chuyển sang `isActive: false` nếu đã có đơn hàng) |
+
+## Middlewares & System Utilities
+
+- **Global Error Handling (`middlewares/errorMiddleware.js`):** Xử lý toàn cục 404 Not Found, Mongoose CastError (ObjectId), Mongoose ValidationError, Unique Index Conflict (11000), JWT Token Expired / Invalid, Multer upload errors, Express SyntaxError.
+- **Request & Error Logger (`middlewares/loggerMiddleware.js`):** Ghi log HTTP request với mã màu ANSI trực quan (2xx xanh lá, 3xx cyan, 4xx vàng, 5xx đỏ), đo thời gian xử lý (ms), timestamp và ghi nhận lỗi hệ thống.
+
 ## Testing
 
 Import `docs/FreshBite_DaNang_API.postman_collection.json` into Postman. Login requests automatically extract and set the `{{token}}` variable for protected routes.
+Để chạy nạp dữ liệu 4 chi nhánh mẫu Đà Nẵng:
+```bash
+npm run seed:branches
+```

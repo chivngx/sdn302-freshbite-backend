@@ -255,6 +255,23 @@
       "item": [
         {
           "name": "2.1. Get All Da Nang Branches",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.data && jsonData.data.length > 0) {",
+                  "    pm.environment.set(\"branchId\", jsonData.data[0]._id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [],
@@ -266,6 +283,194 @@
               "path": [
                 "api",
                 "branches"
+              ]
+            }
+          }
+        },
+        {
+          "name": "2.2. Filter Branches by District",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/branches?district=Ngũ Hành Sơn",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "branches"
+              ],
+              "query": [
+                {
+                  "key": "district",
+                  "value": "Ngũ Hành Sơn"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "2.3. Get Branches Sorted by Nearest GPS (FPT City / Da Nang)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/branches?userLat=16.0544&userLng=108.2022",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "branches"
+              ],
+              "query": [
+                {
+                  "key": "userLat",
+                  "value": "16.0544"
+                },
+                {
+                  "key": "userLng",
+                  "value": "108.2022"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "2.4. Get Branch By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/branches/{{branchId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "branches",
+                "{{branchId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "2.5. Create Branch [Admin]",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"FreshBite An Đồn (Sơn Trà)\",\n  \"address\": \"Số 12 An Đồn, P. An Hải Bắc, Q. Sơn Trà, Đà Nẵng\",\n  \"district\": \"Sơn Trà\",\n  \"latitude\": 16.075421,\n  \"longitude\": 108.232155,\n  \"phone\": \"0236.388.9999\",\n  \"openingHours\": \"06:30 - 22:30\",\n  \"imageUrl\": \"https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800\",\n  \"isActive\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/branches",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "branches"
+              ]
+            }
+          }
+        },
+        {
+          "name": "2.6. Update Branch [Admin]",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"openingHours\": \"06:00 - 23:00\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/branches/{{branchId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "branches",
+                "{{branchId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "2.7. Delete Branch [Admin]",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/branches/{{branchId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "branches",
+                "{{branchId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "2.8. Test 400 Bad Request (Invalid Branch ID)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/branches/invalid-mongo-id-123",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "branches",
+                "invalid-mongo-id-123"
+              ]
+            }
+          }
+        },
+        {
+          "name": "2.9. Test 404 Not Found (Non-existent Branch ID)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/branches/507f1f77bcf86cd799439011",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "branches",
+                "507f1f77bcf86cd799439011"
               ]
             }
           }
