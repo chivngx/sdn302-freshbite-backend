@@ -7,7 +7,8 @@
     "start": "node server.js",
     "dev": "nodemon server.js",
     "seed:test": "node seeds/testSeed.js",
-    "seed:users": "node seeds/userSeed.js"
+    "seed:users": "node seeds/userSeed.js",
+    "seed:branches": "node seeds/branchSeed.js"
   },
   "license": "ISC",
   "dependencies": {
