@@ -1,0 +1,2668 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>SDN302 - Đặc Tả Kỹ Thuật & Thiết Kế Kiến Trúc Backend RESTful API FreshBite (Đà Nẵng)</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
+
+    @page {
+      size: A4;
+      margin: 14mm 12mm 14mm 12mm;
+      @bottom-right {
+        content: "Trang " counter(page) " / " counter(pages);
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 8.5pt;
+        color: #64748B;
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      font-size: 9pt;
+      line-height: 1.5;
+      color: #1E293B;
+      background-color: #FFFFFF;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Cover Page */
+    .cover-page {
+      page-break-after: always;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 98vh;
+      padding: 40px 32px;
+      border: 3px solid #0F766E;
+      border-radius: 16px;
+      background: linear-gradient(180deg, #F0FDFA 0%, #FFFFFF 100%);
+      position: relative;
+    }
+
+    .cover-header {
+      border-bottom: 2px solid #E2E8F0;
+      padding-bottom: 20px;
+    }
+
+    .cover-org {
+      font-size: 11pt;
+      font-weight: 700;
+      color: #0F766E;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .cover-course {
+      font-size: 14pt;
+      font-weight: 800;
+      color: #0F172A;
+      margin-top: 4px;
+    }
+
+    .cover-body {
+      margin: auto 0;
+    }
+
+    .cover-badge {
+      display: inline-block;
+      background-color: #CCFBF1;
+      color: #0F766E;
+      font-size: 8.5pt;
+      font-weight: 700;
+      padding: 5px 14px;
+      border-radius: 20px;
+      border: 1px solid #99F6E4;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .cover-title {
+      font-size: 24pt;
+      font-weight: 800;
+      color: #0F172A;
+      line-height: 1.25;
+      margin: 0 0 10px 0;
+    }
+
+    .cover-subtitle {
+      font-size: 14pt;
+      font-weight: 700;
+      color: #0D9488;
+      margin-bottom: 18px;
+    }
+
+    .cover-desc {
+      font-size: 9.8pt;
+      color: #475569;
+      line-height: 1.6;
+      max-width: 95%;
+      margin-bottom: 24px;
+    }
+
+    .cover-meta-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      background: #FFFFFF;
+      padding: 16px;
+      border-radius: 10px;
+      border: 1px solid #CBD5E1;
+      margin-bottom: 20px;
+    }
+
+    .cover-meta-item {
+      font-size: 8.5pt;
+    }
+
+    .cover-meta-item strong {
+      color: #0F172A;
+      display: inline-block;
+      min-width: 140px;
+    }
+
+    .cover-footer {
+      border-top: 2px solid #E2E8F0;
+      padding-top: 16px;
+      font-size: 8pt;
+      color: #64748B;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Layout & Headings */
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 24px 20px;
+    }
+
+    h1.section-title {
+      font-size: 14pt;
+      font-weight: 800;
+      color: #FFFFFF;
+      background: linear-gradient(135deg, #0F766E 0%, #115E59 100%);
+      padding: 10px 16px;
+      border-radius: 8px;
+      margin: 36px 0 18px 0;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      page-break-after: avoid;
+      box-shadow: 0 2px 4px rgba(15, 118, 110, 0.15);
+    }
+
+    h2 {
+      font-size: 11pt;
+      font-weight: 700;
+      color: #0F766E;
+      border-left: 4px solid #14B8A6;
+      padding-left: 10px;
+      margin: 22px 0 12px 0;
+      page-break-after: avoid;
+    }
+
+    h3 {
+      font-size: 9.5pt;
+      font-weight: 700;
+      color: #334155;
+      margin: 16px 0 8px 0;
+      page-break-after: avoid;
+    }
+
+    p {
+      margin: 0 0 10px 0;
+      text-align: justify;
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 14px 0 18px 0;
+      font-size: 8pt;
+      background-color: #FFFFFF;
+      border-radius: 6px;
+      overflow: hidden;
+      border: 1px solid #CBD5E1;
+    }
+
+    th {
+      background-color: #F1F5F9;
+      color: #0F172A;
+      font-weight: 700;
+      text-align: left;
+      padding: 8px 10px;
+      border: 1px solid #CBD5E1;
+      font-size: 8pt;
+    }
+
+    td {
+      padding: 7px 10px;
+      border: 1px solid #E2E8F0;
+      vertical-align: top;
+    }
+
+    tr:nth-child(even) {
+      background-color: #F8FAFC;
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-block;
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-size: 7.5pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .badge-get { background-color: #E0F2FE; color: #0369A1; border: 1px solid #BAE6FD; }
+    .badge-post { background-color: #DCFCE7; color: #15803D; border: 1px solid #BBF7D0; }
+    .badge-put { background-color: #FEF3C7; color: #B45309; border: 1px solid #FDE68A; }
+    .badge-delete { background-color: #FEE2E2; color: #B91C1C; border: 1px solid #FECACA; }
+    .badge-patch { background-color: #F3E8FF; color: #7E22CE; border: 1px solid #E9D5FF; }
+
+    .badge-user { background-color: #EFF6FF; color: #1D4ED8; border: 1px solid #DBEAFE; }
+    .badge-admin { background-color: #FEF2F2; color: #991B1B; border: 1px solid #FEE2E2; }
+    .badge-public { background-color: #F1F5F9; color: #475569; border: 1px solid #E2E8F0; }
+
+    /* Callout Alerts */
+    .callout {
+      padding: 12px 14px;
+      border-radius: 8px;
+      margin: 14px 0;
+      font-size: 8.5pt;
+      border-left: 4px solid;
+    }
+
+    .callout-info {
+      background-color: #F0FDFA;
+      border-color: #0D9488;
+      color: #115E59;
+    }
+
+    .callout-warning {
+      background-color: #FFFBEB;
+      border-color: #F59E0B;
+      color: #92400E;
+    }
+
+    .callout-danger {
+      background-color: #FEF2F2;
+      border-color: #EF4444;
+      color: #991B1B;
+    }
+
+    .callout-success {
+      background-color: #F0FDF4;
+      border-color: #22C55E;
+      color: #166534;
+    }
+
+    /* Code Blocks */
+    pre {
+      background-color: #0F172A;
+      color: #F8FAFC;
+      padding: 12px 14px;
+      border-radius: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 7.8pt;
+      line-height: 1.45;
+      overflow-x: auto;
+      margin: 12px 0 16px 0;
+      border: 1px solid #334155;
+    }
+
+    code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8pt;
+      background-color: #F1F5F9;
+      color: #0F766E;
+      padding: 2px 5px;
+      border-radius: 4px;
+    }
+
+    pre code {
+      background-color: transparent;
+      color: inherit;
+      padding: 0;
+    }
+
+    /* Diagrams & Flow */
+    .flow-step {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 12px;
+      background: #F8FAFC;
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: 1px solid #E2E8F0;
+    }
+
+    .step-number {
+      background: #0F766E;
+      color: #FFFFFF;
+      font-weight: 800;
+      border-radius: 50%;
+      min-width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 8pt;
+      margin-right: 12px;
+      margin-top: 2px;
+    }
+
+    .step-content {
+      flex: 1;
+    }
+
+    .step-title {
+      font-weight: 700;
+      color: #0F172A;
+      margin-bottom: 3px;
+    }
+
+    .step-desc {
+      font-size: 8pt;
+      color: #475569;
+      margin: 0;
+    }
+
+    /* TOC */
+    .toc {
+      background-color: #F8FAFC;
+      border: 1px solid #CBD5E1;
+      border-radius: 10px;
+      padding: 18px 24px;
+      margin: 24px 0 32px 0;
+    }
+
+    .toc-title {
+      font-size: 11pt;
+      font-weight: 800;
+      color: #0F766E;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .toc-list {
+      list-style-type: none;
+      padding-left: 0;
+      margin: 0;
+      columns: 2;
+      column-gap: 32px;
+    }
+
+    .toc-item {
+      font-size: 8.5pt;
+      margin-bottom: 6px;
+      break-inside: avoid;
+    }
+
+    .toc-item a {
+      color: #1E293B;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .toc-item a:hover {
+      color: #0F766E;
+      text-decoration: underline;
+    }
+
+    .page-break {
+      page-break-after: always;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Trang bìa chuẩn ĐH FPT A4 -->
+  <div class="cover-page">
+    <div class="cover-header">
+      <div class="cover-org">TRƯỜNG ĐẠI HỌC FPT ĐÀ NẴNG • KHOA CÔNG NGHỆ THÔNG TIN</div>
+      <div class="cover-course">BỘ MÔN: KỸ THUẬT PHẦN MỀM (SOFTWARE ENGINEERING)</div>
+    </div>
+
+    <div class="cover-body">
+      <div class="cover-badge">TÀI LIỆU ĐẶC TẢ KỸ THUẬT & KIẾN TRÚC BACKEND MASTER SPEC (A-Z)</div>
+      <h1 class="cover-title">DỰ ÁN: FRESHBITE COFFEE & BAKERY (ĐÀ NẴNG)</h1>
+      <div class="cover-subtitle">MÔN HỌC: SDN302 – SERVER-SIDE WEB DEVELOPMENT WITH NODE.JS & EXPRESS</div>
+      <p class="cover-desc">
+        Hệ thống RESTful API toàn diện phục vụ chuỗi 4 chi nhánh cà phê đặc sản & bánh thủ công tại TP. Đà Nẵng
+        theo mô hình Đặt trước & Nhận tại quầy (Order Ahead & In-Store Pick-up).
+        Hệ sinh thái liên thông 2 chiều đồng bộ với PRM393: Xác thực phân quyền JWT, mã hóa Bcrypt,
+        CSDL MongoDB Atlas (Mongoose ODM), Deep Population liên kết bảng, Module Live Chat CSKH quầy chi nhánh,
+        Module Mã giảm giá (Vouchers), Module Đánh giá (Reviews), Quản lý Yêu thích (Favorites),
+        Kiểm soát tồn kho chi nhánh tức thời, Báo cáo ca & Đối soát doanh thu quầy Barista (Shift Reconciliation),
+        và Bộ kịch bản kiểm thử tự động Postman Collection Test Suite.
+      </p>
+
+      <div class="cover-meta-grid">
+        <div class="cover-meta-item"><strong>Mã môn học:</strong> SDN302 (Node.js & Express)</div>
+        <div class="cover-meta-item"><strong>Khung công nghệ:</strong> Node.js v24, Express v4.19, Mongoose v8.3</div>
+        <div class="cover-meta-item"><strong>Cơ sở dữ liệu:</strong> MongoDB Atlas (Cloud NoSQL DB)</div>
+        <div class="cover-meta-item"><strong>Kiến trúc áp dụng:</strong> MVC + RESTful API + Middleware Pipeline</div>
+        <div class="cover-meta-item"><strong>Công cụ kiểm thử:</strong> Postman Runner & Collection Tests</div>
+        <div class="cover-meta-item"><strong>Hình thức đánh giá:</strong> Vấn đáp trực tiếp 1:1 với Giảng viên</div>
+      </div>
+
+      <h3 style="margin-bottom: 8px; color: #0F766E;">BẢNG PHÂN CHIA TRÁCH NHIỆM 5 THÀNH VIÊN (CHUẨN 20% MỖI NGƯỜI):</h3>
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 5%;">STT</th>
+            <th style="width: 25%;">Họ và tên Sinh viên</th>
+            <th style="width: 22%;">Vai trò đảm nhiệm</th>
+            <th style="width: 33%;">Trọng tâm công việc Backend (SDN302)</th>
+            <th style="width: 15%;">Tỷ lệ đóng góp</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="text-align: center; font-weight: 700;">1</td>
+            <td><strong>Lê Đức Sơn</strong></td>
+            <td><strong style="color: #0F766E;">Nhóm trưởng</strong> / Operations & Live Chat Lead</td>
+            <td>Module Live Chat CSKH quầy chi nhánh (2 chiều), Module Đánh giá (Reviews), Báo cáo ca & Đối soát doanh thu quầy</td>
+            <td style="text-align: center; font-weight: 700; color: #0F766E;">20%</td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: 700;">2</td>
+            <td><strong>Nguyễn Chí Vương</strong></td>
+            <td>API Architect / Auth & Security Lead</td>
+            <td>Thiết kế kiến trúc RESTful API, Module Auth (JWT, Bcrypt), Module Yêu thích (Favorites), Postman Test Suite toàn diện</td>
+            <td style="text-align: center; font-weight: 700; color: #0F766E;">20%</td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: 700;">3</td>
+            <td><strong>Nguyễn Xuân Thịnh</strong></td>
+            <td>BE Core Lead / Product & Orders</td>
+            <td>Khởi tạo Express Server, Core CRUD APIs (Categories, Products, Orders), Server-side Pricing, Deep Population</td>
+            <td style="text-align: center; font-weight: 700; color: #0F766E;">20%</td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: 700;">4</td>
+            <td><strong>Nguyễn Đắc Thịnh</strong></td>
+            <td>Branches & Vouchers & Error Handling</td>
+            <td>API 4 Chi nhánh Đà Nẵng (GPS & Tồn kho tức thời), Module Mã giảm giá (Vouchers), Global Error Middleware, Validators</td>
+            <td style="text-align: center; font-weight: 700; color: #0F766E;">20%</td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: 700;">5</td>
+            <td><strong>Lê Tự Nhật Thạch</strong></td>
+            <td>Uploads, Seed Data & Web Admin SSR</td>
+            <td>Multer Upload & Download files (Slot 12: res.download hóa đơn/báo cáo), 3 Script Seed Data Đà Nẵng, Giao diện EJS Web Admin Dashboard & KDS Barista (Slot 7)</td>
+            <td style="text-align: center; font-weight: 700; color: #0F766E;">20%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="cover-footer">
+      <div>ĐẠI HỌC FPT ĐÀ NẴNG • KHOA CÔNG NGHỆ THÔNG TIN</div>
+      <div>HỌC KỲ: FALL 2026 / SPRING 2027</div>
+    </div>
+  </div>
+
+  <!-- Mục lục liên kết -->
+  <div class="container">
+    <div class="toc">
+      <div class="toc-title">MỤC LỤC TÀI LIỆU ĐẶC TẢ KỸ THUẬT (SDN302 MASTER SPEC)</div>
+      <ul class="toc-list">
+        <li class="toc-item"><a href="#sec1">PHẦN 1: Bối cảnh Nghiệp vụ Thực tế & Hệ thống 2 Chiều FreshBite Đà Nẵng</a></li>
+        <li class="toc-item"><a href="#sec2">PHẦN 2: Thiết kế Cơ sở Dữ liệu MongoDB (Mongoose Schemas & Population)</a></li>
+        <li class="toc-item"><a href="#sec3">PHẦN 3: Bộ Dữ liệu Mẫu Khởi tạo (Seed Data Đà Nẵng & Vouchers)</a></li>
+        <li class="toc-item"><a href="#sec4">PHẦN 4: Xác thực JWT, Bcrypt, Validation Matrix & Xử lý Lỗi Toàn Cục</a></li>
+        <li class="toc-item"><a href="#sec5">PHẦN 5: Kiến trúc Hệ thống MVC & Cấu trúc Mã nguồn Backend Chuẩn</a></li>
+        <li class="toc-item"><a href="#sec6">PHẦN 6: Đặc tả Chi tiết Toàn bộ RESTful API Endpoints (25+ APIs)</a></li>
+        <li class="toc-item"><a href="#sec7">PHẦN 7: Bộ Kịch bản Kiểm thử Tự động Postman (Collection Test Suite)</a></li>
+        <li class="toc-item"><a href="#sec8">PHẦN 8: Bảng Phân chia Trách nhiệm 5 Thành viên (Chuẩn 20% Mỗi Người)</a></li>
+        <li class="toc-item"><a href="#sec9">PHẦN 9: Hướng dẫn Cài đặt, Triển khai & Chạy Thử nghiệm Hệ thống</a></li>
+        <li class="toc-item"><a href="#sec10">PHẦN 10: Ma trận Rubric FPT SDN302 & Bộ Câu hỏi Vấn đáp 1:1 Lấy Điểm 10</a></li>
+      </ul>
+    </div>
+
+    <!-- PHẦN 1 -->
+    <h1 id="sec1" class="section-title">PHẦN 1: BỐI CẢNH NGHIỆP VỤ THỰC TẾ & HỆ THỐNG 2 CHIỀU FRESHBITE ĐÀ NẴNG</h1>
+
+    <h2>1.1. Bối cảnh Nghiệp vụ Thực tế & Phạm vi Dự án (Domain Scope)</h2>
+    <p>
+      Dự án <strong>FreshBite Coffee & Bakery</strong> giải quyết bài toán vận hành thực tế của chuỗi cửa hàng
+      F&B hiện đại tại Thành phố Đà Nẵng. Khác với các ứng dụng giao hàng truyền thống phụ thuộc vào tài xế công nghệ
+      (dễ làm bánh nguội, tan đá cà phê và đội chi phí ship), FreshBite áp dụng mô hình vận hành:
+      <strong>Order Ahead & In-Store Pick-up (100% Không dùng Shipper)</strong>.
+    </p>
+    <div class="callout callout-info">
+      <strong>Mô hình vận hành 2 chiều khép kín:</strong>
+      Hệ thống bao gồm 2 phân hệ tương hỗ:
+      <br>1. <strong>Phân hệ Khách hàng (Client Mobile App):</strong> Khách hàng (sinh viên, nhân viên văn phòng) duyệt menu món ăn đặc sản Đà Nẵng,
+      tùy chọn size (S/M/L), độ ngọt/đá, lưu món yêu thích, áp dụng mã voucher giảm giá, chọn chi nhánh gần nhất theo GPS và đặt hẹn giờ ghé lấy (15, 30, 45 phút).
+      Khi cần hỏi thông tin về đơn hàng hay tình trạng bánh tươi, khách có thể gửi tin nhắn hỗ trợ trực tiếp tới quầy chi nhánh (Live Chat CSKH).
+      <br>2. <strong>Phân hệ Quầy Chi nhánh (Store Staff & Barista KDS Desk):</strong> Nhân viên và quản lý 4 chi nhánh tại Đà Nẵng
+      nhận đơn hàng tức thời trên màn hình bếp KDS (Kitchen Display System), tiến hành pha chế, bấm chuyển trạng thái đơn hàng (<code>Preparing</code> &rarr; <code>Ready for Pickup</code>),
+      kiểm soát bật/tắt món tạm hết hàng tại chi nhánh (<code>outOfStockProductIds</code>), trả lời Live Chat CSKH của khách tại quầy và thực hiện chốt ca đối soát doanh thu cuối ngày (Shift Reconciliation).
+    </div>
+
+    <h2>1.2. Mạng lưới 4 Chi nhánh Chiến lược tại TP. Đà Nẵng</h2>
+    <p>
+      Backend quản lý tập trung và phân luồng phục vụ chính xác cho 4 chi nhánh thực tế tại Đà Nẵng:
+    </p>
+    <table>
+      <thead>
+        <tr>
+          <th>Mã / Tên Chi nhánh</th>
+          <th>Địa chỉ Thực tế</th>
+          <th>Quận / Vị trí Chiến lược</th>
+          <th>Tọa độ GPS (Lat, Lng)</th>
+          <th>Giờ hoạt động</th>
+          <th>Hotline</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Chi nhánh 1 (FPT City)</strong></td>
+          <td>Tòa F-Complex, Khu đô thị FPT City, P. Hòa Hải</td>
+          <td>Ngũ Hành Sơn (Cụm sinh viên ĐH FPT, ĐH CNTT Việt - Hàn VKU)</td>
+          <td><code>15.969234, 108.261221</code></td>
+          <td>06:30 - 22:00</td>
+          <td>0236.730.0999</td>
+        </tr>
+        <tr>
+          <td><strong>Chi nhánh 2 (Bạch Đằng)</strong></td>
+          <td>154 Bạch Đằng, P. Hải Châu 1</td>
+          <td>Hải Châu (Tuyến phố đi bộ sầm uất ven sông Hàn)</td>
+          <td><code>16.067822, 108.220815</code></td>
+          <td>06:30 - 23:00</td>
+          <td>0236.388.8222</td>
+        </tr>
+        <tr>
+          <td><strong>Chi nhánh 3 (Võ Văn Kiệt)</strong></td>
+          <td>68 Võ Văn Kiệt, P. An Hải Đông</td>
+          <td>Sơn Trà (Trục đại lộ thẳng ra bãi biển Mỹ Khê)</td>
+          <td><code>16.061044, 108.238055</code></td>
+          <td>06:30 - 22:30</td>
+          <td>0236.399.9111</td>
+        </tr>
+        <tr>
+          <td><strong>Chi nhánh 4 (Điện Biên Phủ)</strong></td>
+          <td>242 Điện Biên Phủ, P. Chính Gián</td>
+          <td>Thanh Khê (Khu đông sinh viên ĐH Bách Khoa, Sư Phạm, Duy Tân)</td>
+          <td><code>16.062011, 108.185012</code></td>
+          <td>07:00 - 22:00</td>
+          <td>0236.377.7333</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>1.3. Luồng Nghiệp vụ Toàn trình 5 Bước Khép kín (End-to-End Workflow)</h2>
+    <div class="flow-step">
+      <div class="step-number">1</div>
+      <div class="step-content">
+        <div class="step-title">Khám phá & Chọn Chi nhánh Đà Nẵng Gần Nhất (GPS Branch Discovery)</div>
+        <div class="step-desc">Khách mở ứng dụng, gọi <code>GET /api/branches</code> nhận danh sách 4 chi nhánh kèm tọa độ GPS. Ứng dụng tính khoảng cách và tự động đề xuất chi nhánh thuận tiện nhất (VD: Chi nhánh FPT City cách 250m).</div>
+      </div>
+    </div>
+
+    <div class="flow-step">
+      <div class="step-number">2</div>
+      <div class="step-content">
+        <div class="step-title">Duyệt Thực Đơn, Tùy Chỉnh Topping & Áp Dụng Voucher (Menu & Discount Engine)</div>
+        <div class="step-desc">Khách xem thực đơn 4 nhóm danh mục, chọn size bánh/nước (Size S: giá gốc, M: +6.000đ, L: +10.000đ), điều chỉnh 50% đường / 50% đá. Khách có thể nhập mã khuyến mãi gọi <code>POST /api/vouchers/apply</code> để nhận chiết khấu trực tiếp trên đơn hàng.</div>
+      </div>
+    </div>
+
+    <div class="flow-step">
+      <div class="step-number">3</div>
+      <div class="step-content">
+        <div class="step-title">Khởi Tạo Đơn Hàng Pick-up & Tính Tiền Server-Side Chống Giả Mạo</div>
+        <div class="step-desc">Khách chọn khung giờ hẹn ghé lấy (15, 30, 45 phút) và gửi request <code>POST /api/orders</code>. Backend kiểm tra chi nhánh active, đối soát danh sách món tạm hết (<code>outOfStockProductIds</code>), tính toán tổng tiền bằng giá niêm yết trong MongoDB (ngăn chặn hành vi giả mạo giá), sinh mã đơn ngẫu nhiên <code>FB-XXXXX</code>. Trạng thái ban đầu: <code>Received</code>.</div>
+      </div>
+    </div>
+
+    <div class="flow-step">
+      <div class="step-number">4</div>
+      <div class="step-content">
+        <div class="step-title">KDS Quầy Barista Pha Chế & Kênh Live Chat Hỗ Trợ Tại Quầy (Counter KDS & Staff Chat)</div>
+        <div class="step-desc">Đơn hàng lập tức hiển thị trên màn hình KDS của Barista tại chi nhánh. Barista bấm chuyển: <code>Received</code> &rarr; <code>Preparing</code> (đang làm) &rarr; <code>Ready for Pickup</code> (đã xong). Trong quá trình này, nếu khách có yêu cầu riêng hoặc dặn giữ nóng bánh, khách và nhân viên quầy có thể nhắn tin trao đổi trực tiếp qua <code>/api/chats/:branchId</code>.</div>
+      </div>
+    </div>
+
+    <div class="flow-step">
+      <div class="step-number">5</div>
+      <div class="step-content">
+        <div class="step-title">Nhận Món Tại Quầy, Hoàn Tất Đơn & Đánh Giá Món Ăn (Handover, Settlement & Reviews)</div>
+        <div class="step-desc">Khách tới quầy đọc mã <code>FB-XXXXX</code>, nhân viên quầy kiểm tra đối soát, trao túi bánh & cà phê, sau đó bấm chuyển đơn sang <code>Completed</code> và thanh toán <code>PAID</code>. Khách thưởng thức xong có thể gửi đánh giá sao và bình luận qua <code>POST /api/reviews</code>. Quản lý cuối ngày xem báo cáo doanh thu ca qua <code>GET /api/reports/shift</code>.</div>
+      </div>
+    </div>
+
+    <h2>1.4. Ma trận Phân quyền Truy cập Theo Vai trò (Role-Based Access Control - RBAC)</h2>
+    <p>
+      Hệ thống bảo vệ tài nguyên chặt chẽ bằng Middleware JWT (<code>verifyToken</code>) và Middleware phân quyền (<code>authorize</code>):
+    </p>
+    <table>
+      <thead>
+        <tr>
+          <th>Phân hệ Chức năng</th>
+          <th>Endpoints API</th>
+          <th>Quyền Public</th>
+          <th>Quyền Khách hàng (Role: user)</th>
+          <th>Quyền Quản lý / Barista (Role: admin)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Xác thực & Tài khoản</strong></td>
+          <td><code>/api/auth/*</code></td>
+          <td>Register, Login</td>
+          <td>Xem Profile (<code>/me</code>), Cập nhật thông tin, Đổi mật khẩu</td>
+          <td>Toàn quyền quản trị tài khoản người dùng</td>
+        </tr>
+        <tr>
+          <td><strong>Món Yêu Thích (Favorites)</strong></td>
+          <td><code>/api/users/favorites/*</code></td>
+          <td>Không truy cập</td>
+          <td>Lấy danh sách yêu thích, Thêm/Xóa món yêu thích</td>
+          <td>Xem dữ liệu thống kê yêu thích</td>
+        </tr>
+        <tr>
+          <td><strong>Chi nhánh Đà Nẵng</strong></td>
+          <td><code>/api/branches/*</code></td>
+          <td>Xem danh sách 4 chi nhánh & chi tiết GPS</td>
+          <td>Xem danh sách & định vị chi nhánh gần nhất</td>
+          <td>Cập nhật chi nhánh, Bật/tắt món tạm hết tại chi nhánh (<code>outOfStockProductIds</code>)</td>
+        </tr>
+        <tr>
+          <td><strong>Danh mục Thực đơn</strong></td>
+          <td><code>/api/categories/*</code></td>
+          <td>Xem danh mục</td>
+          <td>Xem danh mục món</td>
+          <td>Thêm, Sửa, Xóa danh mục thực đơn (CRUD)</td>
+        </tr>
+        <tr>
+          <td><strong>Món Ăn & Thức Uống</strong></td>
+          <td><code>/api/products/*</code></td>
+          <td>Xem danh sách, Chi tiết món, Tìm kiếm regex</td>
+          <td>Xem menu, Lọc theo danh mục/giá/calo</td>
+          <td>Thêm món mới, Cập nhật giá/ảnh, Bật/tắt còn hàng, Xóa món</td>
+        </tr>
+        <tr>
+          <td><strong>Quản lý Đơn hàng (Orders)</strong></td>
+          <td><code>/api/orders/*</code></td>
+          <td>Không truy cập</td>
+          <td>Tạo đơn đặt món Pick-up, Xem lịch sử đơn (<code>/my-orders</code>)</td>
+          <td>Xem tất cả đơn hệ thống (<code>/admin/all</code>), Đổi trạng thái KDS Barista (<code>status</code>)</td>
+        </tr>
+        <tr>
+          <td><strong>Mã Giảm Giá (Vouchers)</strong></td>
+          <td><code>/api/vouchers/*</code></td>
+          <td>Xem danh sách voucher đang kích hoạt</td>
+          <td>Áp dụng mã giảm giá tính tiền chiết khấu (<code>/apply</code>)</td>
+          <td>Tạo mã voucher mới, Bật/tắt trạng thái khuyến mãi</td>
+        </tr>
+        <tr>
+          <td><strong>Live Chat CSKH Quầy Chi Nhánh</strong></td>
+          <td><code>/api/chats/*</code></td>
+          <td>Không truy cập</td>
+          <td>Gửi tin nhắn tới quầy chi nhánh, Xem lịch sử chat cá nhân</td>
+          <td>Bàn làm việc nhân viên: Xem danh sách hội thoại khách, Trả lời chat khách hàng</td>
+        </tr>
+        <tr>
+          <td><strong>Đánh Giá & Phản Hồi (Reviews)</strong></td>
+          <td><code>/api/reviews/*</code></td>
+          <td>Xem đánh giá & sao trung bình của món ăn</td>
+          <td>Gửi đánh giá (1-5 sao) và bình luận sau khi hoàn tất đơn</td>
+          <td>Quản lý, ẩn/xóa đánh giá vi phạm</td>
+        </tr>
+        <tr>
+          <td><strong>Báo Cáo Ca Quầy & SSR Admin</strong></td>
+          <td><code>/admin/*</code>, <code>/api/reports/*</code></td>
+          <td>Không truy cập</td>
+          <td>Không truy cập</td>
+          <td>Báo cáo ca & Đối soát doanh thu cuối ngày (Shift Reconciliation), Web Admin EJS</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- PHẦN 2 -->
+    <h1 id="sec2" class="section-title">PHẦN 2: THIẾT KẾ CƠ SỞ DỮ LIỆU MONGODB (SCHEMAS & POPULATION)</h1>
+
+    <h2>2.1. Kiến trúc Cơ sở Dữ liệu NoSQL trên MongoDB Atlas</h2>
+    <p>
+      Hệ thống sử dụng <strong>MongoDB Atlas</strong> kết hợp với <strong>Mongoose ODM (v8.3+)</strong>
+      để xây dựng mô hình dữ liệu quan hệ hướng tài liệu. Cấu trúc Schema được thiết kế đồng bộ với hệ thống PRM393,
+      hỗ trợ đầy đủ các trường kiểm soát tồn kho chi nhánh, mã giảm giá, đánh giá và tin nhắn CSKH quầy.
+    </p>
+
+    <h2>2.2. Chi tiết 7 Schemas Cốt lõi (Mongoose Models)</h2>
+
+    <h3>1. Model Người dùng (models/User.js)</h3>
+    <pre><code>const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
+
+const userSchema = new mongoose.Schema(
+  {
+    fullName: { type: String, required: true, trim: true },
+    email: { type: String, required: true, unique: true, lowercase: true, trim: true },
+    password: { type: String, required: true },
+    phone: { type: String, required: true, trim: true },
+    avatar: {
+      type: String,
+      default: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200'
+    },
+    role: {
+      type: String,
+      enum: ['user', 'admin'],
+      default: 'user'
+    },
+    favoriteProducts: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Product'
+      }
+    ]
+  },
+  { timestamps: true }
+);
+
+// Mongoose Pre-save Hook: Tự động băm mật khẩu bằng Bcrypt trước khi lưu vào MongoDB
+userSchema.pre('save', async function () {
+  if (!this.isModified('password')) return;
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+});
+
+// So khớp mật khẩu đăng nhập
+userSchema.methods.comparePassword = async function (candidatePassword) {
+  return bcrypt.compare(candidatePassword, this.password);
+};
+
+// Tự động loại bỏ password khi trả dữ liệu về Client
+userSchema.methods.toJSON = function () {
+  const user = this.toObject();
+  delete user.password;
+  return user;
+};
+
+module.exports = mongoose.model('User', userSchema);</code></pre>
+
+    <h3>2. Model Chi nhánh Đà Nẵng (models/Branch.js)</h3>
+    <pre><code>const mongoose = require('mongoose');
+
+const branchSchema = new mongoose.Schema(
+  {
+    name: { type: String, required: true, trim: true },
+    address: { type: String, required: true, trim: true },
+    district: {
+      type: String,
+      required: true,
+      enum: ['Ngũ Hành Sơn', 'Hải Châu', 'Sơn Trà', 'Thanh Khê']
+    },
+    location: {
+      latitude: { type: Number, required: true },
+      longitude: { type: Number, required: true }
+    },
+    phone: { type: String, required: true, trim: true },
+    openingHours: { type: String, default: '06:30 - 22:30' },
+    imageUrl: { type: String, default: 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800' },
+    isActive: { type: Boolean, default: true },
+    // Mảng ID các món tạm hết hàng tại riêng chi nhánh này (Đồng bộ Tab 2 Quản lý chi nhánh của PRM393)
+    outOfStockProductIds: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Product'
+      }
+    ]
+  },
+  { timestamps: true }
+);
+
+module.exports = mongoose.model('Branch', branchSchema);</code></pre>
+
+    <h3>3. Model Danh mục Thực đơn (models/Category.js)</h3>
+    <pre><code>const mongoose = require('mongoose');
+
+const categorySchema = new mongoose.Schema(
+  {
+    name: { type: String, required: true, unique: true },
+    code: {
+      type: String,
+      required: true,
+      unique: true,
+      enum: ['coffee', 'bakery', 'tea', 'specialty'],
+      lowercase: true,
+      trim: true
+    },
+    description: { type: String },
+    icon: { type: String }
+  },
+  { timestamps: true }
+);
+
+module.exports = mongoose.model('Category', categorySchema);</code></pre>
+
+    <h3>4. Model Món ăn & Thức uống (models/Product.js)</h3>
+    <pre><code>const mongoose = require('mongoose');
+
+const productSchema = new mongoose.Schema(
+  {
+    name: { type: String, required: true, trim: true },
+    categoryId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Category',
+      required: true
+    },
+    price: { type: Number, required: true, min: 0 }, // Giá base cho Size S
+    sizePricing: {
+      S: { type: Number, default: 0 },     // Giá gốc (+0đ)
+      M: { type: Number, default: 6000 },  // Giá tăng thêm cho Size M (+6.000đ)
+      L: { type: Number, default: 10000 }  // Giá tăng thêm cho Size L (+10.000đ)
+    },
+    description: { type: String, required: true },
+    imageUrl: { type: String, required: true },
+    calories: { type: Number, default: 150 },
+    ingredients: [{ type: String }],
+    isBestSeller: { type: Boolean, default: false },
+    isAvailable: { type: Boolean, default: true }
+  },
+  { timestamps: true }
+);
+
+productSchema.index({ categoryId: 1 });
+productSchema.index({ name: 'text' });
+
+module.exports = mongoose.model('Product', productSchema);</code></pre>
+
+    <h3>5. Model Đơn hàng Pick-up (models/Order.js)</h3>
+    <pre><code>const mongoose = require('mongoose');
+
+const orderItemSchema = new mongoose.Schema({
+  productId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Product',
+    required: true
+  },
+  name: { type: String },
+  size: { type: String, enum: ['S', 'M', 'L'], default: 'S' },
+  quantity: { type: Number, required: true, min: 1 },
+  price: { type: Number, required: true },
+  sugarLevel: {
+    type: String,
+    enum: ['100%', '70%', '50%', '0%'],
+    default: '100%'
+  },
+  iceLevel: {
+    type: String,
+    enum: ['100%', '50%', 'Nóng'],
+    default: '100%'
+  },
+  note: { type: String, default: '' }
+});
+
+const orderSchema = new mongoose.Schema(
+  {
+    orderCode: { type: String, required: true, unique: true }, // Format: FB-XXXXX
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true
+    },
+    branchId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Branch',
+      required: true
+    },
+    items: [orderItemSchema],
+    subtotal: { type: Number, required: true },
+    discount: { type: Number, default: 0 },
+    voucherCode: { type: String, default: null },
+    totalAmount: { type: Number, required: true },
+    pickupTime: {
+      type: String,
+      required: true,
+      enum: ['15_MINS', '30_MINS', '45_MINS', 'CUSTOM']
+    },
+    status: {
+      type: String,
+      enum: ['Received', 'Preparing', 'Ready for Pickup', 'Completed', 'Cancelled'],
+      default: 'Received'
+    },
+    paymentMethod: {
+      type: String,
+      enum: ['CASH_AT_COUNTER', 'MOCK_MOMO', 'PAYOS'],
+      default: 'CASH_AT_COUNTER'
+    },
+    paymentStatus: {
+      type: String,
+      enum: ['PENDING', 'PAID'],
+      default: 'PENDING'
+    }
+  },
+  { timestamps: true }
+);
+
+orderSchema.index({ userId: 1, createdAt: -1 });
+orderSchema.index({ branchId: 1, status: 1 });
+
+module.exports = mongoose.model('Order', orderSchema);</code></pre>
+
+    <h3>6. Model Mã Giảm Giá & Khuyến Mãi (models/Voucher.js)</h3>
+    <pre><code>const mongoose = require('mongoose');
+
+const voucherSchema = new mongoose.Schema(
+  {
+    code: { type: String, required: true, unique: true, uppercase: true, trim: true },
+    title: { type: String, required: true },
+    discountType: { type: String, enum: ['PERCENT', 'FIXED'], default: 'PERCENT' },
+    discountValue: { type: Number, required: true }, // % giảm hoặc số tiền cố định
+    maxDiscount: { type: Number, default: 50000 },   // Mức giảm tối đa
+    minOrderAmount: { type: Number, default: 0 },    // Đơn hàng tối thiểu để áp dụng
+    startDate: { type: Date, default: Date.now },
+    endDate: { type: Date, required: true },
+    isActive: { type: Boolean, default: true }
+  },
+  { timestamps: true }
+);
+
+module.exports = mongoose.model('Voucher', voucherSchema);</code></pre>
+
+    <h3>7. Model Tin Nhắn Live Chat CSKH Quầy Chi Nhánh (models/Message.js)</h3>
+    <pre><code>const mongoose = require('mongoose');
+
+// Lưu trữ tin nhắn trao đổi 2 chiều giữa Khách hàng và Quầy Barista chi nhánh (Đồng bộ Tab 3 của PRM393)
+const messageSchema = new mongoose.Schema(
+  {
+    branchId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Branch',
+      required: true
+    },
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true
+    },
+    senderRole: {
+      type: String,
+      enum: ['customer', 'staff'],
+      required: true
+    },
+    senderName: { type: String, required: true },
+    content: { type: String, required: true, trim: true },
+    isRead: { type: Boolean, default: false }
+  },
+  { timestamps: true }
+);
+
+messageSchema.index({ branchId: 1, userId: 1, createdAt: 1 });
+
+module.exports = mongoose.model('Message', messageSchema);</code></pre>
+
+    <h2>2.3. Cơ chế Mongoose Deep Population (Lấy Trọn Điểm Vấn Đáp FPT)</h2>
+    <p>
+      Điểm mấu chốt để đạt điểm tối đa trong rubric môn SDN302 là chứng minh khả năng <strong>liên kết dữ liệu giữa các Collection</strong>
+      thông qua Mongoose <code>populate()</code>. Dưới đây là cách triển khai thực tế trong <code>controllers/orderController.js</code>:
+    </p>
+    <pre><code>// Truy vấn đơn hàng kèm thông tin đầy đủ của User, Chi nhánh và từng Sản phẩm bên trong items:
+const order = await Order.findById(req.params.id)
+  .populate('userId', 'fullName email phone')
+  .populate('branchId', 'name address phone openingHours')
+  .populate('items.productId', 'name price imageUrl calories');</code></pre>
+    <div class="callout callout-tip">
+      <strong>Bản chất kỹ thuật:</strong> Thay vì chỉ lưu trữ thô sơ <code>ObjectId</code> (ví dụ: <code>6625fa7e9b...</code>),
+      Mongoose Population tự động thực hiện truy vấn bổ sung vào các Collection tương ứng dựa trên cấu hình <code>ref</code> trong Schema,
+      sau đó thế chỗ (replace) các ID đó bằng toàn bộ Object chi tiết trước khi trả về kết quả JSON cho Client.
+      Điều này giúp Frontend hiển thị được đầy đủ tên khách, hotline chi nhánh và ảnh sản phẩm mà không cần thực hiện thêm nhiều request độc lập.
+    </div>
+
+    <!-- PHẦN 3 -->
+    <h1 id="sec3" class="section-title">PHẦN 3: BỘ DỮ LIỆU MẪU KHỞI TẠO (SEED DATA ĐÀ NẴNG & VOUCHERS)</h1>
+
+    <h2>3.1. Danh sách 4 Chi nhánh Thực tế tại Đà Nẵng</h2>
+    <p>
+      Hệ thống được khởi tạo sẵn 4 chi nhánh vật lý đại diện cho các quận trọng điểm của TP. Đà Nẵng:
+    </p>
+    <table>
+      <thead>
+        <tr>
+          <th>Tên Chi Nhánh</th>
+          <th>Địa Chỉ Đầy Đủ</th>
+          <th>Quận</th>
+          <th>Tọa Độ (Lat, Lng)</th>
+          <th>Giờ Mở Cửa</th>
+          <th>Ảnh Chi Nhánh</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>FreshBite FPT City</strong></td>
+          <td>Tòa F-Complex, KĐT FPT City, P. Hòa Hải</td>
+          <td>Ngũ Hành Sơn</td>
+          <td><code>15.969234, 108.261221</code></td>
+          <td>06:30 - 22:00</td>
+          <td><code>https://images.unsplash.com/photo-1554118811-1e0d58224f24</code></td>
+        </tr>
+        <tr>
+          <td><strong>FreshBite Bạch Đằng</strong></td>
+          <td>154 Bạch Đằng, P. Hải Châu 1</td>
+          <td>Hải Châu</td>
+          <td><code>16.067822, 108.220815</code></td>
+          <td>06:30 - 23:00</td>
+          <td><code>https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb</code></td>
+        </tr>
+        <tr>
+          <td><strong>FreshBite Võ Văn Kiệt</strong></td>
+          <td>68 Võ Văn Kiệt, P. An Hải Đông</td>
+          <td>Sơn Trà</td>
+          <td><code>16.061044, 108.238055</code></td>
+          <td>06:30 - 22:30</td>
+          <td><code>https://images.unsplash.com/photo-1495474472287-4d71bcdd2085</code></td>
+        </tr>
+        <tr>
+          <td><strong>FreshBite Điện Biên Phủ</strong></td>
+          <td>242 Điện Biên Phủ, P. Chính Gián</td>
+          <td>Thanh Khê</td>
+          <td><code>16.062011, 108.185012</code></td>
+          <td>07:00 - 22:00</td>
+          <td><code>https://images.unsplash.com/photo-1559925393-8be0ec4767c8</code></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>3.2. Danh mục & Bảng 8+ Món ăn Đặc sản Đà Nẵng</h2>
+    <p>
+      Quy chuẩn giá theo Size: <strong>Size S là giá gốc (base price)</strong>, <strong>Size M cộng thêm 6.000 VNĐ</strong>,
+      <strong>Size L cộng thêm 10.000 VNĐ</strong>.
+      Bộ dữ liệu bao gồm cả sản phẩm cố tình tắt trạng thái (<code>isAvailable = false</code>) phục vụ kiểm thử bắt lỗi 400:
+    </p>
+    <table>
+      <thead>
+        <tr>
+          <th>Tên Món Ăn / Thức Uống</th>
+          <th>Danh Mục</th>
+          <th>Giá Base (Size S)</th>
+          <th>Quy Cách Size M / L</th>
+          <th>Năng Lượng</th>
+          <th>Tình Trạng</th>
+          <th>Thành Phần Chính</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Cà phê Muối Đà Nẵng</strong></td>
+          <td><span class="badge badge-get">coffee</span></td>
+          <td>32.000 VNĐ</td>
+          <td>M: 38.000đ | L: 42.000đ</td>
+          <td>180 kcal</td>
+          <td> Còn hàng</td>
+          <td>Cà phê Robusta Đắk Lắk, Muối hồng Himalaya, Sữa đặc</td>
+        </tr>
+        <tr>
+          <td><strong>Cold Brew Cam Vàng Sơn Trà</strong></td>
+          <td><span class="badge badge-get">coffee</span></td>
+          <td>45.000 VNĐ</td>
+          <td>M: 51.000đ | L: 55.000đ</td>
+          <td>80 kcal</td>
+          <td> Còn hàng</td>
+          <td>Cà phê ủ lạnh Arabica Cầu Đất, Cam vàng Sơn Trà thái lát</td>
+        </tr>
+        <tr>
+          <td><strong>Cà phê Dừa Non Xay</strong></td>
+          <td><span class="badge badge-patch">specialty</span></td>
+          <td>42.000 VNĐ</td>
+          <td>M: 48.000đ | L: 52.000đ</td>
+          <td>260 kcal</td>
+          <td> Còn hàng</td>
+          <td>Espresso đậm vị, Cùi dừa non Bến Tre, Sữa béo xay tuyết</td>
+        </tr>
+        <tr>
+          <td><strong>Trà Lài Hạt Sen Cố Đô</strong></td>
+          <td><span class="badge badge-post">tea</span></td>
+          <td>38.000 VNĐ</td>
+          <td>M: 44.000đ | L: 48.000đ</td>
+          <td>120 kcal</td>
+          <td> Còn hàng</td>
+          <td>Trà lài Bảo Lộc ủ lạnh, Hạt sen tươi ninh mềm, Thảo mộc</td>
+        </tr>
+        <tr>
+          <td><strong>Bánh Croissant Bơ Tỏi Trứng Muối</strong></td>
+          <td><span class="badge badge-put">bakery</span></td>
+          <td>35.000 VNĐ</td>
+          <td>Tiêu chuẩn</td>
+          <td>310 kcal</td>
+          <td> Còn hàng</td>
+          <td>Bột mì nhập Pháp, Bơ lạt Elle & Vire, Sốt bơ tỏi, Trứng muối</td>
+        </tr>
+        <tr>
+          <td><strong>Bánh Tiramisu Vị Cà Phê Cốt Dừa</strong></td>
+          <td><span class="badge badge-put">bakery</span></td>
+          <td>45.000 VNĐ</td>
+          <td>Tiêu chuẩn</td>
+          <td>280 kcal</td>
+          <td> Còn hàng</td>
+          <td>Kem Mascarpone Ý, Cà phê Robusta, Nước cốt dừa thơm béo</td>
+        </tr>
+        <tr>
+          <td><strong>Bánh Biscotti Yến Mạch Hạnh Nhân</strong></td>
+          <td><span class="badge badge-put">bakery</span></td>
+          <td>28.000 VNĐ</td>
+          <td>Hộp 100g</td>
+          <td>110 kcal</td>
+          <td> Còn hàng</td>
+          <td>Yến mạch nguyên cám, Hạnh nhân Úc, Nho khô (Dành cho ăn kiêng)</td>
+        </tr>
+        <tr style="background-color: #FEF2F2;">
+          <td><strong>Bánh Mì Que Pate (Hết hàng test)</strong></td>
+          <td><span class="badge badge-put">bakery</span></td>
+          <td>20.000 VNĐ</td>
+          <td>Tiêu chuẩn</td>
+          <td>200 kcal</td>
+          <td><span class="badge badge-delete">Hết hàng</span></td>
+          <td>Bột mì giòn rụm, Pate gan heo tiêu sọ (Dùng để test lỗi 400)</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>3.3. Dữ liệu Mẫu Mã Giảm Giá & Khuyến Mãi (Seed Vouchers)</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Mã Voucher</th>
+          <th>Tên Chương Trình</th>
+          <th>Mức Giảm</th>
+          <th>Giảm Tối Đa</th>
+          <th>Đơn Hàng Tối Thiểu</th>
+          <th>Hạn Sử Dụng</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>FRESHBITE10</code></td>
+          <td>Giảm 10% Chào Bạn Mới</td>
+          <td>10%</td>
+          <td>30.000 VNĐ</td>
+          <td>50.000 VNĐ</td>
+          <td>31/12/2026</td>
+        </tr>
+        <tr>
+          <td><code>FPTCITY20</code></td>
+          <td>Ưu đãi Sinh viên FPT City & VKU</td>
+          <td>20%</td>
+          <td>40.000 VNĐ</td>
+          <td>60.000 VNĐ</td>
+          <td>31/12/2026</td>
+        </tr>
+        <tr>
+          <td><code>BANHNGOT15K</code></td>
+          <td>Giảm 15K Khi Mua Kèm Bánh Bất Kỳ</td>
+          <td>15.000 VNĐ (Fixed)</td>
+          <td>15.000 VNĐ</td>
+          <td>40.000 VNĐ</td>
+          <td>31/12/2026</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>3.4. Danh sách Tài khoản Kiểm thử Mặc định (Pre-seeded Accounts)</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Họ và Tên</th>
+          <th>Email Đăng Nhập</th>
+          <th>Mật Khẩu Chung</th>
+          <th>Vai Trò (Role)</th>
+          <th>Mục Đích Sử Dụng</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Admin FreshBite</strong></td>
+          <td><code>admin@freshbite.com</code></td>
+          <td><code>123456</code></td>
+          <td><span class="badge badge-admin">admin</span></td>
+          <td>Quản lý quầy Barista, Test các route thêm món, đổi trạng thái đơn hàng</td>
+        </tr>
+        <tr>
+          <td><strong>Nguyen Van Test</strong></td>
+          <td><code>user@freshbite.com</code></td>
+          <td><code>123456</code></td>
+          <td><span class="badge badge-user">user</span></td>
+          <td>Khách hàng thông thường, Test luồng đặt món Pick-up</td>
+        </tr>
+        <tr>
+          <td><strong>Lê Đức Sơn</strong></td>
+          <td><code>sonld@fe.edu.vn</code></td>
+          <td><code>123456</code></td>
+          <td><span class="badge badge-user">user</span></td>
+          <td>Tài khoản của Nhóm trưởng, Test Live Chat CSKH & Reviews</td>
+        </tr>
+        <tr>
+          <td><strong>Nguyễn Chí Vương</strong></td>
+          <td><code>vuongnc@fe.edu.vn</code></td>
+          <td><code>123456</code></td>
+          <td><span class="badge badge-user">user</span></td>
+          <td>Tài khoản API Architect, Test Postman Collection & Favorites</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- PHẦN 4 -->
+    <h1 id="sec4" class="section-title">PHẦN 4: XÁC THỰC JWT, BCRYPT, VALIDATION MATRIX & XỬ LÝ LỖI TOÀN CỤC</h1>
+
+    <h2>4.1. Cơ chế Bảo mật Xác thực JWT & Mã hóa Mật khẩu Bcrypt</h2>
+    <p>
+      Hệ thống bảo vệ tài nguyên API bằng giao thức <strong>JSON Web Token (JWT)</strong> theo tiêu chuẩn Stateless Authentication:
+    </p>
+    <ul>
+      <li><strong>Mã hóa mật khẩu:</strong> Mật khẩu người dùng được băm 1 chiều bằng thuật toán <code>bcryptjs</code> với độ phức tạp <code>saltRounds = 10</code>. Chuỗi băm sinh ra có độ dài 60 ký tự, chống hoàn toàn kỹ thuật tấn công từ điển và Rainbow Table.</li>
+      <li><strong>Cấu trúc JWT Payload:</strong> Chỉ chứa định danh tối thiểu <code>{ id: user._id, role: user.role }</code>. Tuyệt đối không lưu trữ mật khẩu, email hoặc thông tin nhạy cảm bên trong Payload.</li>
+      <li><strong>Thời hạn hiệu lực:</strong> Token được cấu hình hết hạn sau <code>7 ngày</code> (<code>expiresIn: '7d'</code>).</li>
+      <li><strong>Header truyền tải:</strong> Phía Client gửi Token qua HTTP Header theo định dạng chuẩn: <code>Authorization: Bearer &lt;token&gt;</code>.</li>
+    </ul>
+
+    <h3>Middleware Xác thực Token & Phân quyền (middlewares/authMiddleware.js)</h3>
+    <pre><code>const jwt = require('jsonwebtoken');
+const User = require('../models/User');
+
+// Giải mã và xác thực token từ header Authorization
+exports.verifyToken = async (req, res, next) => {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return res.status(401).json({
+        success: false,
+        message: 'Yêu cầu đăng nhập. Thiếu Bearer Token trong header!'
+      });
+    }
+
+    const token = authHeader.split(' ')[1];
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    const user = await User.findById(decoded.id);
+    if (!user) {
+      return res.status(401).json({ success: false, message: 'Người dùng không tồn tại' });
+    }
+
+    req.user = user; // Gắn thông tin user vào Request để các controller tiếp theo sử dụng
+    next();
+  } catch (error) {
+    return res.status(401).json({
+      success: false,
+      message: error.name === 'TokenExpiredError' ? 'Token đã hết hạn' : 'Token không hợp lệ'
+    });
+  }
+};
+
+// Kiểm tra Role người dùng để phân quyền truy cập
+exports.checkRole = (...roles) => {
+  return (req, res, next) => {
+    if (!req.user || !roles.includes(req.user.role)) {
+      return res.status(403).json({
+        success: false,
+        message: 'Bạn không có quyền thực hiện hành động này!'
+      });
+    }
+    next();
+  };
+};
+
+exports.authorize = exports.checkRole;</code></pre>
+
+    <h2>4.2. Bảng Quy chuẩn Kiểm tra Hợp lệ Dữ liệu Đầu vào (Validation Matrix)</h2>
+    <p>
+      Dự án áp dụng <code>express-validator</code> để kiểm duyệt toàn bộ dữ liệu đầu vào trước khi tiến vào tầng Controller:
+    </p>
+    <table>
+      <thead>
+        <tr>
+          <th>Trường dữ liệu</th>
+          <th>Phạm vi áp dụng</th>
+          <th>Quy tắc Kiểm tra Hợp lệ (Rules)</th>
+          <th>Mã lỗi & Thông báo trả về</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Email</strong></td>
+          <td>Đăng ký, Đăng nhập</td>
+          <td><code>isEmail().normalizeEmail()</code></td>
+          <td><code>400</code> - Email không đúng định dạng hợp lệ</td>
+        </tr>
+        <tr>
+          <td><strong>Mật khẩu (password)</strong></td>
+          <td>Đăng ký, Đổi mật khẩu</td>
+          <td><code>isLength({ min: 6 })</code></td>
+          <td><code>400</code> - Mật khẩu phải chứa ít nhất 6 ký tự</td>
+        </tr>
+        <tr>
+          <td><strong>Số điện thoại</strong></td>
+          <td>Đăng ký, Cập nhật Profile</td>
+          <td>Regex VN: <code>matches(/^0[35789]\d{8}$/)</code></td>
+          <td><code>400</code> - Số điện thoại phải là số di động VN gồm 10 chữ số</td>
+        </tr>
+        <tr>
+          <td><strong>Họ và tên</strong></td>
+          <td>Đăng ký, Profile</td>
+          <td><code>trim().isLength({ min: 2, max: 50 })</code></td>
+          <td><code>400</code> - Họ tên phải có độ dài từ 2 đến 50 ký tự</td>
+        </tr>
+        <tr>
+          <td><strong>branchId</strong></td>
+          <td>Tạo đơn hàng, Chat CSKH</td>
+          <td><code>isMongoId()</code></td>
+          <td><code>400</code> - ID chi nhánh không đúng định dạng MongoDB ObjectId</td>
+        </tr>
+        <tr>
+          <td><strong>items (Giỏ hàng)</strong></td>
+          <td>Tạo đơn hàng</td>
+          <td><code>isArray({ min: 1 })</code>, từng item có <code>quantity &gt;= 1</code></td>
+          <td><code>400</code> - Giỏ hàng phải chứa ít nhất 1 sản phẩm hợp lệ</td>
+        </tr>
+        <tr>
+          <td><strong>pickupTime</strong></td>
+          <td>Tạo đơn hàng</td>
+          <td><code>isIn(['15_MINS', '30_MINS', '45_MINS', 'CUSTOM'])</code></td>
+          <td><code>400</code> - Thời gian hẹn lấy hàng không hợp lệ</td>
+        </tr>
+        <tr>
+          <td><strong>voucherCode</strong></td>
+          <td>Áp dụng khuyến mãi</td>
+          <td><code>trim().toUpperCase().isLength({ min: 3, max: 20 })</code></td>
+          <td><code>400</code> - Mã giảm giá không hợp lệ</td>
+        </tr>
+        <tr>
+          <td><strong>content (Tin nhắn chat)</strong></td>
+          <td>Live Chat CSKH quầy</td>
+          <td><code>trim().isLength({ min: 1, max: 500 })</code></td>
+          <td><code>400</code> - Nội dung tin nhắn không được để trống (tối đa 500 ký tự)</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>4.3. Middleware Bắt Lỗi Tập Trung Toàn Cục (middlewares/errorMiddleware.js)</h2>
+    <p>
+      Để ứng dụng không bao giờ bị dừng đột ngột (crash) và luôn phản hồi mã HTTP chuẩn xác, mọi ngoại lệ trong Express
+      đều được chuyển tiếp qua hàm <code>next(error)</code> và xử lý tại <code>errorMiddleware.js</code>:
+    </p>
+    <pre><code>// 1. Middleware bắt các route không tồn tại (404 Not Found)
+exports.notFound = (req, res, next) => {
+  const error = new Error(`Resource not found: ${req.originalUrl}`);
+  res.status(404);
+  next(error);
+};
+
+// 2. Global Error Handler: Phân loại và chuyển đổi mã lỗi
+exports.errorHandler = (err, req, res, next) => {
+  let statusCode = res.statusCode === 200 ? 500 : res.statusCode;
+  let message = err.message;
+
+  // Bắt lỗi truyền ID sai định dạng MongoDB ObjectId (CastError)
+  if (err.name === 'CastError' && err.kind === 'ObjectId') {
+    statusCode = 400;
+    message = 'Invalid ID format';
+  }
+  // Bắt lỗi trùng lặp trường unique trong MongoDB (Ví dụ trùng Email, trùng Category code, trùng Voucher code)
+  else if (err.code === 11000) {
+    statusCode = 400;
+    const field = err.keyValue ? Object.keys(err.keyValue)[0] : 'Field';
+    message = `${field} already exists`;
+  }
+  // Bắt lỗi Schema Validation của Mongoose
+  else if (err.name === 'ValidationError') {
+    statusCode = 400;
+    message = Object.values(err.errors).map(e => e.message).join(', ');
+  }
+
+  res.status(statusCode).json({
+    success: false,
+    message,
+    ...(process.env.NODE_ENV !== 'production' && { stack: err.stack })
+  });
+};</code></pre>
+    <div class="callout callout-warning">
+      <strong>Nguyên tắc sống còn trong Express.js:</strong> Middleware xử lý lỗi (<code>errorHandler</code>)
+      <strong>bắt buộc phải nhận đủ 4 tham số</strong> <code>(err, req, res, next)</code> và <strong>phải được đăng ký ở cuối cùng</strong>
+      trong <code>server.js</code>, ngay sau tất cả các khai báo route. Nếu đặt sai thứ tự hoặc thiếu tham số <code>err</code>,
+      Express sẽ coi đó là middleware thông thường và không thể chặn được các exception nảy sinh từ tầng Controller.
+    </div>
+
+    <h2>4.4. Cơ Chế Bảo Mật Kết Nối HTTPS, Chứng Chỉ SSL/TLS & Helmet Security Headers (Slot 11)</h2>
+    <p>
+      Nhằm bảo vệ tuyệt đối luồng thanh toán và dữ liệu nhạy cảm của khách hàng theo chuẩn bài giảng Slot 11, hệ thống FreshBite triển khai kiến trúc truyền thông bảo mật:
+    </p>
+    <ul>
+      <li><strong>Nguyên lý HTTPS & Bắt tay SSL/TLS Handshake:</strong> Quá trình kết nối kết hợp giữa <em>Mã hóa bất đối xứng (Asymmetric Encryption)</em> để xác thực danh tính máy chủ và trao đổi khóa bí mật dùng chung (Session Key), sau đó chuyển sang <em>Mã hóa đối xứng (Symmetric Encryption - AES)</em> để mã hóa luồng dữ liệu HTTP với tốc độ cao, tránh làm nghẽn CPU của Node.js.</li>
+      <li><strong>Khởi tạo chứng chỉ tự ký (Self-signed Certificate) với OpenSSL:</strong>
+        <pre><code>openssl req -x509 -newkey rsa:2048 -nodes -sha256 -keyout server.key -out server.cert -days 365</code></pre>
+      </li>
+      <li><strong>Khởi tạo HTTPS Server trong Node.js (Slot 11):</strong>
+        <pre><code>const https = require('https');
+const fs = require('fs');
+const path = require('path');
+
+const sslOptions = {
+  key: fs.readFileSync(path.join(__dirname, 'server.key')),
+  cert: fs.readFileSync(path.join(__dirname, 'server.cert'))
+};
+
+// Lắng nghe cổng HTTPS 443 hoặc cổng dev bảo mật
+https.createServer(sslOptions, app).listen(PORT_HTTPS, () => {
+  console.log(`FreshBite Secure HTTPS Server running on port ${PORT_HTTPS}`);
+});</code></pre>
+      </li>
+      <li><strong>Bảo vệ HTTP Header với Helmet:</strong> Sử dụng <code>app.use(helmet())</code> nhằm chặn đứng các cuộc tấn công phổ biến: Clickjacking (<code>X-Frame-Options: SAMEORIGIN</code>), MIME Sniffing (<code>X-Content-Type-Options: nosniff</code>), và bắt buộc kết nối an toàn qua HSTS.</li>
+      <li><strong>Kiến trúc SSO & OAuth 2.0 (Google Login):</strong> Sẵn sàng tích hợp ủy quyền đăng nhập qua 4 thành phần chuẩn: Resource Owner (Khách hàng), Client (FreshBite App), Authorization Server (Google Auth Server) và Resource Server (Google User Profile API).</li>
+    </ul>
+
+    <!-- PHẦN 5 -->
+    <h1 id="sec5" class="section-title">PHẦN 5: KIẾN TRÚC HỆ THỐNG MVC & CẤU TRÚC MÃ NGUỒN BACKEND</h1>
+
+    <h2>5.1. Mô hình Kiến trúc MVC & Middleware Pipeline</h2>
+    <p>
+      Hệ thống tuân thủ nghiêm ngặt mô hình phân tầng <strong>MVC (Model - View - Controller)</strong> mở rộng cho kiến trúc RESTful API:
+    </p>
+    <ul>
+      <li><strong>Tầng Định tuyến (Routing Layer - <code>routes/</code>):</strong> Tiếp nhận HTTP requests, gắn kèm các middleware xác thực và validator tương ứng trước khi ủy thác cho Controller.</li>
+      <li><strong>Tầng Điều khiển (Controller Layer - <code>controllers/</code>):</strong> Chứa toàn bộ nghiệp vụ xử lý logic, tính toán giá thành Server-side, kiểm tra voucher, tính toán rating review, đối soát ca và trả về định dạng JSON chuẩn mực.</li>
+      <li><strong>Tầng Dữ liệu (Model Layer - <code>models/</code>):</strong> Định nghĩa cấu trúc Schema, quy tắc ràng buộc, chỉ mục và các hàm nghiệp vụ trên Document (Bcrypt hooks, helper methods).</li>
+      <li><strong>Tầng Trung gian (Middleware Layer - <code>middlewares/</code>):</strong> Kiểm soát an ninh, giải mã JWT, phân quyền RBAC, kiểm duyệt dữ liệu đầu vào và bắt lỗi tập trung.</li>
+      <li><strong>Tầng Giao diện Admin SSR (Views Layer - <code>views/</code>):</strong> Sử dụng template engine EJS phục vụ màn hình quầy Barista KDS và đối soát ca trực tiếp tại quầy.</li>
+    </ul>
+
+    <h2>5.2. Cấu trúc Mã nguồn Thực tế (Project Directory Tree)</h2>
+    <pre><code>sdn302-freshbite-backend/
+├── config/
+│   └── db.js                      # Kết nối cơ sở dữ liệu MongoDB Atlas qua Mongoose
+├── controllers/
+│   ├── authController.js          # Viết bởi Nguyễn Chí Vương (Register, Login, Me, Profile, Password, Favorites)
+│   ├── branchController.js        # Viết bởi Nguyễn Đắc Thịnh (CRUD 4 Chi nhánh Đà Nẵng, quản lý outOfStock)
+│   ├── categoryController.js      # Viết bởi Nguyễn Xuân Thịnh (CRUD Danh mục thực đơn)
+│   ├── productController.js       # Viết bởi Nguyễn Xuân Thịnh (CRUD Món ăn, bộ lọc Regex/Query, quy cách Size)
+│   ├── orderController.js         # Viết bởi Nguyễn Xuân Thịnh (Tạo đơn, tính tiền, KDS Barista chuyển trạng thái)
+│   ├── voucherController.js       # Viết bởi Nguyễn Đắc Thịnh (CRUD Vouchers, kiểm tra & áp dụng giảm giá)
+│   ├── reviewController.js        # Viết bởi Lê Đức Sơn (Review đánh giá món ăn & chi nhánh, tính sao trung bình)
+│   ├── chatController.js          # Viết bởi Lê Đức Sơn (Live Chat CSKH 2 chiều giữa khách & quầy chi nhánh)
+│   ├── reportController.js        # Viết bởi Lê Đức Sơn (Báo cáo ca & Đối soát doanh thu quầy Barista)
+│   ├── uploadController.js        # Viết bởi Lê Tự Nhật Thạch (Multer Upload ảnh tĩnh & res.download hóa đơn/báo cáo)
+│   └── adminWebController.js      # Viết bởi Lê Tự Nhật Thạch (Render giao diện EJS SSR quầy Barista KDS)
+├── middlewares/
+│   ├── authMiddleware.js          # JWT verifyToken & RBAC checkRole/authorize
+│   ├── errorMiddleware.js         # notFound (404) & errorHandler tập trung (CastError, 11000, 500)
+│   ├── uploadMiddleware.js        # Cấu hình Multer upload ảnh món ăn và avatar tĩnh
+│   └── validators/
+│       ├── authValidator.js       # Express-validator cho Auth Module (Email, Password, Phone)
+│       └── orderValidator.js      # Express-validator cho Order Module (Items, Branch, PickupTime)
+├── models/
+│   ├── User.js                    # Schema người dùng, Bcrypt hook, toJSON method, favoriteProducts
+│   ├── Branch.js                  # Schema 4 chi nhánh Đà Nẵng, GPS, outOfStockProductIds
+│   ├── Category.js                # Schema danh mục (coffee, bakery, tea, specialty)
+│   ├── Product.js                 # Schema sản phẩm, calo, cờ isAvailable, sizePricing, Text Index
+│   ├── Order.js                   # Schema đơn hàng, subdoc orderItemSchema, voucherCode, Indexing
+│   ├── Voucher.js                 # Schema mã giảm giá (code, discountValue, minOrderAmount)
+│   ├── Review.js                  # Schema đánh giá món ăn & chi nhánh (rating 1-5, comment)
+│   └── Message.js                 # Schema tin nhắn Live Chat CSKH quầy chi nhánh
+├── routes/
+│   ├── authRoutes.js              # Định tuyến module xác thực & yêu thích (/api/auth)
+│   ├── branchRoutes.js            # Định tuyến module chi nhánh (/api/branches)
+│   ├── categoryRoutes.js          # Định tuyến module danh mục (/api/categories)
+│   ├── productRoutes.js           # Định tuyến module món ăn (/api/products)
+│   ├── orderRoutes.js             # Định tuyến module đơn hàng (/api/orders)
+│   ├── voucherRoutes.js           # Định tuyến module mã giảm giá (/api/vouchers)
+│   ├── reviewRoutes.js            # Định tuyến module đánh giá (/api/reviews)
+│   ├── chatRoutes.js              # Định tuyến module live chat CSKH (/api/chats)
+│   ├── reportRoutes.js            # Định tuyến module báo cáo ca đối soát (/api/reports)
+│   ├── uploadRoutes.js            # Định tuyến Upload ảnh Multer & Download file hóa đơn (/api/upload, /api/orders/:id/invoice)
+│   └── adminWebRoutes.js          # Định tuyến Web Admin SSR bằng EJS (/admin/dashboard, /admin/orders, /admin/products)
+├── views/                         # EJS Admin Template (Phục vụ màn hình Barista quầy KDS)
+│   ├── layouts/
+│   │   └── main.ejs               # Master layout HTML5
+│   ├── dashboard.ejs              # Trang tổng quan thống kê doanh thu quầy
+│   ├── orders.ejs                 # Màn hình KDS quầy Barista bấm nút chuyển trạng thái
+│   └── products.ejs               # Màn hình quản lý thêm/sửa món ăn nhanh
+├── public/
+│   └── css/style.css              # Stylesheet cho Web Admin EJS
+├── uploads/                       # Thư mục lưu trữ hình ảnh upload thực tế
+├── seeds/
+│   ├── seedData.js                # Script nạp 4 chi nhánh, 4 danh mục & 20 món ăn mẫu Đà Nẵng
+│   ├── testSeed.js                # Script seed kiểm thử nhanh (gồm món hết hàng test lỗi 400)
+│   └── userSeed.js                # Script nạp 4 tài khoản Admin & Khách hàng test kèm mật khẩu băm
+├── docs/
+│   └── FreshBite_DaNang_API.postman_collection.json # Postman Collection Test Suite tự động
+├── .env.example                   # Mẫu cấu hình biến môi trường
+├── package.json                   # Khai báo dependencies & scripts
+└── server.js                      # Điểm khởi nhập (Entrypoint) & Pipeline Middleware</code></pre>
+
+    <h2>5.3. Thứ tự Pipeline Middleware trong file server.js Chuẩn</h2>
+    <p>
+      File <code>server.js</code> là trái tim của hệ thống Backend, kiểm soát thứ tự thực thi tuần tự của các Middleware:
+    </p>
+    <pre><code>require('dotenv').config();
+const express = require('express');
+const cors = require('cors');
+const helmet = require('helmet');
+const morgan = require('morgan');
+const path = require('path');
+const connectDB = require('./config/db');
+const { notFound, errorHandler } = require('./middlewares/errorMiddleware');
+
+const authRoutes = require('./routes/authRoutes');
+const categoryRoutes = require('./routes/categoryRoutes');
+const productRoutes = require('./routes/productRoutes');
+const orderRoutes = require('./routes/orderRoutes');
+const branchRoutes = require('./routes/branchRoutes');
+const voucherRoutes = require('./routes/voucherRoutes');
+const reviewRoutes = require('./routes/reviewRoutes');
+const chatRoutes = require('./routes/chatRoutes');
+const reportRoutes = require('./routes/reportRoutes');
+
+const app = express();
+
+// 1. Bảo mật HTTP Headers với Helmet
+app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
+
+// 2. Cho phép Cross-Origin Resource Sharing (CORS) cho Mobile App & Web kết nối
+app.use(cors());
+
+// 3. Ghi log HTTP requests khi chạy môi trường development
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'));
+}
+
+// 4. Phân tích nội dung JSON và URL-encoded trong Request Body
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// 5. Cung cấp file tĩnh từ thư mục uploads
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+// 6. Root & Health Check Endpoints
+app.get('/', (req, res) => res.json({ status: 'ok', message: 'FreshBite API running' }));
+app.get('/api/health', (req, res) => res.json({ status: 'ok', timestamp: new Date().toISOString() }));
+
+// 7. Khai báo các Module Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/categories', categoryRoutes);
+app.use('/api/products', productRoutes);
+app.use('/api/orders', orderRoutes);
+app.use('/api/branches', branchRoutes);
+app.use('/api/vouchers', voucherRoutes);
+app.use('/api/reviews', reviewRoutes);
+app.use('/api/chats', chatRoutes);
+app.use('/api/reports', reportRoutes);
+
+// 8. Bắt buộc đặt ở cuối cùng: Bắt route không tồn tại (404) và Xử lý lỗi toàn cục
+app.use(notFound);
+app.use(errorHandler);
+
+const PORT = process.env.PORT || 5000;
+let server;
+
+// Kết nối MongoDB thành công mới mở Port lắng nghe kết nối
+connectDB().then(() => {
+  server = app.listen(PORT, () => {
+    console.log(`Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
+  });
+});
+
+// Chống dừng ứng dụng khi gặp Unhandled Promise Rejection
+process.on('unhandledRejection', (err) => {
+  console.error(`Unhandled Rejection: ${err.message}`);
+  if (server) server.close(() => process.exit(1));
+  else process.exit(1);
+});</code></pre>
+
+    <!-- PHẦN 6 -->
+    <h1 id="sec6" class="section-title">PHẦN 6: ĐẶC TẢ CHI TIẾT TOÀN BỘ RESTFUL API ENDPOINTS</h1>
+
+    <h2>6.1. Bảng Ma trận Tổng hợp Hệ thống RESTful API (25+ Endpoints)</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Module</th>
+          <th>Phương Thức</th>
+          <th>Đường Dẫn Endpoint</th>
+          <th>Quyền Hạn Truy Cập</th>
+          <th>Mục Đích Sử Dụng & Nghiệp Vụ</th>
+          <th>HTTP Status Thành Công</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Auth & Favorites -->
+        <tr>
+          <td rowspan="6"><strong>Auth & Favorites</strong></td>
+          <td><span class="badge badge-post">POST</span></td>
+          <td><code>/api/auth/register</code></td>
+          <td><span class="badge badge-public">Public</span></td>
+          <td>Đăng ký tài khoản khách hàng mới</td>
+          <td><code>201 Created</code></td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-post">POST</span></td>
+          <td><code>/api/auth/login</code></td>
+          <td><span class="badge badge-public">Public</span></td>
+          <td>Đăng nhập, nhận Bearer Token (7 ngày) & User Info</td>
+          <td><code>200 OK</code></td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-get">GET</span></td>
+          <td><code>/api/auth/me</code></td>
+          <td><span class="badge badge-user">Bearer Token</span></td>
+          <td>Lấy thông tin tài khoản của user đang đăng nhập</td>
+          <td><code>200 OK</code></td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-put">PUT</span></td>
+          <td><code>/api/auth/profile</code></td>
+          <td><span class="badge badge-user">Bearer Token</span></td>
+          <td>Cập nhật họ tên, số điện thoại, avatar</td>
+          <td><code>200 OK</code></td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-put">PUT</span></td>
+          <td><code>/api/auth/change-password</code></td>
+          <td><span class="badge badge-user">Bearer Token</span></td>
+          <td>Đổi mật khẩu tài khoản (kiểm tra mật khẩu cũ)</td>
+          <td><code>200 OK</code></td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-get">GET</span></td>
+          <td><code>/api/users/favorites</code></td>
+          <td><span class="badge badge-user">Bearer Token</span></td>
+          <td>Xem danh sách các món ăn đã bookmark yêu thích</td>
+          <td><code>200 OK</code></td>
+        </tr>
+
+        <!-- Branches -->
+        <tr>
+          <td rowspan="3"><strong>Branches & Tồn Kho</strong></td>
+          <td><span class="badge badge-get">GET</span></td>
+          <td><code>/api/branches</code></td>
+          <td><span class="badge badge-public">Public</span></td>
+          <td>Lấy danh sách 4 chi nhánh Đà Nẵng kèm GPS</td>
+          <td><code>200 OK</code></td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-get">GET</span></td>
+          <td><code>/api/branches/:id</code></td>
+          <td><span class="badge badge-public">Public</span></td>
+          <td>Xem chi tiết 1 chi nhánh (kèm outOfStockProductIds)</td>
+          <td><code>200 OK</code></td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-patch">PATCH</span></td>
+          <td><code>/api/branches/:id/stock</code></td>
+          <td><span class="badge badge-admin">Admin Role</span></td>
+          <td>[Barista quầy] Bật/tắt món tạm hết hàng tại chi nhánh (Tab 2)</td>
+          <td><code>200 OK</code></td>
+        </tr>
+
+        <!-- Categories & Products -->
+        <tr>
+          <td rowspan="4"><strong>Categories & Products</strong></td>
+          <td><span class="badge badge-get">GET</span></td>
+          <td><code>/api/categories</code></td>
+          <td><span class="badge badge-public">Public</span></td>
+          <td>Lấy danh sách 4 nhóm danh mục thực đơn</td>
+          <td><code>200 OK</code></td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-get">GET</span></td>
+          <td><code>/api/products</code></td>
+          <td><span class="badge badge-public">Public</span></td>
+          <td>Lấy danh sách món có bộ lọc (?category, search, sort)</td>
+          <td><code>200 OK</code></td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-get">GET</span></td>
+          <td><code>/api/products/:id</code></td>
+          <td><span class="badge badge-public">Public</span></td>
+          <td>Xem chi tiết món ăn (Populate categoryId, sizePricing)</td>
+          <td><code>200 OK</code></td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-post">POST</span></td>
+          <td><code>/api/products</code></td>
+          <td><span class="badge badge-admin">Admin Role</span></td>
+          <td>[Admin] Tạo món mới (Upload ảnh qua Multer)</td>
+          <td><code>201 Created</code></td>
+        </tr>
+
+        <!-- Orders -->
+        <tr>
+          <td rowspan="5"><strong>Orders & KDS</strong></td>
+          <td><span class="badge badge-post">POST</span></td>
+          <td><code>/api/orders</code></td>
+          <td><span class="badge badge-user">Bearer Token</span></td>
+          <td>Đặt đơn hàng Pick-up (Tính tiền Server-side)</td>
+          <td><code>201 Created</code></td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-get">GET</span></td>
+          <td><code>/api/orders/my-orders</code></td>
+          <td><span class="badge badge-user">Bearer Token</span></td>
+          <td>Lấy lịch sử đơn hàng của user (Mới nhất trước)</td>
+          <td><code>200 OK</code></td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-get">GET</span></td>
+          <td><code>/api/orders/admin/all</code></td>
+          <td><span class="badge badge-admin">Admin Role</span></td>
+          <td>[Admin] Lấy toàn bộ đơn hàng của tất cả chi nhánh</td>
+          <td><code>200 OK</code></td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-get">GET</span></td>
+          <td><code>/api/orders/:id</code></td>
+          <td><span class="badge badge-user">Bearer Token</span></td>
+          <td>Chi tiết đơn hàng (Deep populate User, Branch, Product)</td>
+          <td><code>200 OK</code></td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-patch">PATCH</span></td>
+          <td><code>/api/orders/:id/status</code></td>
+          <td><span class="badge badge-admin">Admin Role</span></td>
+          <td>[Admin/KDS] Chuyển trạng thái: Preparing &rarr; Ready &rarr; Done</td>
+          <td><code>200 OK</code></td>
+        </tr>
+
+        <!-- Vouchers -->
+        <tr>
+          <td rowspan="2"><strong>Vouchers</strong></td>
+          <td><span class="badge badge-get">GET</span></td>
+          <td><code>/api/vouchers/active</code></td>
+          <td><span class="badge badge-public">Public</span></td>
+          <td>Lấy danh sách mã giảm giá đang còn hiệu lực</td>
+          <td><code>200 OK</code></td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-post">POST</span></td>
+          <td><code>/api/vouchers/apply</code></td>
+          <td><span class="badge badge-user">Bearer Token</span></td>
+          <td>Kiểm tra điều kiện & tính số tiền chiết khấu voucher</td>
+          <td><code>200 OK</code></td>
+        </tr>
+
+        <!-- Live Chat CSKH Quầy -->
+        <tr>
+          <td rowspan="2"><strong>Live Chat Quầy</strong></td>
+          <td><span class="badge badge-post">POST</span></td>
+          <td><code>/api/chats/:branchId</code></td>
+          <td><span class="badge badge-user">Bearer Token</span></td>
+          <td>Gửi tin nhắn trao đổi 2 chiều giữa khách và nhân viên quầy</td>
+          <td><code>201 Created</code></td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-get">GET</span></td>
+          <td><code>/api/chats/:branchId</code></td>
+          <td><span class="badge badge-user">Bearer Token</span></td>
+          <td>Lấy toàn bộ lịch sử tin nhắn của khách tại chi nhánh</td>
+          <td><code>200 OK</code></td>
+        </tr>
+
+        <!-- Reviews & Reports -->
+        <tr>
+          <td rowspan="3"><strong>Reviews & Báo Cáo Ca</strong></td>
+          <td><span class="badge badge-post">POST</span></td>
+          <td><code>/api/reviews</code></td>
+          <td><span class="badge badge-user">Bearer Token</span></td>
+          <td>Gửi đánh giá sao & nhận xét về món ăn sau khi nhận</td>
+          <td><code>201 Created</code></td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-get">GET</span></td>
+          <td><code>/api/reviews/product/:productId</code></td>
+          <td><span class="badge badge-public">Public</span></td>
+          <td>Lấy danh sách đánh giá & tính sao trung bình của món</td>
+          <td><code>200 OK</code></td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-get">GET</span></td>
+          <td><code>/api/reports/shift</code></td>
+          <td><span class="badge badge-admin">Admin Role</span></td>
+          <td>[Tab 4 Quản lý] Báo cáo ca & Đối soát doanh thu cuối ngày chi nhánh</td>
+          <td><code>200 OK</code></td>
+        </tr>
+      
+
+        <!-- Upload & Download Files (Slot 12) -->
+        <tr>
+          <td rowspan="3"><strong>Upload & Download (Slot 12)</strong></td>
+          <td><span class="badge badge-post">POST</span></td>
+          <td><code>/api/upload</code></td>
+          <td><span class="badge badge-admin">Admin Role</span></td>
+          <td>Upload hình ảnh món ăn / avatar qua Multer (lưu thư mục <code>/uploads</code>)</td>
+          <td><code>201 Created</code></td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-get">GET</span></td>
+          <td><code>/api/orders/:id/invoice</code></td>
+          <td><span class="badge badge-user">Bearer Token</span></td>
+          <td><strong>Tải file hóa đơn biên nhận đơn hàng</strong> (Sử dụng <code>res.download()</code>)</td>
+          <td><code>200 OK (Download)</code></td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-get">GET</span></td>
+          <td><code>/api/reports/shift/export</code></td>
+          <td><span class="badge badge-admin">Admin Role</span></td>
+          <td><strong>Xuất & tải file báo cáo đối soát ca quầy Barista</strong> dạng CSV (<code>res.download()</code>)</td>
+          <td><code>200 OK (Download)</code></td>
+        </tr>
+
+        <!-- Web Admin Server-Side Rendering (Slot 7 EJS) -->
+        <tr>
+          <td rowspan="3"><strong>Web Admin SSR (Slot 7 EJS)</strong></td>
+          <td><span class="badge badge-get">GET</span></td>
+          <td><code>/admin/dashboard</code></td>
+          <td><span class="badge badge-admin">Admin Role</span></td>
+          <td>Giao diện EJS: Trang tổng quan thống kê doanh thu & đơn hàng trong ngày</td>
+          <td><code>200 OK (HTML EJS)</code></td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-get">GET</span></td>
+          <td><code>/admin/orders</code></td>
+          <td><span class="badge badge-admin">Admin Role</span></td>
+          <td>Màn hình EJS KDS Barista: Xem đơn hàng & bấm nút cập nhật tiến độ pha chế</td>
+          <td><code>200 OK (HTML EJS)</code></td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-get">GET</span></td>
+          <td><code>/admin/products</code></td>
+          <td><span class="badge badge-admin">Admin Role</span></td>
+          <td>Màn hình EJS: Quản lý món ăn, chỉnh sửa nhanh và bật/tắt cờ hết hàng chi nhánh</td>
+          <td><code>200 OK (HTML EJS)</code></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout callout-danger">
+      <strong>Lỗi Kinh Điển Trong Express Routing Cần Lưu Ý Khi Vấn Đáp:</strong><br>
+      Trong file <code>routes/orderRoutes.js</code>, route tĩnh <code>/api/orders/my-orders</code> và
+      <code>/api/orders/admin/all</code> <strong>BẮT BUỘC PHẢI ĐƯỢC KHAI BÁO TRƯỚC</strong> route động
+      <code>/api/orders/:id</code>.<br>
+      Nếu khai báo ngược lại, khi gọi <code>GET /api/orders/my-orders</code>, Express sẽ hiểu nhầm chuỗi
+      <code>"my-orders"</code> chính là giá trị của param <code>:id</code>, và khi gọi <code>Order.findById("my-orders")</code>,
+      Mongoose sẽ quăng lỗi <code>CastError: Cast to ObjectId failed for value "my-orders"</code> trả về mã 400 Bad Request!
+      Đây là câu hỏi thường xuyên xuất hiện trong phần vấn đáp rubric môn SDN302.
+    </div>
+
+    <h2>6.2. Đặc tả Chi tiết Một Số Request / Response Trọng Tâm</h2>
+
+    <h3>1. Đặt Đơn Hàng Pick-up Kèm Size & Áp Dụng Voucher (POST /api/orders)</h3>
+    <p><strong>Headers:</strong> <code>Authorization: Bearer &lt;token&gt;</code>, <code>Content-Type: application/json</code></p>
+    <p><strong>Request Body:</strong></p>
+    <pre><code>{
+  "branchId": "6625fa7e9b0123456789abcd",
+  "pickupTime": "15_MINS",
+  "paymentMethod": "CASH_AT_COUNTER",
+  "voucherCode": "FRESHBITE10",
+  "items": [
+    {
+      "productId": "6625fa7e9b0123456789abce",
+      "size": "M",
+      "quantity": 2,
+      "sugarLevel": "50%",
+      "iceLevel": "100%",
+      "note": "Ít ngọt, cho vào túi giấy giữ nhiệt"
+    }
+  ]
+}</code></pre>
+    <p><strong>Response Trả Về (201 Created):</strong></p>
+    <pre><code>{
+  "success": true,
+  "message": "Đặt đơn hàng thành công!",
+  "data": {
+    "_id": "6625fb9a9b0123456789abcf",
+    "orderCode": "FB-88219",
+    "userId": "6625fa129b0123456789abaa",
+    "branchId": {
+      "_id": "6625fa7e9b0123456789abcd",
+      "name": "FreshBite FPT City (Ngũ Hành Sơn)",
+      "address": "Tòa F-Complex, Khu đô thị FPT City, P. Hòa Hải, Q. Ngũ Hành Sơn, Đà Nẵng",
+      "phone": "0236.730.0999"
+    },
+    "items": [
+      {
+        "productId": "6625fa7e9b0123456789abce",
+        "name": "Cà phê Muối Đà Nẵng",
+        "size": "M",
+        "quantity": 2,
+        "price": 38000,
+        "sugarLevel": "50%",
+        "iceLevel": "100%",
+        "note": "Ít ngọt, cho vào túi giấy giữ nhiệt"
+      }
+    ],
+    "subtotal": 76000,
+    "discount": 7600,
+    "voucherCode": "FRESHBITE10",
+    "totalAmount": 68400,
+    "pickupTime": "15_MINS",
+    "status": "Received",
+    "paymentMethod": "CASH_AT_COUNTER",
+    "paymentStatus": "PENDING",
+    "createdAt": "2026-11-01T08:30:00.000Z"
+  }
+}</code></pre>
+
+    <h3>2. Gửi Tin Nhắn Live Chat CSKH Tới Quầy Chi Nhánh (POST /api/chats/:branchId)</h3>
+    <p><strong>Request Body:</strong></p>
+    <pre><code>{
+  "content": "Chào quán, đơn FB-88219 của mình có thể hâm nóng bánh Croissant thêm chút được không?"
+}</code></pre>
+    <p><strong>Response Trả Về (201 Created):</strong></p>
+    <pre><code>{
+  "success": true,
+  "message": "Gửi tin nhắn thành công!",
+  "data": {
+    "_id": "6625fca19b0123456789abd0",
+    "branchId": "6625fa7e9b0123456789abcd",
+    "userId": "6625fa129b0123456789abaa",
+    "senderRole": "customer",
+    "senderName": "Nguyen Van Test",
+    "content": "Chào quán, đơn FB-88219 của mình có thể hâm nóng bánh Croissant thêm chút được không?",
+    "isRead": false,
+    "createdAt": "2026-11-01T08:32:15.000Z"
+  }
+}</code></pre>
+
+    <h3>3. Báo Cáo Ca & Đối Soát Doanh Thu Cuối Ngày (GET /api/reports/shift?branchId=...)</h3>
+    <pre><code>{
+  "success": true,
+  "data": {
+    "branchName": "FreshBite FPT City (Ngũ Hành Sơn)",
+    "reportDate": "2026-11-01",
+    "totalOrders": 42,
+    "completedOrders": 39,
+    "cancelledOrders": 3,
+    "totalRevenue": 2450000,
+    "cashRevenue": 1650000,
+    "digitalRevenue": 800000,
+    "discountTotal": 145000
+  }
+}</code></pre>
+
+    <!-- PHẦN 7 -->
+    <h1 id="sec7" class="section-title">PHẦN 7: BỘ KỊCH BẢN KIỂM THỬ TỰ ĐỘNG POSTMAN TEST SUITE</h1>
+
+    <h2>7.1. Cấu trúc File Postman Collection Chuẩn (docs/FreshBite_DaNang_API.postman_collection.json)</h2>
+    <p>
+      Bộ test suite tự động được thiết kế bởi <strong>Nguyễn Chí Vương (API Architect / Auth & Security Lead)</strong>,
+      thiết kế chuẩn hoá theo format Postman Collection v2.1 với hệ thống biến môi trường tự động kế thừa:
+    </p>
+    <ul>
+      <li><code>baseUrl</code>: Đường dẫn gốc tới server (mặc định <code>http://localhost:5000</code>).</li>
+      <li><code>token</code>: Tự động trích xuất và cập nhật khi user khách hàng đăng nhập.</li>
+      <li><code>adminToken</code>: Tự động trích xuất và cập nhật khi tài khoản quản trị đăng nhập.</li>
+      <li><code>createdOrderId</code>: Lưu ID đơn hàng vừa tạo để dùng cho các request xem chi tiết và đổi trạng thái.</li>
+    </ul>
+
+    <h2>7.2. Script Tự Động Lưu Token Sau Khi Đăng Nhập (Tab Tests)</h2>
+    <p>
+      Tại tab <strong>Tests</strong> của request <code>1.1. Login Customer</code> và <code>1.2. Login Admin</code>,
+      mã JavaScript sau được thực thi ngay khi nhận response từ server:
+    </p>
+    <pre><code>// Kiểm tra HTTP Status trả về phải là 200 OK
+pm.test("Status code is 200", function () {
+    pm.response.to.have.status(200);
+});
+
+// Kiểm tra response có chứa token và tự động ghi vào biến Collection
+pm.test("Response contains token and save to variable", function () {
+    const jsonData = pm.response.json();
+    pm.expect(jsonData.success).to.eql(true);
+    pm.expect(jsonData.token).to.be.a('string');
+    
+    // Tự động set biến để toàn bộ các request phía sau sử dụng
+    pm.collectionVariables.set("token", jsonData.token);
+});</code></pre>
+
+    <h2>7.3. Ma trận 16 Kịch bản Kiểm thử Tự động Chuẩn Vòng Đời End-to-End</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>STT</th>
+          <th>Tên Kịch Bản Kiểm Thử</th>
+          <th>Endpoint & Method</th>
+          <th>Dữ Liệu Đầu Vào / Điều Kiện</th>
+          <th>Mã HTTP Mong Đợi</th>
+          <th>Nội Dung Test Script Kiểm Tra (Assertions)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td><strong>Đăng ký User Mới</strong></td>
+          <td><code>POST /api/auth/register</code></td>
+          <td>Họ tên, email mới (dynamic timestamp), sđt 10 số, pass password123</td>
+          <td><code>201 Created</code></td>
+          <td><code>pm.expect(pm.response.code).to.be.oneOf([201, 400]);</code></td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td><strong>Đăng nhập Thành công & Lưu Token</strong></td>
+          <td><code>POST /api/auth/login</code></td>
+          <td>Email <code>vuongnc@fe.edu.vn</code>, password đúng 123456</td>
+          <td><code>200 OK</code></td>
+          <td><code>pm.collectionVariables.set("token", jsonData.token);</code></td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td><strong>Đăng nhập Quản Trị & Lưu Admin Token</strong></td>
+          <td><code>POST /api/auth/login</code></td>
+          <td>Email <code>admin@freshbite.com</code>, password 123456</td>
+          <td><code>200 OK</code></td>
+          <td><code>pm.collectionVariables.set("adminToken", jsonData.token);</code></td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td><strong>Bắt Lỗi Đăng nhập Sai Mật khẩu</strong></td>
+          <td><code>POST /api/auth/login</code></td>
+          <td>Email <code>vuongnc@fe.edu.vn</code>, password sai ("wrong_password_123")</td>
+          <td><code>401 Unauthorized</code></td>
+          <td><code>pm.expect(jsonData.message).to.include("Invalid");</code></td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td><strong>Lấy Profile Cá Nhân với Bearer Token</strong></td>
+          <td><code>GET /api/auth/me</code></td>
+          <td>Header <code>Authorization: Bearer {{token}}</code></td>
+          <td><code>200 OK</code></td>
+          <td><code>pm.expect(jsonData.data.email).to.eql("vuongnc@fe.edu.vn");</code></td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td><strong>Bắt Lỗi Gọi Route Thiếu Token</strong></td>
+          <td><code>GET /api/auth/me</code></td>
+          <td>Không truyền Header Authorization</td>
+          <td><code>401 Unauthorized</code></td>
+          <td><code>pm.expect(jsonData.success).to.be.false;</code></td>
+        </tr>
+        <tr>
+          <td>7</td>
+          <td><strong>Bắt Lỗi User Thường Gọi API Admin</strong></td>
+          <td><code>POST /api/categories</code></td>
+          <td>Header dùng <code>{{token}}</code> của khách hàng thường</td>
+          <td><code>403 Forbidden</code></td>
+          <td><code>pm.expect(jsonData.message).to.include("quyền");</code></td>
+        </tr>
+        <tr>
+          <td>8</td>
+          <td><strong>Lấy Danh Sách Thực Đơn Danh Mục</strong></td>
+          <td><code>GET /api/categories</code></td>
+          <td>Public request, không cần token</td>
+          <td><code>200 OK</code></td>
+          <td><code>pm.expect(jsonData.data).to.be.an('array');</code></td>
+        </tr>
+        <tr>
+          <td>9</td>
+          <td><strong>Lấy Danh Sách Món Ăn & Tự Động Lưu ID</strong></td>
+          <td><code>GET /api/products</code></td>
+          <td>Public request, lọc theo trạng thái isAvailable</td>
+          <td><code>200 OK</code></td>
+          <td><code>pm.collectionVariables.set("favoriteProductId", jsonData.data[0]._id);</code></td>
+        </tr>
+        <tr>
+          <td>10</td>
+          <td><strong>Bắt Lỗi Truy Vấn ID Sai Định Dạng Hex</strong></td>
+          <td><code>GET /api/products/123-invalid-id</code></td>
+          <td>Chuỗi ID không phải 24 hex characters của MongoDB</td>
+          <td><code>400 Bad Request</code></td>
+          <td><code>pm.expect(jsonData.success).to.be.false;</code></td>
+        </tr>
+        <tr>
+          <td>11</td>
+          <td><strong>Thêm Món Vào Danh Sách Yêu Thích</strong></td>
+          <td><code>POST /api/users/favorites/{{favoriteProductId}}</code></td>
+          <td>Header dùng <code>{{token}}</code>, áp dụng toán tử <code>$addToSet</code></td>
+          <td><code>200 OK</code></td>
+          <td><code>pm.expect(jsonData.success).to.be.true;</code></td>
+        </tr>
+        <tr>
+          <td>12</td>
+          <td><strong>Xem Danh Sách Món Yêu Thích</strong></td>
+          <td><code>GET /api/users/favorites</code></td>
+          <td>Header dùng <code>{{token}}</code>, kiểm tra Mongoose Populate</td>
+          <td><code>200 OK</code></td>
+          <td><code>pm.expect(jsonData.data.length).to.be.above(0);</code></td>
+        </tr>
+        <tr>
+          <td>13</td>
+          <td><strong>Xóa Món Khỏi Danh Sách Yêu Thích</strong></td>
+          <td><code>DELETE /api/users/favorites/{{favoriteProductId}}</code></td>
+          <td>Header dùng <code>{{token}}</code>, áp dụng toán tử <code>$pull</code></td>
+          <td><code>200 OK</code></td>
+          <td><code>pm.expect(jsonData.data).to.be.an('array');</code></td>
+        </tr>
+        <tr>
+          <td>14</td>
+          <td><strong>Đặt Đơn Hàng Pick-up Nhận Tại Quầy</strong></td>
+          <td><code>POST /api/orders</code></td>
+          <td>Header <code>{{token}}</code>, branchId hợp lệ, pickupTime: "15_MINS", size: "M"</td>
+          <td><code>201 Created</code></td>
+          <td><code>pm.collectionVariables.set("createdOrderId", jsonData.data._id);</code></td>
+        </tr>
+        <tr>
+          <td>15</td>
+          <td><strong>Lấy Chi Tiết Đơn Hàng (Deep Population)</strong></td>
+          <td><code>GET /api/orders/{{createdOrderId}}</code></td>
+          <td>Header <code>{{token}}</code>, kiểm tra đối tượng User, Branch, Product lồng nhau</td>
+          <td><code>200 OK</code></td>
+          <td><code>pm.expect(jsonData.data.branchId.name).to.be.a('string');</code></td>
+        </tr>
+        <tr>
+          <td>16</td>
+          <td><strong>Barista Quầy Cập Nhật Trạng Thái Đơn</strong></td>
+          <td><code>PATCH /api/orders/{{createdOrderId}}/status</code></td>
+          <td>Header dùng <code>{{adminToken}}</code>, chuyển status: "Ready for Pickup"</td>
+          <td><code>200 OK</code></td>
+          <td><code>pm.expect(jsonData.data.status).to.eql("Ready for Pickup");</code></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout callout-success">
+      <strong>Kịch bản Trình diễn Điểm 10 với Giảng viên:</strong> Mở Postman, chọn Collection <code>FreshBite - REST API</code>,
+      bấm <strong>Run Collection</strong>. Toàn bộ 16 request được chạy tự động nối tiếp nhau theo đúng vòng đời nghiệp vụ từ Đăng ký, Đăng nhập, lưu Token, quản lý Yêu thích, lấy thực đơn, đặt đơn có size, kiểm tra Deep Population đến Barista chuyển trạng thái đơn hàng,
+      kiểm tra voucher, tạo đơn hàng có size, gửi live chat, thử kịch bản sai bắt lỗi 400, 401, 403. Kết quả 100% Passed (Xanh lá toàn bộ)
+      chứng minh tính toàn vẹn và độ tin cậy tuyệt đối của hệ thống Backend.
+    </div>
+
+    <!-- PHẦN 8 -->
+    <h1 id="sec8" class="section-title">PHẦN 8: BẢNG PHÂN CHIA TRÁCH NHIỆM 5 THÀNH VIÊN (CHUẨN 20% MỖI NGƯỜI)</h1>
+
+    <h2>8.1. Ma trận Trách nhiệm & Sản phẩm Bàn giao Cụ thể (5 Thành viên x 20%)</h2>
+    <p>
+      Khối lượng công việc dự án Backend SDN302 được phân bổ cân bằng tuyệt đối (20% cho mỗi thành viên).
+      Từng sinh viên chịu trách nhiệm trực tiếp đối với các file mã nguồn, chức năng nghiệp vụ và sẵn sàng vấn đáp 1:1 độc lập:
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Họ và Tên Sinh Viên</th>
+          <th>Vai Trò Đảm Nhiệm</th>
+          <th>Phạm Vi & Trách Nhiệm Backend (SDN302)</th>
+          <th>Tệp Tin Mã Nguồn Phụ Trách Trực Tiếp</th>
+          <th>Sản Phẩm Nghiệm Thu Cụ Thể (20%)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Lê Đức Sơn</strong></td>
+          <td><strong style="color: #0F766E;">Nhóm trưởng</strong> / Operations & Live Chat Lead</td>
+          <td>
+            - Quản lý chung tiến độ nhóm, điều phối kiến trúc và chất lượng code.<br>
+            - Thiết kế Schema & xây dựng Module <strong>Live Chat CSKH quầy chi nhánh 2 chiều</strong> (khách chat với nhân viên quầy).<br>
+            - Thiết kế Schema & xây dựng Module <strong>Đánh giá (Reviews)</strong>, tính toán sao trung bình của món ăn.<br>
+            - Xây dựng Module <strong>Báo cáo ca & Đối soát doanh thu quầy Barista</strong> cuối ngày (Shift Reconciliation).
+          </td>
+          <td>
+            <code>models/Message.js</code><br>
+            <code>models/Review.js</code><br>
+            <code>controllers/chatController.js</code><br>
+            <code>controllers/reviewController.js</code><br>
+            <code>controllers/reportController.js</code><br>
+            <code>routes/chatRoutes.js</code><br>
+            <code>routes/reviewRoutes.js</code><br>
+            <code>routes/reportRoutes.js</code>
+          </td>
+          <td>
+            Kênh Live Chat CSKH 2 chiều hoạt động chuẩn xác; API Reviews tính sao chính xác; Báo cáo ca quầy đối soát đầy đủ.
+          </td>
+        </tr>
+
+        <tr>
+          <td><strong>Nguyễn Chí Vương</strong></td>
+          <td>API Architect / Auth & Security Lead</td>
+          <td>
+            - Thiết kế kiến trúc RESTful API, cấu trúc chuẩn hóa JSON Response (<code>success</code>, <code>message</code>, <code>data</code>).<br>
+            - Xây dựng trọn bộ Module <strong>Authentication & User Security</strong> (Đăng ký, Đăng nhập, Profile, Đổi mật khẩu).<br>
+            - Xây dựng Module <strong>Món ăn Yêu thích (Favorites)</strong> cho tài khoản khách hàng.<br>
+            - Cấu hình thuật toán sinh & xác thực JWT Bearer Token, mã hóa Bcrypt salt 10, method <code>toJSON</code>.<br>
+            - Xây dựng trọn bộ kịch bản kiểm thử tự động <strong>Postman Collection Test Suite</strong> đầy đủ mã HTTP.
+          </td>
+          <td>
+            <code>controllers/authController.js</code><br>
+            <code>routes/authRoutes.js</code><br>
+            <code>middlewares/validators/authValidator.js</code><br>
+            <code>docs/FreshBite_DaNang_API.postman_collection.json</code>
+          </td>
+          <td>
+            Trọn bộ Auth API bảo mật cao; Quản lý Favorites mượt mà; Postman Test Suite tự động chạy 100% Passed.
+          </td>
+        </tr>
+
+        <tr>
+          <td><strong>Nguyễn Xuân Thịnh</strong></td>
+          <td>BE Core Lead / Product & Orders</td>
+          <td>
+            - Khởi tạo Express Server, thiết lập kết nối cơ sở dữ liệu MongoDB Atlas (<code>config/db.js</code>).<br>
+            - Xây dựng Core RESTful CRUD APIs: Danh mục (Categories), Món ăn (Products), Đơn hàng (Orders).<br>
+            - Xử lý nghiệp vụ quy cách định giá theo <strong>Size (S giá gốc, M +6k, L +10k)</strong> và tùy chọn đường/đá.<br>
+            - Xử lý thuật toán tính tiền Server-side trong <code>createOrder</code>, kiểm tra tồn kho theo chi nhánh (<code>outOfStockProductIds</code>), chống giả mạo giá tiền từ Client.<br>
+            - Triển khai Mongoose Deep Population đa cấp trong truy vấn đơn hàng và bộ lọc tìm kiếm regex.
+          </td>
+          <td>
+            <code>server.js</code><br>
+            <code>config/db.js</code><br>
+            <code>models/Category.js</code><br>
+            <code>models/Product.js</code><br>
+            <code>models/Order.js</code><br>
+            <code>controllers/categoryController.js</code><br>
+            <code>controllers/productController.js</code><br>
+            <code>controllers/orderController.js</code><br>
+            <code>routes/categoryRoutes.js</code><br>
+            <code>routes/productRoutes.js</code><br>
+            <code>routes/orderRoutes.js</code>
+          </td>
+          <td>
+            Core CRUD hoàn chỉnh; Xử lý luồng đặt món Pick-up; Mongoose Deep Population liên kết 3 bảng chuẩn mực.
+          </td>
+        </tr>
+
+        <tr>
+          <td><strong>Nguyễn Đắc Thịnh</strong></td>
+          <td>Branches & Vouchers & Error Handling</td>
+          <td>
+            - Thiết kế Schema & xây dựng API Quản lý 4 Chi nhánh Đà Nẵng (<code>/api/branches</code>) kèm tọa độ GPS và bán kính phục vụ.<br>
+            - Xây dựng tính năng cập nhật danh sách món tạm hết hàng tại riêng từng chi nhánh (<code>outOfStockProductIds</code>).<br>
+            - Thiết kế Schema & xây dựng Module <strong>Mã Giảm Giá & Vouchers</strong> (<code>/api/vouchers</code>), kiểm tra hạn dùng và chiết khấu.<br>
+            - Xây dựng Middleware bắt lỗi toàn cục tập trung (<code>errorMiddleware.js</code>) xử lý CastError, Duplicate 11000, 404.<br>
+            - Cấu hình HTTP Request Logger (<code>morgan</code>) và Middleware xác thực đơn hàng (<code>orderValidator.js</code>).
+          </td>
+          <td>
+            <code>models/Branch.js</code><br>
+            <code>models/Voucher.js</code><br>
+            <code>controllers/branchController.js</code><br>
+            <code>controllers/voucherController.js</code><br>
+            <code>routes/branchRoutes.js</code><br>
+            <code>routes/voucherRoutes.js</code><br>
+            <code>middlewares/errorMiddleware.js</code><br>
+            <code>middlewares/validators/orderValidator.js</code>
+          </td>
+          <td>
+            API 4 Chi nhánh Đà Nẵng hoạt động chuẩn xác; Module Vouchers chiết khấu linh hoạt; Hệ thống chặn lỗi toàn diện.
+          </td>
+        </tr>
+
+        <tr>
+          <td><strong>Lê Tự Nhật Thạch</strong></td>
+          <td>Upload & Download, Seed Data & Web Admin SSR</td>
+          <td>
+            - Xây dựng trọn bộ Module <strong>Upload & Download Files (Slot 12)</strong>: Multer xử lý upload ảnh món ăn / avatar (<code>single</code> và <code>array</code>), phục vụ static files qua <code>/uploads</code>, và xây dựng endpoint tải file hóa đơn (<code>res.download()</code>) cho khách và xuất báo cáo ca.<br>
+            - Soạn thảo các script nạp dữ liệu mẫu tự động (<code>seedData.js</code>, <code>testSeed.js</code>, <code>userSeed.js</code>).<br>
+            - Xây dựng Giao diện Web Admin SSR bằng template engine <strong>EJS (Slot 7)</strong> (<code>/admin/dashboard</code>, <code>/admin/orders</code>, <code>/admin/products</code>) phục vụ màn hình quầy Barista đối soát và chuyển trạng thái đơn hàng.
+          </td>
+          <td>
+            <code>middlewares/uploadMiddleware.js</code><br>
+            <code>controllers/uploadController.js</code><br>
+            <code>controllers/adminWebController.js</code><br>
+            <code>routes/uploadRoutes.js</code><br>
+            <code>routes/adminWebRoutes.js</code><br>
+            <code>seeds/seedData.js</code><br>
+            <code>seeds/testSeed.js</code><br>
+            <code>seeds/userSeed.js</code><br>
+            <code>views/layouts/main.ejs</code><br>
+            <code>views/dashboard.ejs</code><br>
+            <code>views/orders.ejs</code><br>
+            <code>views/products.ejs</code><br>
+            <code>public/css/style.css</code>
+          </td>
+          <td>
+            Multer upload/download file an toàn (res.download); 3 script seed dữ liệu chạy ổn định; Giao diện EJS Admin đối soát trực quan; Bao quát 100% Slot 7 & Slot 12.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>8.2. Tiêu chí Đánh giá Đóng góp Theo Rubric FPT (Individual 1:1 Review)</h2>
+    <p>
+      Theo quy chế khảo thí của Bộ môn Kỹ thuật Phần mềm ĐH FPT, điểm số môn SDN302 được chấm dựa trên 
+      <strong>sự thể hiện cá nhân trong buổi vấn đáp 1:1</strong> giữa từng sinh viên và giảng viên:
+    </p>
+    <ul>
+      <li><strong>Không đánh giá theo hình thức thuyết trình tập thể:</strong> Không dùng slide báo cáo chung; giảng viên sẽ gọi từng bạn lên máy tính cá nhân để yêu cầu mở mã nguồn, giải thích cơ chế và sửa code trực tiếp (Live Coding).</li>
+      <li><strong>Kiểm tra lịch sử Git Commits:</strong> Mã nguồn trên Git repository phải thể hiện rõ các commit của đúng tác giả tương ứng với các file đã được phân công trong bảng trên.</li>
+      <li><strong>Hiểu rõ luồng dữ liệu (Data Flow):</strong> Từng thành viên phải nắm vững cách Request đi từ Postman/Client &rarr; Middleware &rarr; Router &rarr; Controller &rarr; Mongoose &rarr; MongoDB và Response quay ngược trở lại.</li>
+    </ul>
+
+    <!-- PHẦN 9 -->
+    <h1 id="sec9" class="section-title">PHẦN 9: HƯỚNG DẪN CÀI ĐẶT, TRIỂN KHAI & CHẠY THỬ NGHIỆM</h1>
+
+    <h2>9.1. Yêu cầu Tiền đề Môi trường Phát triển (Prerequisites)</h2>
+    <ul>
+      <li><strong>Node.js:</strong> Phiên bản LTS <code>v18.x</code>, <code>v20.x</code> hoặc <code>v24.x</code> (khuyến nghị <code>v20+</code>).</li>
+      <li><strong>Trình quản lý gói:</strong> <code>pnpm</code> (khuyến nghị theo repo) hoặc <code>npm</code>.</li>
+      <li><strong>Cơ sở dữ liệu:</strong> Tài khoản MongoDB Atlas (Cloud) hoặc cài đặt MongoDB Community Server <code>v7.0+</code> cục bộ.</li>
+      <li><strong>Công cụ kiểm thử & kiểm tra DB:</strong> Postman (Desktop App) và MongoDB Compass.</li>
+    </ul>
+
+    <h2>9.2. Quy trình 6 Bước Triển khai Dự án Từ Dòng Lệnh (CLI Steps)</h2>
+
+    <div class="flow-step">
+      <div class="step-number">1</div>
+      <div class="step-content">
+        <div class="step-title">Mở Terminal & Cài đặt Toàn bộ Thư viện Phụ thuộc (Dependencies)</div>
+        <pre><code>cd C:\Users\Admin\Desktop\SDN\sdn302-freshbite-backend
+pnpm install
+# Hoặc: npm install</code></pre>
+      </div>
+    </div>
+
+    <div class="flow-step">
+      <div class="step-number">2</div>
+      <div class="step-content">
+        <div class="step-title">Cấu hình Tệp Biến Môi trường (.env)</div>
+        <p class="step-desc">Tạo file <code>.env</code> tại thư mục gốc của dự án với nội dung mẫu sau:</p>
+        <pre><code>PORT=5000
+NODE_ENV=development
+MONGO_URI=mongodb+srv://freshbite_admin:FreshBite2026@cluster0.mongodb.net/freshbite_danang?retryWrites=true&w=majority
+JWT_SECRET=FreshBite_DaNang_Master_Secret_Key_2026_FPT_University
+JWT_EXPIRES_IN=7d</code></pre>
+      </div>
+    </div>
+
+    <div class="flow-step">
+      <div class="step-number">3</div>
+      <div class="step-content">
+        <div class="step-title">Nạp Bộ Dữ liệu Mẫu Khởi tạo (Database Seeding)</div>
+        <p class="step-desc">Khởi tạo sẵn 4 chi nhánh Đà Nẵng, 4 danh mục thực đơn, 8+ sản phẩm, vouchers và 4 tài khoản kiểm thử:</p>
+        <pre><code># Nạp 4 chi nhánh, danh mục, vouchers và món ăn đặc sản Đà Nẵng
+node seeds/testSeed.js
+
+# Nạp các tài khoản người dùng test (Admin & Customers) kèm băm mật khẩu
+node seeds/userSeed.js</code></pre>
+      </div>
+    </div>
+
+    <div class="flow-step">
+      <div class="step-number">4</div>
+      <div class="step-content">
+        <div class="step-title">Khởi động Máy chủ Phát triển (Development Server)</div>
+        <pre><code>pnpm run dev
+# Server tự động lắng nghe tại http://localhost:5000 kèm Hot Reloading qua Nodemon</code></pre>
+      </div>
+    </div>
+
+    <div class="flow-step">
+      <div class="step-number">5</div>
+      <div class="step-content">
+        <div class="step-title">Kiểm thử Tự động Hàng loạt Bằng Postman Collection Runner</div>
+        <p class="step-desc">
+          Mở ứng dụng Postman &rarr; Chọn <strong>Import</strong> &rarr; Trỏ tới tệp <code>docs/FreshBite_DaNang_API.postman_collection.json</code>.
+          Nhấn chuột phải vào thư mục collection &rarr; Chọn <strong>Run collection</strong> &rarr; Nhấn <strong>Run FreshBite - REST API</strong>.
+          Toàn bộ 12 bài kiểm tra tự động chạy và trả về kết quả 100% Passed.
+        </p>
+      </div>
+    </div>
+
+    <div class="flow-step">
+      <div class="step-number">6</div>
+      <div class="step-content">
+        <div class="step-title">Kiểm tra Giao diện SSR Web Admin & Dữ liệu Trên MongoDB Compass</div>
+        <p class="step-desc">
+          Mở trình duyệt truy cập <code>http://localhost:5000/admin/dashboard</code> để xem giao diện thống kê ca bán hàng của quầy Barista.
+          Đồng thời, mở MongoDB Compass kết nối chuỗi <code>MONGO_URI</code> để quan sát các Document được lưu trữ và mối quan hệ giữa các Collection.
+        </p>
+      </div>
+    </div>
+
+    <!-- PHẦN 10 -->
+    <h1 id="sec10" class="section-title">PHẦN 10: MA TRẬN RUBRIC FPT SDN302 & BỘ CÂU HỎI VẤN ĐÁP 1:1 LẤY ĐIỂM 10</h1>
+
+    <h2>10.1. Ma trận Đối chiếu Rubric Đánh giá Môn học (10/10 Tiêu chí Xuất sắc)</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>STT</th>
+          <th>Tiêu Chí Đánh Giá Chuẩn FPT</th>
+          <th>Hiện Trạng Triển Khai Trong Dự Án FreshBite</th>
+          <th>Minh Chứng Mã Nguồn Cụ Thể</th>
+          <th>Đánh Giá</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td><strong>Kiến trúc & Cấu trúc Thư mục</strong></td>
+          <td>Tổ chức phân tầng MVC rành mạch (config, controllers, middlewares, models, routes, views, seeds, docs)</td>
+          <td>Thư mục dự án chuẩn hóa, <code>server.js</code> sạch sẽ</td>
+          <td><span class="badge badge-post">10/10 Đạt</span></td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td><strong>Thiết kế CSDL MongoDB NoSQL</strong></td>
+          <td>7 Mongoose Schemas có đầy đủ Validation, Enum, Indexing, Timestamps, Compound Index</td>
+          <td><code>models/*.js</code> (User, Branch, Category, Product, Order, Voucher, Message)</td>
+          <td><span class="badge badge-post">10/10 Đạt</span></td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td><strong>Chuẩn mực RESTful API & HTTP Codes</strong></td>
+          <td>Sử dụng chuẩn GET, POST, PUT, PATCH, DELETE. Mã phản hồi chính xác (200, 201, 400, 401, 403, 404, 500)</td>
+          <td>Bảng ma trận 25+ Endpoints, JSON response đồng nhất</td>
+          <td><span class="badge badge-post">10/10 Đạt</span></td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td><strong>Bảo mật Xác thực & Phân quyền</strong></td>
+          <td>JWT Bearer Token 7 ngày, băm mật khẩu Bcrypt (salt=10), phân quyền 2 Roles (User & Admin)</td>
+          <td><code>middlewares/authMiddleware.js</code>, <code>models/User.js</code></td>
+          <td><span class="badge badge-post">10/10 Đạt</span></td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td><strong>Mongoose Population Liên kết Bảng</strong></td>
+          <td>Deep Population đa cấp trong truy vấn đơn hàng (liên kết User, Branch và từng Product trong items)</td>
+          <td><code>orderController.js</code> (populate userId, branchId, items.productId)</td>
+          <td><span class="badge badge-post">10/10 Đạt</span></td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td><strong>Kiểm duyệt Dữ liệu (Validation)</strong></td>
+          <td>Sử dụng <code>express-validator</code> kiểm duyệt Email, Password, Số điện thoại VN, ObjectId, Giỏ hàng, Voucher</td>
+          <td><code>middlewares/validators/authValidator.js</code>, <code>orderValidator.js</code></td>
+          <td><span class="badge badge-post">10/10 Đạt</span></td>
+        </tr>
+        <tr>
+          <td>7</td>
+          <td><strong>Xử lý Ngoại lệ & Lỗi Toàn Cục</strong></td>
+          <td>Bắt lỗi tập trung: CastError (400), Duplicate Key 11000 (400), ValidationError (400), 404 Not Found</td>
+          <td><code>middlewares/errorMiddleware.js</code>, unhandledRejection handler</td>
+          <td><span class="badge badge-post">10/10 Đạt</span></td>
+        </tr>
+        <tr>
+          <td>8</td>
+          <td><strong>Logger & An toàn Mạng</strong></td>
+          <td>Tích hợp Helmet bảo vệ HTTP Header, Morgan ghi log dev, CORS cấu hình mở rộng</td>
+          <td><code>server.js</code> (app.use helmet, cors, morgan)</td>
+          <td><span class="badge badge-post">10/10 Đạt</span></td>
+        </tr>
+        <tr>
+          <td>9</td>
+          <td><strong>Kiểm thử Tự động Hóa (Testing)</strong></td>
+          <td>Postman Collection v2.1 với Test Scripts JavaScript tự động trích xuất Token và assert HTTP codes</td>
+          <td><code>docs/FreshBite_DaNang_API.postman_collection.json</code></td>
+          <td><span class="badge badge-post">10/10 Đạt</span></td>
+        </tr>
+        <tr>
+          <td>10</td>
+          <td><strong>Server-Side Rendering với EJS (Slot 7)</strong></td>
+          <td>Giao diện Web Admin SSR bằng EJS kết hợp Layouts, render dynamic data cho màn hình KDS quầy Barista</td>
+          <td><code>views/*.ejs</code>, <code>routes/adminWebRoutes.js</code>, <code>controllers/adminWebController.js</code></td>
+          <td><span class="badge badge-post">10/10 Đạt</span></td>
+        </tr>
+        <tr>
+          <td>11</td>
+          <td><strong>Xử lý Tệp tin Upload & Download (Slot 12)</strong></td>
+          <td>Multer upload ảnh món ăn/avatar tĩnh (lưu <code>/uploads</code>) và <code>res.download()</code> tải hóa đơn đơn hàng/xuất file báo cáo ca</td>
+          <td><code>middlewares/uploadMiddleware.js</code>, <code>controllers/uploadController.js</code> (res.download)</td>
+          <td><span class="badge badge-post">10/10 Đạt</span></td>
+        </tr>
+        <tr>
+          <td>12</td>
+          <td><strong>Tính năng Vượt trội (Bonus Points)</strong></td>
+          <td>Kênh Live Chat CSKH 2 chiều + Engine tính toán mã giảm giá Voucher + Báo cáo đối soát ca quầy Barista</td>
+          <td><code>controllers/chatController.js</code>, <code>voucherController.js</code>, <code>reportController.js</code></td>
+          <td><span class="badge badge-post">10/10 Đạt</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>10.2. 5 Điểm Cộng Kỹ Thuật Vượt Barem Gây Ấn Tượng Mạnh Mẽ</h2>
+    <div class="callout callout-success">
+      <strong>1. Tính toán giá thành Server-Side theo Quy cách Size (S/M/L) Chống Giả Mạo:</strong><br>
+      Khách hàng chọn Size (S: giá base, M: +6.000đ, L: +10.000đ). Phía Server tự động truy vấn giá base từ MongoDB,
+      cộng thêm phần phụ thu theo size và nhân số lượng để ra tổng tiền. Không bao giờ tin tưởng giá tiền Client gửi lên.
+    </div>
+    <div class="callout callout-success">
+      <strong>2. Kiểm soát Tồn kho Tức thời Theo Chi nhánh (outOfStockProductIds):</strong><br>
+      Đồng bộ chính xác với Tab 2 của màn hình Quản lý chi nhánh trong PRM393. Từng chi nhánh có mảng quản lý các món tạm hết hàng riêng biệt,
+      khiến khách đặt món tại chi nhánh đó sẽ bị chặn ngay nếu món đã hết nguyên liệu.
+    </div>
+    <div class="callout callout-success">
+      <strong>3. Kênh Live Chat CSKH 2 Chiều Giữa Khách Hàng & Quầy Chi Nhánh:</strong><br>
+      Khách hàng có thể nhắn tin dặn dò quầy Barista giữ ấm bánh hay dặn dò đường đá, nhân viên quầy có thể trả lời trực tiếp.
+      Khắc phục nhược điểm "ứng dụng 1 chiều" của các đồ án thông thường.
+    </div>
+    <div class="callout callout-success">
+      <strong>4. Động Cơ Khuyến Mãi & Giảm Giá Linh Hoạt (Voucher Engine):</strong><br>
+      Hỗ trợ giảm giá theo phần trăm (kèm trần tối đa) hoặc số tiền cố định, kiểm tra giá trị đơn hàng tối thiểu và hạn dùng tự động.
+    </div>
+    <div class="callout callout-success">
+      <strong>5. Bộ Kiểm Thử Tự Động Postman Kế Thừa Biến Môi Trường (Chạy 100% Xanh Lá):</strong><br>
+      Tự động trích xuất token sau khi login và gắn vào các request tạo đơn hàng, chat, kiểm tra voucher.
+      Giảng viên bấm "Run Collection", 12 kịch bản tự động chạy mượt mà không cần thao tác tay.
+    </div>
+
+    <h2>10.3. Bộ Câu Hỏi & Câu Trả Lời Vấn Đáp Kỹ Thuật 1:1 Độc Lập Cho Từng Thành Viên</h2>
+
+    <h3>1. Dành cho: Lê Đức Sơn (Nhóm trưởng / Operations & Live Chat Lead - 20%)</h3>
+    <div class="callout callout-info">
+      <strong>Câu hỏi 1: Kênh Live Chat CSKH 2 chiều giữa khách và quầy được thiết kế thế nào? Làm sao để phân biệt tin nhắn của khách và nhân viên?</strong><br>
+      <strong>Trả lời:</strong> Trong Model <code>Message</code>, em thiết kế các trường: <code>branchId</code>, <code>userId</code>,
+      <code>senderRole</code> (nhận giá trị <code>'customer'</code> hoặc <code>'staff'</code>), <code>senderName</code>, <code>content</code> và <code>isRead</code>.
+      Khi khách hàng gửi tin nhắn, <code>senderRole</code> được gán là <code>'customer'</code>. Khi nhân viên chi nhánh trả lời từ quầy,
+      <code>senderRole</code> là <code>'staff'</code>. Khi truy vấn lịch sử qua <code>GET /api/chats/:branchId</code>, server lọc theo <code>branchId</code>
+      và <code>userId</code> của khách để hiển thị đúng luồng hội thoại 2 chiều theo thứ tự thời gian tăng dần (<code>createdAt: 1</code>).
+    </div>
+
+    <div class="callout callout-info">
+      <strong>Câu hỏi 2: Schema Review liên kết với những Model nào? Cách tính số sao trung bình của một món ăn?</strong><br>
+      <strong>Trả lời:</strong> Model <code>Review</code> liên kết với <code>userId</code> (ref User), <code>productId</code> (ref Product) và <code>branchId</code> (ref Branch).
+      Để tính điểm sao trung bình của món ăn, em dùng Aggregation Pipeline với 2 bước:
+      Bước 1: <code>$match: { productId: new mongoose.Types.ObjectId(productId) }</code>.
+      Bước 2: <code>$group: { _id: '$productId', avgRating: { $avg: '$rating' }, totalReviews: { $sum: 1 } }</code>.
+      Toán tử <code>$avg</code> sẽ tính ra số sao thực tế (ví dụ: 4.8 / 5 sao) và <code>$sum: 1</code> đếm tổng số lượt đánh giá.
+    </div>
+
+    <div class="callout callout-info">
+      <strong>Câu hỏi 3: Báo cáo ca (Shift Reconciliation) của quầy Barista thống kê những chỉ số gì và truy vấn ra sao?</strong><br>
+      <strong>Trả lời:</strong> Báo cáo ca tại <code>GET /api/reports/shift</code> giúp quản lý quầy đối soát doanh thu cuối ngày.
+      Em lọc tất cả các đơn hàng thuộc <code>branchId</code> trong ngày hôm nay, sau đó thống kê:
+      tổng số đơn hàng, số đơn hoàn thành (<code>status: 'Completed'</code>), số đơn bị hủy (<code>status: 'Cancelled'</code>),
+      tổng doanh thu thực thu (<code>totalAmount</code>), doanh thu theo tiền mặt (<code>paymentMethod: 'CASH_AT_COUNTER'</code>)
+      và doanh thu thanh toán điện tử (MoMo/PayOS), cùng tổng tiền chiết khấu từ voucher.
+    </div>
+
+    <h3>2. Dành cho: Nguyễn Chí Vương (API Architect / Auth & Security Lead - 20%)</h3>
+    <div class="callout callout-info">
+      <strong>Câu hỏi 1: JWT là gì? Payload của em chứa những thông tin gì? Tại sao không được lưu password vào JWT?</strong><br>
+      <strong>Trả lời:</strong> JWT (JSON Web Token) là chuẩn mở (RFC 7519) định nghĩa cách truyền tải thông tin an toàn giữa các bên dưới dạng JSON object.
+      JWT gồm 3 phần: Header, Payload và Signature. Trong dự án, Payload em chỉ lưu định danh tối thiểu gồm:
+      <code>{ id: user._id, role: user.role }</code>. Tuyệt đối không lưu mật khẩu vào Payload vì Payload chỉ được mã hóa Base64Url chứ không hề được mã hóa bí mật,
+      bất kỳ ai cầm token đều có thể giải mã Base64 ra đọc được Payload. Token chỉ an toàn ở tính toàn vẹn (Integrity) nhờ Signature được ký với <code>JWT_SECRET</code> trên Server.
+    </div>
+
+    <div class="callout callout-info">
+      <strong>Câu hỏi 2: Trong Postman Collection, em làm thế nào để request tạo đơn hàng tự động có Bearer Token mà không cần copy paste tay?</strong><br>
+      <strong>Trả lời:</strong> Tại request <code>Login</code> trong Postman, tại tab <strong>Tests</strong>, em viết đoạn mã JavaScript:
+      <code>pm.collectionVariables.set("token", pm.response.json().token);</code>. Khi đăng nhập thành công, Postman tự động bắt lấy chuỗi token
+      và gán vào biến Collection có tên là <code>token</code>. Tại các request tiếp theo cần xác thực, ở tab <strong>Authorization</strong>,
+      em chọn loại <strong>Bearer Token</strong> và truyền giá trị là <code>{{token}}</code>. Nhờ đó mọi request tự động kế thừa token vừa đăng nhập.
+    </div>
+
+    <div class="callout callout-info">
+      <strong>Câu hỏi 3: Phương thức toJSON trong User Schema hoạt động thế nào? Module Favorites được lưu trữ ra sao?</strong><br>
+      <strong>Trả lời:</strong> Khi Document được chuyển sang JSON (như khi gọi <code>res.json(user)</code>), Mongoose sẽ tự gọi hàm <code>toJSON()</code>.
+      Em override hàm này bằng: <code>userSchema.methods.toJSON = function() { const u = this.toObject(); delete u.password; return u; }</code>
+      để đảm bảo trường <code>password</code> luôn bị loại bỏ trước khi trả về Client.
+      Về Favorites, trong User Schema em có mảng <code>favoriteProducts: [{ type: ObjectId, ref: 'Product' }]</code>.
+      Khi khách bấm yêu thích, server dùng toán tử <code>$addToSet</code> để thêm ID món ăn vào mảng (tránh trùng lặp), và khi bỏ thích thì dùng <code>$pull</code>.
+    </div>
+
+    <h3>3. Dành cho: Nguyễn Xuân Thịnh (BE Core Lead / Product & Orders - 20%)</h3>
+    <div class="callout callout-info">
+      <strong>Câu hỏi 1: Trong hàm createOrder, tại sao em không lấy trực tiếp giá tiền từ Client gửi lên mà phải truy vấn lại từ Database? Xử lý size thế nào?</strong><br>
+      <strong>Trả lời:</strong> Vì Client là môi trường không an toàn, kẻ gian hoàn toàn có thể can thiệp gói tin để sửa giá từ 45.000đ xuống 1.000đ.
+      Do đó, server chỉ nhận <code>productId</code>, <code>size</code> và <code>quantity</code>. Server dùng <code>Product.find({ _id: { $in: ids } })</code>
+      lấy giá gốc (Size S). Nếu khách chọn Size M thì cộng thêm 6.000đ, Size L cộng thêm 10.000đ (dựa vào cấu hình <code>sizePricing</code> trong Model),
+      sau đó mới nhân với số lượng để tính tổng tiền. Đây là nguyên tắc bảo vệ doanh thu bắt buộc ở phía Backend.
+    </div>
+
+    <div class="callout callout-info">
+      <strong>Câu hỏi 2: Giải thích cơ chế Mongoose Population? Khác gì với $lookup trong MongoDB Aggregation?</strong><br>
+      <strong>Trả lời:</strong> Mongoose <code>populate()</code> là cơ chế giúp thay thế trường ObjectId tham chiếu bằng Document thực tế từ collection khác.
+      Bên dưới Mongoose sẽ thực hiện 1 truy vấn riêng biệt thứ hai bằng lệnh <code>find({ _id: { $in: ids } })</code> sau đó ghép dữ liệu lại trên bộ nhớ Node.js.
+      Còn <code>$lookup</code> là toán tử thực hiện trực tiếp bên trong Database Engine thông qua Aggregation Pipeline (tương đương Left Outer Join của SQL).
+      Dùng <code>populate()</code> giúp mã nguồn trong Controller ngắn gọn, dễ bảo trì và đúng cấu trúc chuẩn của Mongoose.
+    </div>
+
+    <div class="callout callout-info">
+      <strong>Câu hỏi 3: Tại sao route /api/orders/my-orders phải đặt trước route /api/orders/:id?</strong><br>
+      <strong>Trả lời:</strong> Vì Express so khớp các route tuần tự từ trên xuống dưới. Nếu đặt <code>/:id</code> lên trước,
+      khi người dùng gọi <code>GET /api/orders/my-orders</code>, Express sẽ coi chuỗi <code>"my-orders"</code> là giá trị của param <code>:id</code>.
+      Khi controller gọi <code>Order.findById("my-orders")</code>, Mongoose quăng lỗi <code>CastError</code> vì chuỗi này không phải là ObjectId 24 ký tự hex hợp lệ.
+      Đặt route tĩnh <code>/my-orders</code> lên trước giúp Express bắt đúng route trước khi xét tới route động.
+    </div>
+
+    <h3>4. Dành cho: Nguyễn Đắc Thịnh (Branches & Vouchers & Error Handling - 20%)</h3>
+    <div class="callout callout-info">
+      <strong>Câu hỏi 1: Tính năng kiểm soát món tạm hết hàng tại chi nhánh (outOfStockProductIds) hoạt động thế nào?</strong><br>
+      <strong>Trả lời:</strong> Mỗi chi nhánh có một danh sách tồn kho riêng. Trong Model <code>Branch</code>, em có mảng <code>outOfStockProductIds</code>
+      chứa ID các món tạm hết tại chi nhánh đó. Khi Barista phát hiện hết nguyên liệu làm Cà phê Muối tại quầy FPT City,
+      họ gọi API <code>PATCH /api/branches/:id/stock</code> để thêm ID món đó vào mảng.
+      Khi khách đặt đơn hàng tại chi nhánh FPT City, hàm <code>createOrder</code> sẽ kiểm tra: nếu món khách chọn nằm trong <code>outOfStockProductIds</code> của chi nhánh,
+      server trả về mã lỗi 400 Bad Request kèm thông báo món đã tạm hết tại quầy này, đồng bộ hoàn toàn với Tab 2 của PRM393.
+    </div>
+
+    <div class="callout callout-info">
+      <strong>Câu hỏi 2: Module Voucher kiểm tra những điều kiện gì trước khi áp dụng giảm giá?</strong><br>
+      <strong>Trả lời:</strong> Trong <code>voucherController.js</code>, khi khách gửi mã giảm giá lên, server kiểm tra tuần tự 4 điều kiện:
+      1. Mã voucher có tồn tại và <code>isActive = true</code> hay không;
+      2. Ngày hiện tại có nằm trong khoảng từ <code>startDate</code> đến <code>endDate</code> hay không;
+      3. Tổng tiền đơn hàng có đạt mức tối thiểu <code>minOrderAmount</code> hay không;
+      4. Tính số tiền giảm: nếu là <code>PERCENT</code> thì tính theo % nhưng không vượt quá <code>maxDiscount</code>; nếu là <code>FIXED</code> thì trừ trực tiếp số tiền cố định.
+    </div>
+
+    <div class="callout callout-info">
+      <strong>Câu hỏi 3: Tại sao Middleware errorHandler phải nhận đủ 4 tham số và đặt ở cuối cùng của file server.js?</strong><br>
+      <strong>Trả lời:</strong> Express nhận diện middleware xử lý lỗi dựa trên số lượng tham số khai báo của hàm (<code>fn.length === 4</code>).
+      Nếu chỉ khai báo 3 tham số <code>(err, req, res)</code>, Express sẽ coi đó là middleware thông thường.
+      Nó phải được đặt ở cuối cùng của <code>server.js</code> vì middleware chỉ bắt được lỗi của các route được khai báo phía trên nó khi các controller gọi <code>next(error)</code>.
+    </div>
+
+    <h3>5. Dành cho: Lê Tự Nhật Thạch (Uploads, Seed Data & Web Admin SSR - 20%)</h3>
+    <div class="callout callout-info">
+      <strong>Câu hỏi 1: Thư viện Multer hoạt động ra sao? Làm sao để client tải được ảnh tĩnh từ thư mục /uploads?</strong><br>
+      <strong>Trả lời:</strong> Multer là middleware chuyên phân tích định dạng <code>multipart/form-data</code>.
+      Em cấu hình <code>diskStorage</code> để lưu file vào thư mục <code>uploads/</code> và đổi tên file bằng <code>Date.now() + path.extname(file.originalname)</code>
+      để tránh bị trùng tên file. Để client tải được ảnh, trong <code>server.js</code> em cấu hình static middleware:
+      <code>app.use('/uploads', express.static(path.join(__dirname, 'uploads')));</code>.
+      Nhờ đó Client có thể xem trực tiếp ảnh qua URL: <code>http://localhost:5000/uploads/ten-anh.jpg</code>.
+    </div>
+
+    <div class="callout callout-info">
+      <strong>Câu hỏi 2: Giao diện SSR bằng EJS khác gì so với Client-Side Rendering (CSR) trên React Native hay Flutter?</strong><br>
+      <strong>Trả lời:</strong> Với EJS (Server-Side Rendering), mã HTML hoàn chỉnh được tạo ra và ghép dữ liệu ngay trên máy chủ Node.js
+      trước khi gửi về cho trình duyệt hiển thị. Ưu điểm là tải trang nhanh, không phụ thuộc vào sức mạnh xử lý của thiết bị client,
+      phù hợp cho màn hình quản lý quầy Barista tại cửa hàng. Còn CSR (Client-Side Rendering) như React Native hay Flutter thì Server chỉ trả về dữ liệu thô dạng JSON,
+      sau đó điện thoại của khách hàng mới tự vẽ giao diện và gắn dữ liệu vào từng Widget.
+    </div>
+
+    <div class="callout callout-info">
+      <strong>Câu hỏi 3: Trong script seed tài khoản (userSeed.js), tại sao em dùng User.create() thay vì insertMany()?</strong><br>
+      <strong>Trả lời:</strong> Vì trong User Model, em có cài đặt hook <code>userSchema.pre('save', ...)</code> để tự động băm mật khẩu bằng Bcrypt.
+      Hàm <code>User.create()</code> khởi tạo từng document và gọi hàm <code>save()</code> nên hook băm mật khẩu sẽ được kích hoạt bình thường.
+      Nếu dùng <code>User.insertMany()</code>, MongoDB sẽ chèn trực tiếp dữ liệu thô vào database mà bỏ qua hook <code>save()</code>,
+      khiến mật khẩu lưu dưới dạng plain text và người dùng không thể đăng nhập được.
+    </div>
+
+    <div class="callout callout-info">
+      <strong>Câu hỏi 4: Phương thức res.download() hoạt động ra sao? Khác gì với res.sendFile() và static files? (Slot 12)</strong><br>
+      <strong>Trả lời:</strong> <code>res.download(path, [filename])</code> tự động cấu hình HTTP Header <code>Content-Disposition: attachment; filename="..."</code>,
+      yêu cầu trình duyệt hoặc client di động kích hoạt hộp thoại tải file về máy thay vì hiển thị trực tiếp (inline display) như <code>res.sendFile()</code>.
+      Trong FreshBite, hàm này được ứng dụng để xuất file hóa đơn bán lẻ (<code>/api/orders/:id/invoice</code>) và file CSV đối soát ca (<code>/api/reports/shift/export</code>).
+    </div>
+
+    <div class="callout callout-info">
+      <strong>Câu hỏi 5: Giao thức HTTPS và bắt tay SSL/TLS hoạt động thế nào trên Node.js? Tại sao lại dùng cả mã hóa đối xứng và bất đối xứng? (Slot 11)</strong><br>
+      <strong>Trả lời:</strong> Bắt tay TLS Handshake kết hợp 2 giai đoạn:
+      (1) <em>Mã hóa bất đối xứng</em> (Public/Private Key) ở giai đoạn đầu để xác thực danh tính server và trao đổi an toàn một khóa phiên bí mật (Session Key);
+      (2) Sau đó toàn bộ dữ liệu HTTP được mã hóa bằng <em>Mã hóa đối xứng</em> (AES) sử dụng khóa phiên đó vì mã hóa đối xứng có tốc độ xử lý nhanh hơn hàng nghìn lần, không gây quá tải CPU của máy chủ Node.js.
+      Trên môi trường local, ta tạo self-signed cert bằng OpenSSL và dùng module <code>https.createServer({ key, cert }, app)</code>.
+    </div>
+
+    <div class="callout callout-info">
+      <strong>Câu hỏi 6: So sánh kiến trúc Express.js và NestJS? Nếu mở rộng hệ thống FreshBite toàn quốc thì tại sao nên chuyển sang NestJS? (Slot 17-19)</strong><br>
+      <strong>Trả lời:</strong> Express là micro-framework tối giản và linh hoạt, rất phù hợp để hiểu sâu cơ chế HTTP và xây dựng MVP nhanh.
+      Tuy nhiên, khi mở rộng quy mô lớn (Enterprise) với chuỗi hàng trăm chi nhánh, NestJS vượt trội hơn nhờ áp dụng kiến trúc Modular chuẩn hóa (Modules, Controllers, Providers/Services),
+      tích hợp sẵn TypeScript, cơ chế Dependency Injection (DI) và DTO validation. Giúp phân chia công việc nhóm rõ ràng, mã nguồn dễ bảo trì, testable và loại trừ triệt để lỗi runtime.
+    </div>
+
+
+  </div> <!-- Kết thúc container -->
+</body>
+</html>

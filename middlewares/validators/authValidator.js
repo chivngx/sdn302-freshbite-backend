@@ -1,3 +1,5 @@
+const mongoose = require('mongoose');
+
 const EMAIL_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,}$/;
 const PHONE_REGEX = /^0[35789][0-9]{8}$/;
 
@@ -104,6 +106,21 @@ exports.validateChangePassword = (req, res, next) => {
 
   req.body.currentPassword = currentStr;
   req.body.newPassword = newStr;
+
+  next();
+};
+
+// validate id mon an yeu thich
+exports.validateFavorite = (req, res, next) => {
+  const productId = req.params.productId || req.body.productId;
+
+  if (!productId) {
+    return res.status(400).json({ success: false, message: 'Product ID is required' });
+  }
+
+  if (!mongoose.isValidObjectId(productId)) {
+    return res.status(400).json({ success: false, message: 'Invalid product ID' });
+  }
 
   next();
 };

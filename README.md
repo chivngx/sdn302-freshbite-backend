@@ -4,17 +4,19 @@ RESTful API backend for **FreshBite Coffee & Bakery (Da Nang)** – an Order Ahe
 
 ## Team & Contribution (20% Each)
 
-- **Nguyen Chi Vuong (FE Lead):** Project architecture, Authentication (JWT), Error Handling, Postman collection.
-- **Le Duc Son:** Reviews, Feedback & Gemini AI proxy.
-- **Nguyen Xuan Thinh:** Categories, Products & Orders CRUD.
-- **Nguyen Dac Thinh:** Da Nang Branches API (GPS coordinates).
-- **Le Tu Nhat Thach:** Multer upload, Seed data, EJS Admin Dashboard.
+- **Lê Đức Sơn (Nhóm trưởng):** Operations & Live Chat Lead (Live Chat CSKH 2 chiều, Reviews đánh giá, Báo cáo ca quầy Barista).
+- **Nguyễn Chí Vương:** API Architect / Auth & Security Lead (Thiết kế RESTful API, Module Auth JWT/Bcrypt, Module Favorites, Postman Test Suite).
+- **Nguyễn Xuân Thịnh:** BE Core Lead / Product & Orders (Express Server, CRUD Categories/Products/Orders, Server-side Pricing, Deep Population).
+- **Nguyễn Đắc Thịnh:** Branches & Vouchers & Error Handling (API 4 Chi nhánh Đà Nẵng GPS, Quản lý Tồn kho outOfStock, Module Vouchers, Error Middleware).
+- **Lê Tự Nhật Thạch:** Uploads, Seed Data & Web Admin SSR (Multer upload tĩnh `/uploads`, 3 Script Seed Data, Giao diện EJS Web Admin KDS Barista).
 
 ## Tech Stack
 
 - **Runtime & Framework:** Node.js, Express.js
-- **Database:** MongoDB Atlas (Mongoose)
-- **Security:** JWT, Bcrypt, Helmet, CORS
+- **Database:** MongoDB Atlas (Mongoose ODM)
+- **Security:** JWT (Stateless Bearer Token), Bcrypt (Salt 10), Helmet, CORS
+- **Template Engine:** EJS (Web Admin KDS Barista)
+- **Validation:** Express-Validator
 - **Package Manager:** `pnpm`
 
 ## Getting Started
@@ -26,7 +28,11 @@ pnpm install
 # 2. Setup environment variables (add your MongoDB Atlas URI)
 cp .env.example .env
 
-# 3. Start development server
+# 3. Seed initial database (users & test products)
+pnpm run seed:users
+pnpm run seed:test
+
+# 4. Start development server
 pnpm run dev
 ```
 
@@ -36,26 +42,30 @@ Server runs at `http://localhost:5000`.
 
 ```text
 sdn302-freshbite-backend/
-├── config/             # Database connection
-├── controllers/        # Route controllers
-├── middlewares/        # Auth, Validation, Error handlers
-├── models/             # Mongoose schemas
+├── config/             # Database connection (db.js)
+├── controllers/        # Route controllers (auth, category, product, order, branch, voucher, chat, review, report)
+├── middlewares/        # Auth (JWT), Validation, Error handlers
+├── models/             # Mongoose schemas (User, Product, Order, Branch, Category, Voucher, Review, Message)
 ├── routes/             # API routes
-├── docs/               # Postman collection
+├── seeds/              # Database seed scripts
+├── docs/               # Postman collection test suite
 ├── server.js           # App entry point
 └── package.json
 ```
 
-## API Endpoints (Auth Module)
+## API Endpoints (Auth & Favorites Module)
 
 | Method | Endpoint | Access | Description |
 | :--- | :--- | :--- | :--- |
-| `GET` | `/` | Public | Health check |
-| `POST` | `/api/auth/register` | Public | Register new user / admin |
-| `POST` | `/api/auth/login` | Public | Login & receive 7-day JWT |
-| `GET` | `/api/auth/me` | Bearer Token | Get current user profile |
-| `PUT` | `/api/auth/profile` | Bearer Token | Update profile info |
-| `PUT` | `/api/auth/change-password` | Bearer Token | Change password |
+| `GET` | `/` | Public | Server health check |
+| `POST` | `/api/auth/register` | Public | Đăng ký tài khoản khách hàng / admin mới |
+| `POST` | `/api/auth/login` | Public | Đăng nhập & nhận JWT Bearer Token (7 ngày) |
+| `GET` | `/api/auth/me` | Bearer Token | Lấy thông tin user hiện tại (kèm favoriteProducts) |
+| `PUT` | `/api/auth/profile` | Bearer Token | Cập nhật họ tên, số điện thoại, avatar |
+| `PUT` | `/api/auth/change-password` | Bearer Token | Đổi mật khẩu tài khoản |
+| `GET` | `/api/users/favorites` | Bearer Token | Lấy danh sách món ăn đã lưu yêu thích |
+| `POST` | `/api/users/favorites/:productId` | Bearer Token | Thêm món ăn vào danh sách yêu thích ($addToSet) |
+| `DELETE` | `/api/users/favorites/:productId` | Bearer Token | Xóa món ăn khỏi danh sách yêu thích ($pull) |
 
 ## API Endpoints (Branches Module - Da Nang Stores)
 
@@ -74,7 +84,10 @@ sdn302-freshbite-backend/
 
 ## Testing
 
-Import `docs/FreshBite_DaNang_API.postman_collection.json` into Postman. Login requests automatically extract and set the `{{token}}` variable for protected routes.
+## Testing
+
+Import `docs/FreshBite_DaNang_API.postman_collection.json` vào Postman. Các request Login sẽ tự động trích xuất và lưu biến `{{token}}`, `{{adminToken}}` và `{{favoriteProductId}}` cho toàn bộ test suite.
+
 Để chạy nạp dữ liệu 4 chi nhánh mẫu Đà Nẵng:
 ```bash
 npm run seed:branches

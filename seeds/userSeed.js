@@ -7,6 +7,8 @@ const users = [
     { fullName: 'Admin FreshBite', email: 'admin@freshbite.com', password: '123456', phone: '0987654321', role: 'admin' },
     { fullName: 'Nguyen Van Test', email: 'user@freshbite.com', password: '123456', phone: '0912345678', role: 'user' },
     { fullName: 'Tran Thi Khach', email: 'user2@freshbite.com', password: '123456', phone: '0933456789', role: 'user' },
+    { fullName: 'Lê Đức Sơn', email: 'sonld@fe.edu.vn', password: '123456', phone: '0905111222', role: 'user' },
+    { fullName: 'Nguyễn Chí Vương', email: 'vuongnc@fe.edu.vn', password: '123456', phone: '0905123456', role: 'user' },
 ];
 
 (async () => {
