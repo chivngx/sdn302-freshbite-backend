@@ -64,7 +64,7 @@ exports.getMe = async (req, res, next) => {
 
     // chi populate khi model product da khoi tao de tranh loi
     if (mongoose.models.Product && req.user.favoriteProducts?.length > 0) {
-      query = query.populate('favoriteProducts', 'name price imageUrl');
+      query = query.populate('favoriteProducts', 'name price imageUrl calories isAvailable isBestSeller');
     }
 
     const user = await query;
@@ -107,6 +107,74 @@ exports.changePassword = async (req, res, next) => {
     await user.save();
 
     res.status(200).json({ success: true, message: 'Password updated successfully' });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// lay danh sach mon an yeu thich cua user
+exports.getFavorites = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user._id).populate(
+      'favoriteProducts',
+      'name price imageUrl calories isAvailable isBestSeller'
+    );
+
+    res.status(200).json({
+      success: true,
+      count: user.favoriteProducts ? user.favoriteProducts.length : 0,
+      data: user.favoriteProducts || []
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// them mon an vao danh sach yeu thich (dung toan tu $addToSet de tranh trung lap)
+exports.addFavorite = async (req, res, next) => {
+  try {
+    const productId = req.params.productId || req.body.productId;
+
+    if (!productId || !mongoose.isValidObjectId(productId)) {
+      return res.status(400).json({ success: false, message: 'Invalid product ID' });
+    }
+
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      { $addToSet: { favoriteProducts: productId } },
+      { new: true }
+    ).populate('favoriteProducts', 'name price imageUrl calories isAvailable isBestSeller');
+
+    res.status(200).json({
+      success: true,
+      message: 'Product added to favorites successfully',
+      data: user.favoriteProducts
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// xoa mon an khoi danh sach yeu thich (dung toan tu $pull)
+exports.removeFavorite = async (req, res, next) => {
+  try {
+    const productId = req.params.productId || req.body.productId;
+
+    if (!productId || !mongoose.isValidObjectId(productId)) {
+      return res.status(400).json({ success: false, message: 'Invalid product ID' });
+    }
+
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      { $pull: { favoriteProducts: productId } },
+      { new: true }
+    ).populate('favoriteProducts', 'name price imageUrl calories isAvailable isBestSeller');
+
+    res.status(200).json({
+      success: true,
+      message: 'Product removed from favorites successfully',
+      data: user.favoriteProducts
+    });
   } catch (error) {
     next(error);
   }
