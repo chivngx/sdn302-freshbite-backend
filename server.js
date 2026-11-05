@@ -56,3 +56,6 @@ process.on('unhandledRejection', (err) => {
   if (server) server.close(() => process.exit(1));
   else process.exit(1);
 });
+
+module.exports = app;
+

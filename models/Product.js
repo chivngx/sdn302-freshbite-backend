@@ -8,7 +8,12 @@ const productSchema = new mongoose.Schema(
       ref: 'Category',
       required: true
     },
-    price: { type: Number, required: true, min: 0 },
+    price: { type: Number, required: true, min: 0 }, // Giá base cho Size S
+    sizePricing: {
+      S: { type: Number, default: 0 },     // Giá gốc (+0đ)
+      M: { type: Number, default: 6000 },  // Giá tăng thêm cho Size M (+6.000đ)
+      L: { type: Number, default: 10000 }  // Giá tăng thêm cho Size L (+10.000đ)
+    },
     description: { type: String, required: true },
     imageUrl: { type: String, required: true },
     calories: { type: Number, default: 150 },

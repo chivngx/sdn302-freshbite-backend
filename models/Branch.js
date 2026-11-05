@@ -44,7 +44,14 @@ const branchSchema = new mongoose.Schema(
     isActive: {
       type: Boolean,
       default: true
-    }
+    },
+    // Mảng ID các món tạm hết hàng tại riêng chi nhánh này (Đồng bộ Tab 2 Quản lý chi nhánh của PRM393)
+    outOfStockProductIds: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Product'
+      }
+    ]
   },
   {
     timestamps: true,
