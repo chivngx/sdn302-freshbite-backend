@@ -7,6 +7,11 @@ const orderItemSchema = new mongoose.Schema({
     required: true
   },
   name: { type: String },
+  size: {
+    type: String,
+    enum: ['S', 'M', 'L'],
+    default: 'S'
+  },
   quantity: { type: Number, required: true, min: 1 },
   price: { type: Number, required: true },
   sugarLevel: {
@@ -19,7 +24,7 @@ const orderItemSchema = new mongoose.Schema({
     enum: ['100%', '50%', 'Nóng'],
     default: '100%'
   },
-  note: { type: String }
+  note: { type: String, default: '' }
 });
 
 const orderSchema = new mongoose.Schema(
@@ -38,6 +43,7 @@ const orderSchema = new mongoose.Schema(
     items: [orderItemSchema],
     subtotal: { type: Number, required: true },
     discount: { type: Number, default: 0 },
+    voucherCode: { type: String, default: null },
     totalAmount: { type: Number, required: true },
     pickupTime: {
       type: String,
@@ -64,6 +70,6 @@ const orderSchema = new mongoose.Schema(
 );
 
 orderSchema.index({ userId: 1, createdAt: -1 });
-orderSchema.index({ status: 1 });
+orderSchema.index({ branchId: 1, status: 1 });
 
 module.exports = mongoose.model('Order', orderSchema);
