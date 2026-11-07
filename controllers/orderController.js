@@ -19,7 +19,7 @@ const generateOrderCode = async () => {
 // 1) POST /api/orders (verifyToken) - Người dùng đặt món
 exports.createOrder = async (req, res, next) => {
   try {
-    const { branchId, items, pickupTime, paymentMethod } = req.body;
+    const { branchId, items, pickupTime, paymentMethod, voucherCode } = req.body;
     const userId = req.user._id;
 
     // Kiểm tra chi nhánh tồn tại và isActive = true
@@ -37,10 +37,15 @@ exports.createOrder = async (req, res, next) => {
     const productMap = new Map();
     products.forEach(p => productMap.set(p._id.toString(), p));
 
+    // Tập hợp ID các món tạm hết hàng tại riêng chi nhánh này
+    const outOfStockBranchSet = new Set(
+      (branch.outOfStockProductIds || []).map(id => id.toString())
+    );
+
     const verifiedItems = [];
     let subtotal = 0;
 
-    // Với mỗi item: lấy name và price từ DB, kiểm tra tồn tại và isAvailable
+    // Với mỗi item: lấy name và price từ DB, kiểm tra tồn tại, isAvailable và tồn kho tại chi nhánh
     for (const item of items) {
       const product = productMap.get(item.productId.toString());
       if (!product) {
@@ -57,15 +62,34 @@ exports.createOrder = async (req, res, next) => {
         });
       }
 
+      if (outOfStockBranchSet.has(product._id.toString())) {
+        return res.status(400).json({
+          success: false,
+          message: `Món "${product.name}" hiện đang tạm hết hàng tại chi nhánh này!`
+        });
+      }
+
       const quantity = Number(item.quantity);
-      const itemPrice = product.price;
-      subtotal += itemPrice * quantity;
+      const size = item.size && ['S', 'M', 'L'].includes(item.size) ? item.size : 'S';
+
+      // Tính giá phụ thu theo size (S: +0đ, M: +6.000đ, L: +10.000đ)
+      let extraPrice = 0;
+      if (product.sizePricing && product.sizePricing[size] !== undefined) {
+        extraPrice = Number(product.sizePricing[size]) || 0;
+      } else {
+        if (size === 'M') extraPrice = 6000;
+        else if (size === 'L') extraPrice = 10000;
+      }
+
+      const unitPrice = product.price + extraPrice;
+      subtotal += unitPrice * quantity;
 
       verifiedItems.push({
         productId: product._id,
         name: product.name,
+        size,
         quantity,
-        price: itemPrice,
+        price: unitPrice,
         sugarLevel: item.sugarLevel || '100%',
         iceLevel: item.iceLevel || '100%',
         note: item.note ? String(item.note).trim() : ''
@@ -83,6 +107,7 @@ exports.createOrder = async (req, res, next) => {
       items: verifiedItems,
       subtotal,
       discount,
+      voucherCode: voucherCode ? String(voucherCode).trim().toUpperCase() : null,
       totalAmount,
       pickupTime,
       status: 'Received',
@@ -117,7 +142,7 @@ exports.getMyOrders = async (req, res, next) => {
     const orders = await Order.find(filter)
       .sort({ createdAt: -1 })
       .populate('branchId', 'name address phone')
-      .populate('items.productId', 'name price imageUrl calories');
+      .populate('items.productId', 'name price imageUrl calories sizePricing');
 
     return res.status(200).json({
       success: true,
@@ -144,8 +169,8 @@ exports.getOrderById = async (req, res, next) => {
 
     const order = await Order.findById(id)
       .populate('userId', 'fullName email phone')
-      .populate('branchId', 'name address phone')
-      .populate('items.productId', 'name price imageUrl calories');
+      .populate('branchId', 'name address phone openingHours')
+      .populate('items.productId', 'name price imageUrl calories sizePricing');
 
     if (!order) {
       return res.status(404).json({
@@ -295,7 +320,7 @@ exports.updateOrderStatus = async (req, res, next) => {
     const updatedOrder = await Order.findById(order._id)
       .populate('userId', 'fullName email phone')
       .populate('branchId', 'name address phone')
-      .populate('items.productId', 'name price imageUrl calories');
+      .populate('items.productId', 'name price imageUrl calories sizePricing');
 
     return res.status(200).json({
       success: true,
