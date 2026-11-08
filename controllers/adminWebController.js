@@ -1,148 +1,320 @@
 /**
  * Module: Web Admin SSR Controller (EJS Template Engine)
  * Tác giả: Lê Tự Nhật Thạch (Uploads, Seed Data & Web Admin SSR Lead)
- * Bài học tích hợp: Slot 7 - Server-Side Rendering (SSR) với EJS & Express Layouts
- *
- * ĐIỂM SỐNG CÒN KHI VẤN ĐÁP:
- * SSR (EJS) khác gì CSR (Client-Side Rendering trên React Native/Flutter)?
- * -> SSR sinh toàn bộ mã HTML đã ghép sẵn dữ liệu trực tiếp trên Server Node.js
- *    rồi mới gửi về cho trình duyệt. Giúp tải nhanh, nhẹ thiết bị, rất phù hợp
- *    cho quầy Barista KDS tại chỗ hoạt động ổn định.
+ * Bài học tích hợp: Slot 7 - Server-Side Rendering (SSR) với EJS & Express
  */
 
 const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
 const Order = require('../models/Order');
 const Product = require('../models/Product');
 const Branch = require('../models/Branch');
 const Category = require('../models/Category');
+const User = require('../models/User');
 
 /**
- * 1. GET /admin/dashboard
- * Render giao diện tổng quan doanh thu & hoạt động các chi nhánh
+ * 0. Authentication Middleware cho Web Admin SSR
  */
-exports.renderDashboard = async (req, res, next) => {
+exports.adminWebAuth = async (req, res, next) => {
   try {
-    const branches = await Branch.find().lean();
-    const orders = await Order.find().lean();
+    const token =
+      req.cookies?.freshbite_admin_token ||
+      req.cookies?.token ||
+      (req.headers.authorization && req.headers.authorization.split(' ')[1]) ||
+      req.query.token;
 
-    // Tính toán các chỉ số thống kê đối soát ca
-    const completedOrders = orders.filter((o) => o.status === 'Completed');
-    const totalRevenue = completedOrders.reduce((sum, o) => sum + (o.totalAmount || 0), 0);
-    const cashRevenue = completedOrders
-      .filter((o) => o.paymentMethod === 'CASH_AT_COUNTER')
-      .reduce((sum, o) => sum + (o.totalAmount || 0), 0);
-    const digitalRevenue = completedOrders
-      .filter((o) => o.paymentMethod !== 'CASH_AT_COUNTER')
-      .reduce((sum, o) => sum + (o.totalAmount || 0), 0);
+    if (token) {
+      try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const user = await User.findById(decoded.id).lean();
+        if (user && (user.role === 'admin' || user.role === 'staff')) {
+          req.user = user;
+          res.locals.currentUser = user;
+          return next();
+        }
+      } catch (tokenErr) {
+        res.clearCookie('freshbite_admin_token', { path: '/' });
+        res.clearCookie('freshbite_admin_token');
+        res.clearCookie('token', { path: '/' });
+        res.clearCookie('token');
+      }
+    }
 
-    const processingOrders = orders.filter((o) =>
-      ['Received', 'Preparing', 'Ready for Pickup'].includes(o.status)
-    ).length;
+    // Nếu không có token hợp lệ -> Chuyển hướng bắt buộc về trang đăng nhập
+    return res.redirect('/admin/login');
+  } catch (error) {
+    next(error);
+  }
+};
 
-    const stats = {
-      totalOrders: orders.length,
-      completedOrders: completedOrders.length,
-      processingOrders,
-      totalRevenue,
-      cashRevenue,
-      digitalRevenue
+/**
+ * GET /admin/login
+ * Render trang Đăng Nhập Quản Trị & Barista KDS
+ */
+exports.getLoginPage = (req, res) => {
+  const token = req.cookies?.freshbite_admin_token;
+  if (token) {
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      if (decoded && decoded.id) {
+        return res.redirect('/admin/dashboard');
+      }
+    } catch (e) {
+      res.clearCookie('freshbite_admin_token', { path: '/' });
+    }
+  }
+
+  res.render('login', {
+    title: 'Đăng Nhập Quản Trị & Barista - FreshBite Coffee',
+    error: req.query.error || null,
+    message: req.query.message || null
+  });
+};
+
+/**
+ * POST /admin/login
+ * Xử lý xác thực đăng nhập Quản Trị Viên / Nhân Viên
+ */
+exports.postLogin = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return res.status(400).render('login', {
+        title: 'Đăng Nhập Quản Trị & Barista - FreshBite Coffee',
+        error: 'Vui lòng nhập đầy đủ email và mật khẩu',
+        message: null
+      });
+    }
+
+    const user = await User.findOne({ email: email.toLowerCase().trim() });
+    if (!user) {
+      return res.status(401).render('login', {
+        title: 'Đăng Nhập Quản Trị & Barista - FreshBite Coffee',
+        error: 'Tài khoản không tồn tại trong hệ thống',
+        message: null
+      });
+    }
+
+    const isMatch = await user.comparePassword(password);
+    if (!isMatch) {
+      return res.status(401).render('login', {
+        title: 'Đăng Nhập Quản Trị & Barista - FreshBite Coffee',
+        error: 'Mật khẩu không chính xác',
+        message: null
+      });
+    }
+
+    if (user.role !== 'admin' && user.role !== 'staff') {
+      return res.status(403).render('login', {
+        title: 'Đăng Nhập Quản Trị & Barista - FreshBite Coffee',
+        error: 'Tài khoản không có quyền truy cập hệ thống Quản Trị',
+        message: null
+      });
+    }
+
+    const token = jwt.sign(
+      { id: user._id, email: user.email, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: '1d' }
+    );
+
+    res.cookie('freshbite_admin_token', token, {
+      httpOnly: true,
+      maxAge: 24 * 60 * 60 * 1000,
+      path: '/'
+    });
+
+    res.redirect('/admin/dashboard');
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * GET /admin/logout
+ * Đăng xuất và xóa phiên cookie
+ */
+exports.getLogout = (req, res) => {
+  res.clearCookie('freshbite_admin_token', { path: '/' });
+  res.clearCookie('freshbite_admin_token');
+  res.clearCookie('token', { path: '/' });
+  res.clearCookie('token');
+  res.redirect('/admin/login?message=logged_out');
+};
+
+/**
+ * 1. GET /admin hoặc GET /admin/dashboard
+ * Trang Tổng quan Dashboard: Thống kê doanh thu, tổng đơn hàng, số lượng theo trạng thái
+ */
+exports.getDashboard = async (req, res, next) => {
+  try {
+    const [totalOrders, totalProducts, branches, revenueAgg, statusCountsAgg, recentOrders] = await Promise.all([
+      Order.countDocuments(),
+      Product.countDocuments(),
+      Branch.find({ isActive: true }).lean(),
+      Order.aggregate([
+        { $match: { status: 'Completed' } },
+        {
+          $group: {
+            _id: null,
+            totalRevenue: { $sum: '$totalAmount' },
+            cashRevenue: {
+              $sum: {
+                $cond: [{ $eq: ['$paymentMethod', 'CASH_AT_COUNTER'] }, '$totalAmount', 0]
+              }
+            },
+            digitalRevenue: {
+              $sum: {
+                $cond: [{ $ne: ['$paymentMethod', 'CASH_AT_COUNTER'] }, '$totalAmount', 0]
+              }
+            }
+          }
+        }
+      ]),
+      Order.aggregate([
+        {
+          $group: {
+            _id: '$status',
+            count: { $sum: 1 }
+          }
+        }
+      ]),
+      Order.find()
+        .sort({ createdAt: -1 })
+        .limit(10)
+        .populate('userId', 'fullName email phone')
+        .populate('branchId', 'name address')
+        .populate('items.productId', 'name price')
+        .lean()
+    ]);
+
+    const revenue = revenueAgg[0] || { totalRevenue: 0, cashRevenue: 0, digitalRevenue: 0 };
+    const statusCounts = {
+      Received: 0,
+      Preparing: 0,
+      'Ready for Pickup': 0,
+      Completed: 0,
+      Cancelled: 0
     };
 
-    const recentOrders = await Order.find()
-      .sort({ createdAt: -1 })
-      .limit(8)
-      .populate('userId', 'fullName phone')
-      .populate('branchId', 'name')
-      .lean();
+    statusCountsAgg.forEach((item) => {
+      if (item._id && statusCounts[item._id] !== undefined) {
+        statusCounts[item._id] = item.count;
+      }
+    });
 
-    return res.render('dashboard', {
+    const processingOrders = (statusCounts.Received || 0) + (statusCounts.Preparing || 0) + (statusCounts['Ready for Pickup'] || 0);
+
+    const stats = {
+      totalRevenue: revenue.totalRevenue,
+      cashRevenue: revenue.cashRevenue,
+      digitalRevenue: revenue.digitalRevenue,
+      totalOrders,
+      totalProducts,
+      processingOrders,
+      completedOrders: statusCounts.Completed || 0,
+      statusCounts
+    };
+
+    res.render('dashboard', {
       title: 'FRESHBITE COFFEE & BAKERY (ĐÀ NẴNG) - Tổng Quan Hoạt Động',
       activeTab: 'dashboard',
       stats,
       branches,
       recentOrders,
       successMsg: req.query.msg || null,
-      errorMsg: req.query.err || null
+      errorMsg: req.query.err || null,
+      currentUser: res.locals.currentUser || req.user || null
     });
   } catch (error) {
     next(error);
   }
 };
+exports.renderDashboard = exports.getDashboard;
 
 /**
  * 2. GET /admin/orders
- * Render màn hình KDS Bếp & Quầy Barista
+ * Màn hình KDS quầy Barista thời gian thực
  */
-exports.renderOrders = async (req, res, next) => {
+exports.getOrdersKDS = async (req, res, next) => {
   try {
-    const { status, branchId } = req.query;
-    const filter = {};
-
-    if (status) {
-      filter.status = status;
-    }
+    const { branchId, status } = req.query;
+    const query = {};
 
     if (branchId && mongoose.isValidObjectId(branchId)) {
-      filter.branchId = branchId;
+      query.branchId = branchId;
     }
 
-    const branches = await Branch.find().sort({ name: 1 }).lean();
+    if (status) {
+      query.status = status;
+    }
 
-    const orders = await Order.find(filter)
-      .sort({ createdAt: -1 })
-      .populate('userId', 'fullName phone')
-      .populate('branchId', 'name address phone')
-      .populate('items.productId', 'name price imageUrl calories')
-      .lean();
+    const [branches, orders, statusCountsAgg] = await Promise.all([
+      Branch.find({ isActive: true }).sort({ name: 1 }).lean(),
+      Order.find(query)
+        .sort({ createdAt: -1 })
+        .populate('userId', 'fullName email phone')
+        .populate('branchId', 'name address phone')
+        .populate('items.productId', 'name price')
+        .lean(),
+      Order.aggregate([
+        { $match: branchId && mongoose.isValidObjectId(branchId) ? { branchId: new mongoose.Types.ObjectId(branchId) } : {} },
+        {
+          $group: {
+            _id: '$status',
+            count: { $sum: 1 }
+          }
+        }
+      ])
+    ]);
 
-    // Thống kê số lượng đơn theo từng trạng thái để hiển thị trên tabs
-    const allBranchOrders = await Order.find(branchId ? { branchId } : {}).lean();
     const statusCounts = {
       Received: 0,
       Preparing: 0,
       'Ready for Pickup': 0,
-      Completed: 0
+      Completed: 0,
+      Cancelled: 0
     };
 
-    allBranchOrders.forEach((o) => {
-      if (statusCounts[o.status] !== undefined) {
-        statusCounts[o.status]++;
+    statusCountsAgg.forEach((item) => {
+      if (item._id && statusCounts[item._id] !== undefined) {
+        statusCounts[item._id] = item.count;
       }
     });
 
-    return res.render('orders', {
+    res.render('orders', {
       title: 'FRESHBITE COFFEE & BAKERY (ĐÀ NẴNG) - Màn Hình Bếp KDS',
       activeTab: 'orders',
       orders,
       branches,
-      currentStatus: status || '',
-      currentBranch: branchId || '',
       statusCounts,
-      totalCount: allBranchOrders.length,
+      currentBranchId: branchId || '',
+      selectedBranchId: branchId || '',
+      currentBranch: branchId || '',
+      currentStatus: status || '',
+      selectedStatus: status || '',
+      totalCount: orders.length,
       successMsg: req.query.msg || null,
-      errorMsg: req.query.err || null
+      errorMsg: req.query.err || null,
+      currentUser: res.locals.currentUser || req.user || null
     });
   } catch (error) {
     next(error);
   }
 };
+exports.renderOrders = exports.getOrdersKDS;
 
 /**
  * 3. POST /admin/orders/:id/status
- * Xử lý chuyển đổi trạng thái đơn hàng trực tiếp từ màn hình KDS
+ * Cập nhật trạng thái đơn hàng trực tiếp từ KDS
  */
 exports.updateOrderStatusWeb = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { status } = req.body;
+    const { status, redirectUrl } = req.body;
 
     if (!mongoose.isValidObjectId(id)) {
       return res.redirect('/admin/orders?err=ID đơn hàng không hợp lệ!');
-    }
-
-    const order = await Order.findById(id);
-    if (!order) {
-      return res.redirect('/admin/orders?err=Không tìm thấy đơn hàng!');
     }
 
     const validStatuses = ['Received', 'Preparing', 'Ready for Pickup', 'Completed', 'Cancelled'];
@@ -150,18 +322,20 @@ exports.updateOrderStatusWeb = async (req, res, next) => {
       return res.redirect('/admin/orders?err=Trạng thái không hợp lệ!');
     }
 
-    order.status = status;
+    const order = await Order.findById(id);
+    if (!order) {
+      return res.redirect('/admin/orders?err=Không tìm thấy đơn hàng!');
+    }
 
-    // Tự động chuyển paymentStatus sang PAID khi hoàn tất đơn trả tiền mặt tại quầy
+    order.status = status;
     if (status === 'Completed' && order.paymentMethod === 'CASH_AT_COUNTER') {
       order.paymentStatus = 'PAID';
     }
 
     await order.save();
 
-    return res.redirect(
-      `/admin/orders?msg=Đơn hàng ${order.orderCode} đã chuyển sang trạng thái: "${status}"`
-    );
+    const targetUrl = redirectUrl || '/admin/orders';
+    return res.redirect(`${targetUrl}?msg=${encodeURIComponent(`Đơn hàng ${order.orderCode || order._id} đã chuyển sang "${status}"`)}`);
   } catch (error) {
     return res.redirect(`/admin/orders?err=${encodeURIComponent(error.message)}`);
   }
@@ -169,29 +343,29 @@ exports.updateOrderStatusWeb = async (req, res, next) => {
 
 /**
  * 4. GET /admin/products
- * Render giao diện quản lý thực đơn & danh sách sản phẩm
+ * Danh sách thực đơn & Quản lý món ăn
  */
-exports.renderProducts = async (req, res, next) => {
+exports.getProductsAdmin = async (req, res, next) => {
   try {
-    const products = await Product.find()
-      .sort({ createdAt: -1 })
-      .populate('categoryId', 'name code')
-      .lean();
+    const [products, categories] = await Promise.all([
+      Product.find().populate('categoryId', 'name code').sort({ categoryId: 1, name: 1 }).lean(),
+      Category.find().sort({ name: 1 }).lean()
+    ]);
 
-    const categories = await Category.find().sort({ name: 1 }).lean();
-
-    return res.render('products', {
+    res.render('products', {
       title: 'FRESHBITE COFFEE & BAKERY (ĐÀ NẴNG) - Quản Lý Thực Đơn',
       activeTab: 'products',
       products,
       categories,
       successMsg: req.query.msg || null,
-      errorMsg: req.query.err || null
+      errorMsg: req.query.err || null,
+      currentUser: res.locals.currentUser || req.user || null
     });
   } catch (error) {
     next(error);
   }
 };
+exports.renderProducts = exports.getProductsAdmin;
 
 /**
  * 5. POST /admin/products
@@ -205,13 +379,11 @@ exports.createProductWeb = async (req, res, next) => {
       return res.redirect('/admin/products?err=Vui lòng nhập đầy đủ các trường bắt buộc!');
     }
 
-    // Nếu có file upload từ Multer, lưu đường dẫn /uploads/...
     let imageUrl = 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=800';
     if (req.file) {
       imageUrl = `/uploads/${req.file.filename}`;
     }
 
-    // Xử lý nguyên liệu dạng mảng
     const ingredientsArr = ingredients
       ? ingredients.split(',').map((item) => item.trim()).filter(Boolean)
       : [];
@@ -241,13 +413,16 @@ exports.createProductWeb = async (req, res, next) => {
 
 /**
  * 6. POST /admin/products/:id/toggle
- * Bật/tắt nhanh trạng thái còn hàng (isAvailable) của món ăn
+ * Bật/tắt trạng thái phục vụ món ăn (isAvailable)
  */
-exports.toggleProductAvailabilityWeb = async (req, res, next) => {
+exports.toggleProductAvailability = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const product = await Product.findById(id);
+    if (!mongoose.isValidObjectId(id)) {
+      return res.redirect('/admin/products?err=ID món ăn không hợp lệ!');
+    }
 
+    const product = await Product.findById(id);
     if (!product) {
       return res.redirect('/admin/products?err=Không tìm thấy món ăn!');
     }
@@ -256,11 +431,30 @@ exports.toggleProductAvailabilityWeb = async (req, res, next) => {
     await product.save();
 
     const statusText = product.isAvailable ? 'Còn Hàng' : 'Hết Hàng';
-    return res.redirect(
-      `/admin/products?msg=Món "${product.name}" đã được cập nhật: [${statusText}]`
-    );
+    return res.redirect(`/admin/products?msg=${encodeURIComponent(`Món "${product.name}" đã cập nhật: [${statusText}]`)}`);
   } catch (error) {
     return res.redirect(`/admin/products?err=${encodeURIComponent(error.message)}`);
   }
 };
+exports.toggleProductAvailabilityWeb = exports.toggleProductAvailability;
 
+/**
+ * 7. GET /admin/branches
+ * Danh sách 4 chi nhánh chuỗi FreshBite Đà Nẵng
+ */
+exports.getBranchesAdmin = async (req, res, next) => {
+  try {
+    const branches = await Branch.find().sort({ name: 1 }).lean();
+
+    res.render('branches', {
+      title: 'Hệ Thống Chi Nhánh FreshBite Đà Nẵng',
+      activeTab: 'branches',
+      branches,
+      successMsg: req.query.msg || null,
+      errorMsg: req.query.err || null,
+      currentUser: res.locals.currentUser || req.user || null
+    });
+  } catch (error) {
+    next(error);
+  }
+};

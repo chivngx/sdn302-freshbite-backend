@@ -35,10 +35,17 @@ router.post(
   reviewController.createReview
 );
 
-// GET /api/reviews/product/:productId
+// GET /api/reviews/product/:productId & GET /api/reviews/:productId
 // Lấy danh sách đánh giá + sao trung bình của 1 món ăn (Public)
 router.get(
   '/product/:productId',
+  [param('productId').isMongoId().withMessage('productId không hợp lệ')],
+  validate,
+  reviewController.getReviewsByProduct
+);
+
+router.get(
+  '/:productId',
   [param('productId').isMongoId().withMessage('productId không hợp lệ')],
   validate,
   reviewController.getReviewsByProduct
@@ -65,4 +72,3 @@ router.delete(
 );
 
 module.exports = router;
-

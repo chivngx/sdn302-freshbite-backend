@@ -1,7 +1,7 @@
 /**
  * Module: Upload & Download Controller
  * Tác giả: Lê Tự Nhật Thạch (Uploads, Seed Data & Web Admin SSR Lead)
- * Bài học tích hợp: Slot 12 - Tải lên tệp tin và Tải xuống file (res.download) trong Express.js
+ * Bài học tích hợp: Slot 12 - Tải lên tệp tin (Multer) và Tải xuống file (res.download)
  */
 
 const fs = require('fs');
@@ -9,12 +9,19 @@ const path = require('path');
 const os = require('os');
 const mongoose = require('mongoose');
 const Order = require('../models/Order');
+const { uploadDir } = require('../middlewares/uploadMiddleware');
+
+// Thư mục lưu hóa đơn bán lẻ
+const invoiceDir = path.join(uploadDir, 'invoices');
+if (!fs.existsSync(invoiceDir)) {
+  fs.mkdirSync(invoiceDir, { recursive: true });
+}
 
 /**
- * 1. POST /api/upload
+ * 1. POST /api/uploads/single (hoặc POST /api/upload hoặc POST /api/uploads)
  * Tiếp nhận 1 ảnh tải lên qua Multer, trả về URL tĩnh phục vụ trên server
  */
-exports.uploadImage = async (req, res, next) => {
+exports.uploadSingleImage = async (req, res, next) => {
   try {
     if (!req.file) {
       return res.status(400).json({
@@ -44,9 +51,10 @@ exports.uploadImage = async (req, res, next) => {
     next(error);
   }
 };
+exports.uploadImage = exports.uploadSingleImage;
 
 /**
- * 2. POST /api/upload/multiple
+ * 2. POST /api/uploads/multiple (hoặc POST /api/upload/multiple)
  * Tiếp nhận tối đa 5 ảnh cùng lúc
  */
 exports.uploadMultipleImages = async (req, res, next) => {
@@ -82,15 +90,47 @@ exports.uploadMultipleImages = async (req, res, next) => {
 };
 
 /**
- * 3. GET /api/orders/:id/invoice (hoặc /api/upload/orders/:id/invoice)
- * Tải file hóa đơn biên nhận đơn hàng (res.download - Slot 12)
- *
- * Bản chất: res.download(path, [filename], [callback]) tự động gán HTTP Header:
- * Content-Disposition: attachment; filename="..."
- * Buộc trình duyệt / thiết bị di động kích hoạt hộp thoại tải file về máy,
- * khác với res.sendFile() vốn hiển thị inline trực tiếp.
+ * 3. GET /api/uploads/download/:filename
+ * Tải file bất kỳ trong thư mục uploads qua res.download() (Slot 12)
+ * Kèm cơ chế chống Directory Traversal Attack
  */
-exports.downloadInvoice = async (req, res, next) => {
+exports.downloadFile = (req, res, next) => {
+  try {
+    const { filename } = req.params;
+
+    // Ngăn chặn Directory Traversal
+    if (filename.includes('..') || filename.includes('/') || filename.includes('\\')) {
+      return res.status(404).json({
+        success: false,
+        message: 'Đường dẫn tệp tin không hợp lệ hoặc bị từ chối truy cập!'
+      });
+    }
+
+    const filePath = path.join(uploadDir, filename);
+
+    if (!fs.existsSync(filePath)) {
+      return res.status(404).json({
+        success: false,
+        message: `Không tìm thấy tệp tin: ${filename}`
+      });
+    }
+
+    return res.download(filePath, filename, (err) => {
+      if (err && !res.headersSent) {
+        next(err);
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * 4. GET /api/orders/:id/invoice hoặc /api/uploads/orders/:id/invoice
+ * Xuất và tải file hóa đơn bán lẻ đơn hàng bằng res.download() (Slot 12)
+ * Kèm BOM UTF-8 '\ufeff' cho Windows Notepad / Excel
+ */
+exports.downloadOrderInvoice = async (req, res, next) => {
   try {
     const { id } = req.params;
 
@@ -109,114 +149,108 @@ exports.downloadInvoice = async (req, res, next) => {
     if (!order) {
       return res.status(404).json({
         success: false,
-        message: 'Không tìm thấy thông tin đơn hàng để xuất hóa đơn!'
+        message: `Không tìm thấy đơn hàng với mã ID: ${id}`
       });
     }
 
-    // Kiểm tra quyền: Chủ đơn hàng hoặc tài khoản Admin mới được tải hóa đơn
-    if (req.user) {
-      const isOwner = order.userId && order.userId._id.toString() === req.user._id.toString();
-      const isAdmin = req.user.role === 'admin';
-      if (!isOwner && !isAdmin) {
-        return res.status(403).json({
-          success: false,
-          message: 'Bạn không có quyền tải hóa đơn của đơn hàng này!'
-        });
+    const invoiceFileName = `HoaDon_${order.orderCode || order._id}.txt`;
+    const invoiceFilePath = path.join(invoiceDir, invoiceFileName);
+
+    const createdAtStr = order.createdAt
+      ? new Date(order.createdAt).toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' })
+      : new Date().toLocaleString('vi-VN');
+
+    const customerName = (order.userId && order.userId.fullName) || 'Khách vãng lai';
+    const customerPhone = (order.userId && order.userId.phone) || 'N/A';
+    const branchName = (order.branchId && order.branchId.name) || 'FreshBite Chi nhánh Đà Nẵng';
+    const branchAddress = (order.branchId && order.branchId.address) || 'Đà Nẵng';
+    const branchPhone = (order.branchId && order.branchId.phone) || '0236.730.0999';
+
+    let itemsTable = '------------------------------------------------------------\n';
+    itemsTable += 'Tên món                       Size   SL      Đơn giá   Thành tiền\n';
+    itemsTable += '------------------------------------------------------------\n';
+
+    (order.items || []).forEach((item, idx) => {
+      const prodName = (item.productId && item.productId.name) || item.name || `Món #${idx + 1}`;
+      const paddedName = prodName.padEnd(28, ' ').slice(0, 28);
+      const sizeStr = (item.size || 'M').padEnd(6, ' ');
+      const qtyStr = String(item.quantity || 1).padEnd(6, ' ');
+      const priceStr = `${Number(item.price || 0).toLocaleString('vi-VN')}đ`.padEnd(11, ' ');
+      const itemSubtotal = (item.quantity || 1) * (item.price || 0);
+      const subStr = `${itemSubtotal.toLocaleString('vi-VN')}đ`;
+
+      itemsTable += `${paddedName} ${sizeStr} ${qtyStr} ${priceStr} ${subStr}\n`;
+      if (item.sugarLevel || item.iceLevel || item.note) {
+        itemsTable += `    - Tùy chọn: ${item.sugarLevel || '100%'} đường, ${item.iceLevel || '100%'} đá${item.note ? ` | Ghi chú: ${item.note}` : ''}\n`;
       }
-    }
-
-    // Định dạng nội dung Hóa đơn biên nhận chi tiết UTF-8
-    const customerName = order.userId ? order.userId.fullName : 'Khách vãng lai';
-    const customerPhone = order.userId ? order.userId.phone : 'N/A';
-    const customerEmail = order.userId ? order.userId.email : 'N/A';
-    const branchName = order.branchId ? order.branchId.name : 'FreshBite Đà Nẵng';
-    const branchAddress = order.branchId ? order.branchId.address : 'Đà Nẵng';
-    const branchPhone = order.branchId ? order.branchId.phone : '0236.730.0999';
-
-    const orderDate = new Date(order.createdAt).toLocaleString('vi-VN', {
-      timeZone: 'Asia/Ho_Chi_Minh'
     });
+    itemsTable += '------------------------------------------------------------\n';
 
-    const formatCurrency = (amount) =>
-      Number(amount || 0).toLocaleString('vi-VN') + ' VNĐ';
-
-    let itemsTable = '';
-    order.items.forEach((item, index) => {
-      const itemTotal = (item.price || 0) * (item.quantity || 1);
-      itemsTable += `
-[${index + 1}] ${item.name}
-    - Size: ${item.size || 'S'} | Số lượng: ${item.quantity} | Đơn giá: ${formatCurrency(item.price)}
-    - Tùy chọn: ${item.sugarLevel || '100%'} đường | ${item.iceLevel || '100%'} đá
-    ${item.note ? `- Ghi chú: ${item.note}` : ''}
-    - Thành tiền: ${formatCurrency(itemTotal)}
+    const invoiceContent = `============================================================
+              HỆ THỐNG CÀ PHÊ FRESHBITE ĐÀ NẴNG
+          HÓA ĐƠN BÁN LẺ & PHIẾU XÁC NHẬN ĐƠN HÀNG
+============================================================
+Mã đơn hàng:     ${order.orderCode || order._id}
+Ngày đặt hàng:   ${createdAtStr}
+Trạng thái:      ${order.status}
+Phương thức TT:  ${order.paymentMethod} (${order.paymentStatus || 'PENDING'})
+------------------------------------------------------------
+Chi nhánh:       ${branchName}
+Địa chỉ:         ${branchAddress}
+Hotline:         ${branchPhone}
+Khách hàng:      ${customerName}
+Số điện thoại:   ${customerPhone}
+Ghi chú nhận:    ${order.pickupTime ? order.pickupTime : 'Sớm nhất tại quầy'}
+============================================================
+CHI TIẾT MÓN ĂN:
+${itemsTable}
+Tổng tiền món:              ${Number(order.subtotal || order.totalAmount || 0).toLocaleString('vi-VN')} VNĐ
+Giảm giá / Voucher:        -${Number(order.discount || order.discountAmount || 0).toLocaleString('vi-VN')} VNĐ
+TỔNG THANH TOÁN:            ${Number(order.totalAmount || 0).toLocaleString('vi-VN')} VNĐ
+============================================================
+Cảm ơn Quý khách đã tin tưởng và ủng hộ FreshBite Đà Nẵng!
+Mô hình Order Ahead & In-Store Pick-up (100% Không Shipper)
+Hotline hỗ trợ: 0236.730.0999 | Email: contact@freshbite.vn
 `;
-    });
-
-    const invoiceContent = `
-============================================================
-              FRESHBITE COFFEE & BAKERY
-        Mạng lưới Cà phê Đặc sản & Bánh thủ công Đà Nẵng
-============================================================
-HÓA ĐƠN BIÊN NHẬN ĐẶT TRƯỚC (ORDER AHEAD RECEIPT)
-Mã đơn hàng       : ${order.orderCode}
-Thời gian tạo     : ${orderDate}
-Trạng thái đơn    : ${order.status}
-Hẹn giờ nhận món  : ${order.pickupTime}
-------------------------------------------------------------
-THÔNG TIN CHI NHÁNH NHẬN HÀNG:
-- Chi nhánh       : ${branchName}
-- Địa chỉ         : ${branchAddress}
-- Hotline         : ${branchPhone}
-
-THÔNG TIN KHÁCH HÀNG:
-- Họ và tên       : ${customerName}
-- Số điện thoại   : ${customerPhone}
-- Email           : ${customerEmail}
-------------------------------------------------------------
-CHI TIẾT DANH SÁCH MÓN:${itemsTable}
-------------------------------------------------------------
-Tạm tính          : ${formatCurrency(order.subtotal)}
-Mã giảm giá       : ${order.voucherCode || 'Không áp dụng'}
-Giảm giá          : -${formatCurrency(order.discount || 0)}
-------------------------------------------------------------
-TỔNG CỘNG THANH TOÁN : ${formatCurrency(order.totalAmount)}
-Phương thức TT    : ${order.paymentMethod}
-Trạng thái TT     : ${order.paymentStatus}
-============================================================
-   Mô hình Order Ahead & In-Store Pick-up (100% Không Shipper)
-   Quý khách vui lòng xuất trình mã đơn ${order.orderCode} tại quầy!
-          Cảm ơn Quý khách & Hẹn gặp lại!
-============================================================
-`;
-
-    // Lưu file tạm vào thư mục tạm của hệ điều hành (os.tmpdir)
-    const fileName = `HoaDon_${order.orderCode}.txt`;
-    const tempFilePath = path.join(os.tmpdir(), fileName);
 
     // Ghi kèm BOM UTF-8 '\ufeff' để Windows Notepad / Excel không bị lỗi font Tiếng Việt
-    fs.writeFileSync(tempFilePath, '\ufeff' + invoiceContent, 'utf8');
+    fs.writeFileSync(invoiceFilePath, '\ufeff' + invoiceContent, 'utf8');
 
     // Kích hoạt res.download() tải file về máy Client (Slot 12)
-    return res.download(tempFilePath, fileName, (err) => {
-      if (err) {
-        if (!res.headersSent) {
-          return res.status(500).json({
-            success: false,
-            message: `Lỗi tải file hóa đơn: ${err.message}`
-          });
-        }
-      }
-      // Dọn dẹp file tạm trên ổ cứng sau khi hoàn tất truyền tải
-      try {
-        if (fs.existsSync(tempFilePath)) {
-          fs.unlinkSync(tempFilePath);
-        }
-      } catch (cleanupErr) {
-        console.error('Lỗi dọn file hóa đơn tạm:', cleanupErr.message);
+    return res.download(invoiceFilePath, invoiceFileName, (err) => {
+      if (err && !res.headersSent) {
+        next(err);
       }
     });
   } catch (error) {
     next(error);
   }
 };
+exports.downloadInvoice = exports.downloadOrderInvoice;
 
+/**
+ * 5. GET /api/uploads/template/product-import
+ * Tải file mẫu CSV thực đơn bằng res.download() (Slot 12)
+ */
+exports.downloadProductTemplate = (req, res, next) => {
+  try {
+    const templateFileName = 'FreshBite_Menu_Import_Template.csv';
+    const templateFilePath = path.join(uploadDir, templateFileName);
+
+    const templateContent = `name,categoryCode,price,calories,description,isAvailable,ingredients
+Cà phê Sữa Tươi Sương Sáo,coffee,39000,195,"Cà phê sữa tươi thơm béo kết hợp sương sáo thanh mát đặc sản Đà Nẵng",true,"Cà phê Robusta, Sữa tươi, Sương sáo"
+Trà Lài Hạt Sen Cố Đô,tea,42000,120,"Trà hoa lài thanh nhã hòa quyện hạt sen Huế bùi bùi thanh mát",true,"Trà lài, Hạt sen, Đường phèn"
+Bánh Sừng Bò Trứng Muối,bakery,35000,280,"Bánh sừng bò ngàn lớp nhân sốt trứng muối hoàng kim béo ngậy",true,"Bột mì Pháp, Bơ tươi, Trứng muối"
+`;
+
+    fs.writeFileSync(templateFilePath, '\ufeff' + templateContent, 'utf8');
+
+    return res.download(templateFilePath, templateFileName, (err) => {
+      if (err && !res.headersSent) {
+        next(err);
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+};

@@ -17,10 +17,12 @@ if (!fs.existsSync(uploadDir)) {
 // 1. Cấu hình diskStorage: Lưu file vào thư mục /uploads và đổi tên tránh trùng lặp
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
     cb(null, uploadDir);
   },
   filename: (req, file, cb) => {
-    // Đổi tên file: [timestamp]-[randomDigits].[extension]
     const ext = path.extname(file.originalname).toLowerCase();
     const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
     const safeBaseName = path
@@ -35,9 +37,9 @@ const storage = multer.diskStorage({
 const fileFilter = (req, file, cb) => {
   const allowedExtensions = ['.jpg', '.jpeg', '.png', '.webp', '.gif'];
   const ext = path.extname(file.originalname).toLowerCase();
-  const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+  const allowedMimeTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'];
 
-  if (allowedExtensions.includes(ext) && allowedMimeTypes.includes(file.mimetype)) {
+  if (allowedExtensions.includes(ext) && (allowedMimeTypes.includes(file.mimetype) || file.mimetype.startsWith('image/'))) {
     cb(null, true);
   } else {
     cb(
@@ -93,4 +95,4 @@ exports.uploadMultiple = (fieldName = 'images', maxCount = 5) => {
 };
 
 exports.upload = upload;
-
+exports.uploadDir = uploadDir;

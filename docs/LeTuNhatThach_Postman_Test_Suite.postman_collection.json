@@ -1,0 +1,744 @@
+{
+  "info": {
+    "_postman_id": "freshbite-letunhatthach-uploads-ssr",
+    "name": "FreshBite - Le Tu Nhat Thach (Uploads, Seed Data & Web Admin SSR) Test Suite",
+    "description": "Bộ kịch bản kiểm thử Postman toàn diện dành cho Lê Tự Nhật Thạch (Uploads, Seed Data & Web Admin SSR - 20% Scope môn SDN302 ĐH FPT)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000",
+      "type": "string"
+    },
+    {
+      "key": "adminToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "userToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "uploadedFilename",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "orderId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "productId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "branchId",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "0. Khởi Tạo & Xác Thực (Setup & Auth)",
+      "item": [
+        {
+          "name": "0.1 Đăng nhập Quản trị viên (Admin Login)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "const json = pm.response.json();",
+                  "if (json.data && json.data.token) {",
+                  "    pm.collectionVariables.set(\"adminToken\", json.data.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@freshbite.vn\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "0.2 Lấy danh sách đơn hàng để trích xuất Order ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "const json = pm.response.json();",
+                  "if (json.data && json.data.length > 0) {",
+                  "    pm.collectionVariables.set(\"orderId\", json.data[0]._id);",
+                  "    if (json.data[0].branchId) {",
+                  "        const bId = typeof json.data[0].branchId === 'object' ? json.data[0].branchId._id : json.data[0].branchId;",
+                  "        pm.collectionVariables.set(\"branchId\", bId);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/orders/admin/all",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "orders", "admin", "all"]
+            }
+          }
+        },
+        {
+          "name": "0.3 Lấy danh sách món ăn để trích xuất Product ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "const json = pm.response.json();",
+                  "if (json.data && json.data.length > 0) {",
+                  "    pm.collectionVariables.set(\"productId\", json.data[0]._id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/products",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "products"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "1. Multer File Upload Module (Slot 12)",
+      "item": [
+        {
+          "name": "1.1 Upload 1 Ảnh Đơn Lẻ (POST /api/uploads/single)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201 Created\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Upload returns URL and filename\", function () {",
+                  "    pm.expect(json.success).to.be.true;",
+                  "    pm.expect(json.data.url).to.include('/uploads/');",
+                  "});",
+                  "if (json.data && json.data.filename) {",
+                  "    pm.collectionVariables.set(\"uploadedFilename\", json.data.filename);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/uploads/single",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "uploads", "single"]
+            }
+          }
+        },
+        {
+          "name": "1.2 Tải Trực Tiếp Ảnh Tĩnh từ Express Static (GET /uploads/:filename)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/uploads/{{uploadedFilename}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["uploads", "{{uploadedFilename}}"]
+            }
+          }
+        },
+        {
+          "name": "1.3 Upload Ảnh Qua Route Alias (POST /api/uploads)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201 Created\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/uploads",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "uploads"]
+            }
+          }
+        },
+        {
+          "name": "1.4 Upload Nhiều Ảnh Cùng Lúc (POST /api/uploads/multiple)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201 Created\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "images",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/uploads/multiple",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "uploads", "multiple"]
+            }
+          }
+        },
+        {
+          "name": "1.5 Bắt Lỗi Khi Không Đính Kèm File (Validation Error)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400 Bad Request\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Returns validation error message\", function () {",
+                  "    pm.expect(json.success).to.be.false;",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": []
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/uploads/single",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "uploads", "single"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. File Download Module với res.download() (Slot 12)",
+      "item": [
+        {
+          "name": "2.1 Tải Tệp Tin Đã Upload Bằng res.download() (GET /api/uploads/download/:filename)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Header Content-Disposition is attachment\", function () {",
+                  "    pm.expect(pm.response.headers.get(\"Content-Disposition\")).to.include(\"attachment\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/uploads/download/{{uploadedFilename}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "uploads", "download", "{{uploadedFilename}}"]
+            }
+          }
+        },
+        {
+          "name": "2.2 Tải Tệp Tin Mẫu CSV Thực Đơn (GET /api/uploads/template/product-import)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Downloads CSV file with attachment header\", function () {",
+                  "    pm.expect(pm.response.headers.get(\"Content-Disposition\")).to.include(\"attachment\");",
+                  "    pm.expect(pm.response.text()).to.include(\"categoryCode\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/uploads/template/product-import",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "uploads", "template", "product-import"]
+            }
+          }
+        },
+        {
+          "name": "2.3 Tải Hóa Đơn Bán Lẻ Đơn Hàng (GET /api/uploads/orders/:id/invoice)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Invoice download attachment verified\", function () {",
+                  "    pm.expect(pm.response.headers.get(\"Content-Disposition\")).to.include(\"attachment\");",
+                  "    pm.expect(pm.response.text()).to.include(\"FRESHBITE\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/uploads/orders/{{orderId}}/invoice",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "uploads", "orders", "{{orderId}}", "invoice"]
+            }
+          }
+        },
+        {
+          "name": "2.4 Tải Hóa Đơn Bán Lẻ RESTful (GET /api/orders/:id/invoice)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Content-Disposition header present\", function () {",
+                  "    pm.expect(pm.response.headers.get(\"Content-Disposition\")).to.include(\"attachment\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/orders/{{orderId}}/invoice",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "orders", "{{orderId}}", "invoice"]
+            }
+          }
+        },
+        {
+          "name": "2.5 Báo Lỗi 404 Khi Tải Tệp Tin Không Tồn Tại",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 404 Not Found\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/uploads/download/nonexistent_file_9999.png",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "uploads", "download", "nonexistent_file_9999.png"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Server-Side Rendering EJS Web Admin & Barista KDS (Slot 7)",
+      "item": [
+        {
+          "name": "3.1 Truy Cập Bảng Quản Trị SSR (GET /admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Content-Type is text/html\", function () {",
+                  "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"text/html\");",
+                  "});",
+                  "pm.test(\"HTML contains Dashboard content\", function () {",
+                  "    pm.expect(pm.response.text()).to.include(\"Bảng Quản Trị & Doanh Thu Quầy\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/admin",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin"]
+            }
+          }
+        },
+        {
+          "name": "3.2 Truy Cập Màn Hình KDS Quầy Barista (GET /admin/orders)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"HTML contains KDS elements\", function () {",
+                  "    pm.expect(pm.response.text()).to.include(\"Màn Hình Quầy Barista (KDS)\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/admin/orders",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "orders"]
+            }
+          }
+        },
+        {
+          "name": "3.3 Lọc Đơn Hàng Theo Chi Nhánh Trên KDS (GET /admin/orders?branchId=...)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/admin/orders?branchId={{branchId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "orders"],
+              "query": [
+                {
+                  "key": "branchId",
+                  "value": "{{branchId}}"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "3.4 Cập Nhật Trạng Thái Đơn Hàng Từ Web Admin SSR (POST /admin/orders/:id/status)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 or 302 Redirect\", function () {",
+                  "    pm.expect([200, 302]).to.include(pm.response.code);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "status",
+                  "value": "Preparing",
+                  "type": "text"
+                },
+                {
+                  "key": "redirectUrl",
+                  "value": "/admin/orders",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/orders/{{orderId}}/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "orders", "{{orderId}}", "status"]
+            }
+          }
+        },
+        {
+          "name": "3.5 Quản Lý Thực Đơn & Giá Món Ăn (GET /admin/products)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"HTML contains Product table\", function () {",
+                  "    pm.expect(pm.response.text()).to.include(\"Quản Lý Thực Đơn\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/admin/products",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "products"]
+            }
+          }
+        },
+        {
+          "name": "3.6 Bật/Tắt Trạng Thái Còn Hàng Món Ăn (POST /admin/products/:id/toggle)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 or 302 Redirect\", function () {",
+                  "    pm.expect([200, 302]).to.include(pm.response.code);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/admin/products/{{productId}}/toggle",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "products", "{{productId}}", "toggle"]
+            }
+          }
+        },
+        {
+          "name": "3.7 Quản Lý 4 Chi Nhánh Đà Nẵng (GET /admin/branches)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"HTML contains Da Nang Branches\", function () {",
+                  "    pm.expect(pm.response.text()).to.include(\"Chi Nhánh\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/admin/branches",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "branches"]
+            }
+          }
+        },
+        {
+          "name": "3.8 Tải Stylesheet Giao Diện Admin (GET /css/style.css)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"CSS content verified\", function () {",
+                  "    pm.expect(pm.response.text()).to.include(\"--primary\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/css/style.css",
+              "host": ["{{baseUrl}}"],
+              "path": ["css", "style.css"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

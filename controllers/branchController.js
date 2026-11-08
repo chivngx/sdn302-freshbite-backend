@@ -290,3 +290,73 @@ exports.deleteBranch = async (req, res, next) => {
     next(error);
   }
 };
+
+/**
+ * @desc    [Barista quầy] Bật/tắt món tạm hết hàng tại chi nhánh (Tab 2)
+ * @route   PATCH /api/branches/:id/stock
+ * @access  Private/Admin
+ */
+exports.updateBranchStock = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { productId, isOutOfStock, action, outOfStockProductIds } = req.body;
+
+    const branch = await Branch.findById(id);
+    if (!branch) {
+      return res.status(404).json({
+        success: false,
+        message: 'Không tìm thấy chi nhánh yêu cầu!'
+      });
+    }
+
+    if (!Array.isArray(branch.outOfStockProductIds)) {
+      branch.outOfStockProductIds = [];
+    }
+
+    // Trường hợp 1: Truyền mảng trực tiếp
+    if (Array.isArray(outOfStockProductIds)) {
+      branch.outOfStockProductIds = outOfStockProductIds;
+    } else if (productId) {
+      const pidStr = productId.toString();
+      const existingIndex = branch.outOfStockProductIds.findIndex(
+        (p) => p.toString() === pidStr
+      );
+
+      if (action === 'add' || isOutOfStock === true) {
+        if (existingIndex === -1) {
+          branch.outOfStockProductIds.push(productId);
+        }
+      } else if (action === 'remove' || isOutOfStock === false) {
+        if (existingIndex !== -1) {
+          branch.outOfStockProductIds.splice(existingIndex, 1);
+        }
+      } else {
+        // Toggle nếu không chỉ định rõ
+        if (existingIndex !== -1) {
+          branch.outOfStockProductIds.splice(existingIndex, 1);
+        } else {
+          branch.outOfStockProductIds.push(productId);
+        }
+      }
+    } else {
+      return res.status(400).json({
+        success: false,
+        message: 'Vui lòng cung cấp productId hoặc outOfStockProductIds cần cập nhật!'
+      });
+    }
+
+    await branch.save();
+
+    return res.status(200).json({
+      success: true,
+      message: 'Cập nhật trạng thái tồn kho chi nhánh thành công!',
+      data: {
+        branchId: branch._id,
+        branchName: branch.name,
+        outOfStockProductIds: branch.outOfStockProductIds
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+};

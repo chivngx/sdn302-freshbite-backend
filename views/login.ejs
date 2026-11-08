@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title || 'Đăng Nhập Quản Trị & Barista - FreshBite Coffee & Tea' %></title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    body.login-page-body {
+      display: block !important;
+      width: 100% !important;
+      min-height: 100vh !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      overflow-x: hidden !important;
+    }
+
+    .login-viewport {
+      min-height: 100vh;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--md-sys-color-shell);
+      padding: 16px;
+      box-sizing: border-box;
+    }
+
+    .login-floating-card {
+      width: 100%;
+      max-width: 400px;
+      background-color: var(--md-sys-color-surface);
+      border-radius: var(--md-shape-2xl);
+      box-shadow: var(--md-elevation-3);
+      padding: 32px 24px;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid var(--md-sys-color-outline-variant);
+      box-sizing: border-box;
+      margin: 0 auto;
+    }
+
+    @media (max-width: 480px) {
+      .login-viewport {
+        padding: 12px;
+      }
+      .login-floating-card {
+        padding: 24px 16px;
+        border-radius: 20px;
+      }
+      .login-title {
+        font-size: 1.25rem;
+      }
+      .quick-chip-row {
+        flex-direction: column;
+      }
+      .demo-account-chip {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    .login-brand-head {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .login-emblem {
+      width: 52px;
+      height: 52px;
+      border-radius: var(--md-shape-lg);
+      background: linear-gradient(135deg, #5C3826 0%, #8C532B 100%);
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 14px;
+      box-shadow: 0 4px 12px rgba(92, 56, 38, 0.25);
+    }
+
+    .login-title {
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: var(--md-sys-color-primary);
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+
+    .login-subtitle {
+      font-size: 0.8rem;
+      color: var(--md-sys-color-on-surface-variant);
+      margin-top: 4px;
+    }
+
+    .login-alert-error {
+      background-color: #FEE2E2;
+      border: 1px solid #FECACA;
+      color: #991B1B;
+      border-radius: var(--md-shape-md);
+      padding: 10px 14px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .login-alert-success {
+      background-color: #DCFCE7;
+      border: 1px solid #BBF7D0;
+      color: #166534;
+      border-radius: var(--md-shape-md);
+      padding: 10px 14px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .login-form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .m3-input-field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .m3-input-label {
+      font-size: 0.76rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--md-sys-color-on-surface-variant);
+    }
+
+    .m3-input-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background-color: var(--md-sys-color-surface-container);
+      border: 1px solid var(--md-sys-color-outline-variant);
+      border-radius: var(--md-shape-md);
+      padding: 10px 14px;
+      transition: all var(--spring-snappy);
+    }
+
+    .m3-input-box:focus-within {
+      border-color: var(--md-sys-color-primary);
+      background-color: #FFFFFF;
+      box-shadow: 0 0 0 3px rgba(92, 56, 38, 0.12);
+    }
+
+    .m3-input-box svg {
+      color: var(--md-sys-color-secondary);
+      flex-shrink: 0;
+    }
+
+    .m3-real-input {
+      border: none;
+      outline: none;
+      background: transparent;
+      width: 100%;
+      font-size: 0.88rem;
+      color: var(--md-sys-color-on-surface);
+      font-weight: 600;
+    }
+
+    .quick-chips-section {
+      margin-top: 20px;
+      padding-top: 18px;
+      border-top: 1px dashed var(--md-sys-color-outline-variant);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .quick-chips-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--md-sys-color-on-surface-variant);
+    }
+
+    .quick-chip-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .demo-account-chip {
+      background-color: var(--md-sys-color-surface-container);
+      border: 1px solid var(--md-sys-color-outline-variant);
+      border-radius: var(--md-shape-full);
+      padding: 6px 12px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--md-sys-color-primary);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all var(--spring-snappy);
+    }
+
+    .demo-account-chip:hover {
+      background-color: var(--md-sys-color-primary-container);
+      border-color: var(--md-sys-color-primary);
+    }
+  </style>
+</head>
+<body class="freshbite-app login-page-body">
+  <div class="login-viewport">
+    <div class="login-floating-card">
+      <div class="login-brand-head">
+        <div class="login-emblem">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 8h1a4 4 0 0 1 0 8h-1"></path>
+            <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path>
+            <line x1="6" y1="1" x2="6" y2="4"></line>
+            <line x1="10" y1="1" x2="10" y2="4"></line>
+            <line x1="14" y1="1" x2="14" y2="4"></line>
+          </svg>
+        </div>
+        <h1 class="login-title">FreshBite Coffee & Tea</h1>
+        <p class="login-subtitle">Hệ Thống Quản Trị & Trạm Pha Chế Barista KDS Đà Nẵng</p>
+      </div>
+
+      <% if (typeof error !== 'undefined' && error) { %>
+        <div class="login-alert-error">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+          <span><%= error %></span>
+        </div>
+      <% } %>
+
+      <% if (typeof message !== 'undefined' && message === 'logged_out') { %>
+        <div class="login-alert-success">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          <span>Đã đăng xuất an toàn khỏi hệ thống quản trị</span>
+        </div>
+      <% } %>
+
+      <form action="/admin/login" method="POST" class="login-form">
+        <div class="m3-input-field">
+          <label for="emailInput" class="m3-input-label">Email Quản Trị / Nhân Viên</label>
+          <div class="m3-input-box">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+            <input type="email" name="email" id="emailInput" required placeholder="admin@freshbite.vn" class="m3-real-input" value="admin@freshbite.vn">
+          </div>
+        </div>
+
+        <div class="m3-input-field">
+          <label for="passwordInput" class="m3-input-label">Mật Khẩu</label>
+          <div class="m3-input-box">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+            <input type="password" name="password" id="passwordInput" required placeholder="••••••••" class="m3-real-input" value="password123">
+          </div>
+        </div>
+
+        <button type="submit" class="m3-btn m3-btn-filled" style="width: 100%; height: 44px; margin-top: 6px; font-size: 0.88rem;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><polyline points="10 17 15 12 10 7"></polyline><line x1="15" y1="12" x2="3" y2="12"></line></svg>
+          <span>Đăng Nhập Vào Trạm</span>
+        </button>
+      </form>
+
+      <!-- Quick Fill Demo Accounts -->
+      <div class="quick-chips-section">
+        <span class="quick-chips-label">Tài Khoản Mẫu Nhanh:</span>
+        <div class="quick-chip-row">
+          <button type="button" class="demo-account-chip" onclick="document.getElementById('emailInput').value='admin@freshbite.vn'; document.getElementById('passwordInput').value='password123';">
+            <span>Quản Trị Viên (Admin)</span>
+          </button>
+          <button type="button" class="demo-account-chip" onclick="document.getElementById('emailInput').value='thachltn@freshbite.vn'; document.getElementById('passwordInput').value='password123';">
+            <span>Lê Tự Nhật Thạch</span>
+          </button>
+        </div>
+        <span style="font-size: 0.72rem; color: var(--md-sys-color-on-surface-variant); margin-top: 2px;">
+          Mật khẩu mặc định: <code>password123</code>
+        </span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

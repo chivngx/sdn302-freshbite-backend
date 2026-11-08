@@ -5,7 +5,8 @@ const {
   getBranchById,
   createBranch,
   updateBranch,
-  deleteBranch
+  deleteBranch,
+  updateBranchStock
 } = require('../controllers/branchController');
 const { verifyToken, authorize } = require('../middlewares/authMiddleware');
 const {
@@ -48,5 +49,12 @@ router.put('/:id', verifyToken, authorize('admin'), validateUpdateBranch, update
  * @access  Private/Admin
  */
 router.delete('/:id', verifyToken, authorize('admin'), validateBranchId, deleteBranch);
+
+/**
+ * @route   PATCH /api/branches/:id/stock
+ * @desc    [Barista quầy] Bật/tắt món tạm hết hàng tại chi nhánh (Tab 2)
+ * @access  Private/Admin
+ */
+router.patch('/:id/stock', verifyToken, authorize('admin'), validateBranchId, updateBranchStock);
 
 module.exports = router;

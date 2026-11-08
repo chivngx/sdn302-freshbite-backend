@@ -4,6 +4,7 @@ const chatController = require('../controllers/chatController');
 const { verifyToken, checkRole } = require('../middlewares/authMiddleware');
 const { body, param } = require('express-validator');
 const { validationResult } = require('express-validator');
+const Message = require('../models/Message');
 
 // Middleware kiểm tra lỗi validation
 const validate = (req, res, next) => {
@@ -66,10 +67,19 @@ router.get(
   chatController.getMyChat
 );
 
-// GET /api/chats/:branchId/conversations
-// Staff xem danh sách tất cả hội thoại tại chi nhánh
+// GET /api/chats/:branchId/conversations & /api/chats/:branchId/customers
+// Staff xem danh sách tất cả hội thoại khách hàng tại chi nhánh
 router.get(
   '/:branchId/conversations',
+  verifyToken,
+  checkRole('admin'),
+  branchIdValidator,
+  validate,
+  chatController.getBranchConversations
+);
+
+router.get(
+  '/:branchId/customers',
   verifyToken,
   checkRole('admin'),
   branchIdValidator,
@@ -91,5 +101,31 @@ router.get(
   chatController.getConversationByUser
 );
 
-module.exports = router;
+// PATCH /api/chats/:branchId/read
+// Đánh dấu tin nhắn đã đọc
+router.patch(
+  '/:branchId/read',
+  verifyToken,
+  branchIdValidator,
+  validate,
+  async (req, res, next) => {
+    try {
+      const { branchId } = req.params;
+      const customerId = req.body.customerId || req.user._id;
 
+      await Message.updateMany(
+        { branchId, userId: customerId, isRead: false },
+        { isRead: true }
+      );
+
+      return res.status(200).json({
+        success: true,
+        message: 'Đã đánh dấu tin nhắn đã đọc!'
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
+module.exports = router;

@@ -5,7 +5,7 @@ const http = require('http');
 const cors = require('cors');
 const helmet = require('helmet');
 const path = require('path');
-const expressLayouts = require('express-ejs-layouts');
+const cookieParser = require('cookie-parser');
 const connectDB = require('./config/db');
 const { initSocket } = require('./config/socket');
 const { notFound, errorHandler } = require('./middlewares/errorMiddleware');
@@ -16,6 +16,7 @@ const categoryRoutes = require('./routes/categoryRoutes');
 const productRoutes = require('./routes/productRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const branchRoutes = require('./routes/branchRoutes');
+const voucherRoutes = require('./routes/voucherRoutes');
 const chatRoutes = require('./routes/chatRoutes');
 const reviewRoutes = require('./routes/reviewRoutes');
 const reportRoutes = require('./routes/reportRoutes');
@@ -25,15 +26,10 @@ const adminWebRoutes = require('./routes/adminWebRoutes');
 const app = express();
 const server = http.createServer(app);
 
-// Khởi tạo Socket.IO hỗ trợ Live Chat real-time
+// Khởi tạo Socket.IO hỗ trợ Live Chat real-time (Lê Đức Sơn)
 initSocket(server);
 
-// Cấu hình View Engine EJS & Express Layouts (Slot 7 - Lê Tự Nhật Thạch)
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
-app.use(expressLayouts);
-app.set('layout', 'layouts/main');
-
+// Cấu hình Helmet bảo mật
 app.use(
   helmet({
     contentSecurityPolicy: false,
@@ -44,8 +40,15 @@ app.use(cors());
 app.use(requestLogger);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use(cookieParser());
+
+// Cấu hình EJS View Engine (Slot 7 - Web Admin & Barista KDS)
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+
+// Static assets: public/ cho CSS/JS giao diện và uploads/ cho ảnh tĩnh
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.get('/', (req, res) => {
   res.status(200).json({ status: 'ok', message: 'FreshBite API running' });
@@ -55,19 +58,26 @@ app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
+// Các API Endpoints
 app.use('/api/auth', authRoutes);
-app.use('/api/users', authRoutes); // ho tro routing /api/users/favorites theo dac ta
+app.use('/api/users', authRoutes); // hỗ trợ routing /api/users/favorites theo đặc tả
 app.use('/api/categories', categoryRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/branches', branchRoutes);
+app.use('/api/vouchers', voucherRoutes);
 app.use('/api/chats', chatRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/reports', reportRoutes);
-app.use('/api/upload', uploadRoutes);
+
+// Module Uploads & File Downloads (Slot 12 - Lê Tự Nhật Thạch)
+app.use('/api/uploads', uploadRoutes);
+app.use('/api/upload', uploadRoutes); // alias theo đặc tả
+
+// Web Admin SSR (Slot 7: EJS Server-Side Rendering)
 app.use('/admin', adminWebRoutes);
 
-// middleware bat loi phai dat o cuoi cung sau tat ca routes
+// Middleware bắt lỗi phải đặt ở cuối cùng sau tất cả routes
 app.use(notFound);
 app.use(errorLogger);
 app.use(errorHandler);

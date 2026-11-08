@@ -7,7 +7,7 @@ const {
   getAllOrders,
   updateOrderStatus
 } = require('../controllers/orderController');
-const { downloadInvoice } = require('../controllers/uploadController');
+const { downloadOrderInvoice } = require('../controllers/uploadController');
 const { verifyToken, authorize } = require('../middlewares/authMiddleware');
 const { validateCreateOrder } = require('../middlewares/validators/orderValidator');
 
@@ -18,16 +18,19 @@ router.post('/', verifyToken, validateCreateOrder, createOrder);
 router.get('/my-orders', verifyToken, getMyOrders);
 router.get('/admin/all', verifyToken, authorize('admin'), getAllOrders);
 
-// 3. Route tải hóa đơn biên nhận đơn hàng qua res.download() (Slot 12 - Lê Tự Nhật Thạch)
-router.get('/:id/invoice', (req, res, next) => {
-  if (req.headers.authorization) {
-    return verifyToken(req, res, next);
-  }
-  next();
-}, downloadInvoice);
-
-// 4. Các route động có param '/:id'
+// 3. Các route động có param '/:id'
 router.get('/:id', verifyToken, getOrderById);
+// Route tải hóa đơn biên nhận đơn hàng qua res.download() (Slot 12 - Lê Tự Nhật Thạch)
+router.get(
+  '/:id/invoice',
+  (req, res, next) => {
+    if (req.headers.authorization || req.cookies?.freshbite_admin_token) {
+      return verifyToken(req, res, next);
+    }
+    next();
+  },
+  downloadOrderInvoice
+);
 router.patch('/:id/status', verifyToken, authorize('admin'), updateOrderStatus);
 
 module.exports = router;
