@@ -76,7 +76,7 @@ const PORT = process.env.PORT || 5000;
 
 if (require.main === module) {
   connectDB().then(() => {
-    server = app.listen(PORT, () => {
+    server.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
     });
   });
