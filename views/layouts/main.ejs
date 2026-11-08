@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof title !== 'undefined' ? title : 'FreshBite Đà Nẵng - Quản Trị Quầy Barista' %></title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>☕</text></svg>">
+</head>
+<body>
+
+  <!-- Thanh Điều Hướng Header (Navbar) -->
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="/admin/dashboard" class="brand-logo">
+        <div class="brand-icon">☕</div>
+        <div>
+          <div class="brand-title">FreshBite Đà Nẵng</div>
+          <div class="brand-subtitle">Order Ahead & In-Store Pick-up • KDS Counter Desk</div>
+        </div>
+      </a>
+
+      <nav>
+        <ul class="nav-links">
+          <li>
+            <a href="/admin/dashboard" class="nav-link <%= typeof activeTab !== 'undefined' && activeTab === 'dashboard' ? 'active' : '' %>">
+              📊 Tổng Quan
+            </a>
+          </li>
+          <li>
+            <a href="/admin/orders" class="nav-link <%= typeof activeTab !== 'undefined' && activeTab === 'orders' ? 'active' : '' %>">
+              ☕ Màn Hình KDS Bếp
+            </a>
+          </li>
+          <li>
+            <a href="/admin/products" class="nav-link <%= typeof activeTab !== 'undefined' && activeTab === 'products' ? 'active' : '' %>">
+              🥐 Thực Đơn & Upload
+            </a>
+          </li>
+          <li>
+            <span class="nav-branch-pill">
+              📍 4 Chi nhánh Đà Nẵng
+            </span>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Nội Dung Trang Chính (Render từ EJS view con) -->
+  <main class="main-content">
+    <% if (typeof successMsg !== 'undefined' && successMsg) { %>
+      <div class="alert alert-success">
+        ✅ <%= successMsg %>
+      </div>
+    <% } %>
+
+    <% if (typeof errorMsg !== 'undefined' && errorMsg) { %>
+      <div class="alert alert-danger">
+        ⚠️ <%= errorMsg %>
+      </div>
+    <% } %>
+
+    <%- body %>
+  </main>
+
+  <!-- Chân Trang Footer -->
+  <footer class="footer">
+    <p>
+      <strong>FRESHBITE COFFEE & BAKERY (ĐÀ NẴNG)</strong> • HỆ THỐNG QUẢN TRỊ QUẦY BARISTA (SSR EJS - SLOT 7)
+    </p>
+    <p style="margin-top: 0.35rem; font-size: 0.8rem; color: #94a3b8;">
+      Đại học FPT Đà Nẵng • Môn học SDN302 (Node.js & Express) • Nhóm 5 Thành viên (Phụ trách SSR & Uploads: <strong>Lê Tự Nhật Thạch</strong>)
+    </p>
+  </footer>
+
+</body>
+</html>
+

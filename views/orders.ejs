@@ -1,0 +1,191 @@
+<!-- Màn Hình KDS Quầy Barista & Bếp (Kitchen Display System - Slot 7 EJS) -->
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Màn Hình Bếp KDS & Quầy Barista</h1>
+    <p class="page-subtitle">Nhận đơn hàng tức thời, theo dõi pha chế và chuyển trạng thái đơn (Pick-up 100% không shipper)</p>
+  </div>
+  <div style="display: flex; gap: 0.5rem;">
+    <a href="/admin/orders" class="btn btn-outline">
+      🔄 Làm Mới Đơn Hàng
+    </a>
+  </div>
+</div>
+
+<!-- Thanh Bộ Lọc KDS: Trạng Thái & Chi Nhánh -->
+<div class="kds-filter-bar">
+  <div class="filter-tabs">
+    <a href="/admin/orders<%= currentBranch ? '?branchId=' + currentBranch : '' %>"
+       class="filter-btn <%= !currentStatus ? 'active' : '' %>">
+      Tất Cả (<%= totalCount || 0 %>)
+    </a>
+    <a href="/admin/orders?status=Received<%= currentBranch ? '&branchId=' + currentBranch : '' %>"
+       class="filter-btn <%= currentStatus === 'Received' ? 'active' : '' %>" style="border-left: 3px solid var(--status-received);">
+      Chờ Nhận (<%= statusCounts['Received'] || 0 %>)
+    </a>
+    <a href="/admin/orders?status=Preparing<%= currentBranch ? '&branchId=' + currentBranch : '' %>"
+       class="filter-btn <%= currentStatus === 'Preparing' ? 'active' : '' %>" style="border-left: 3px solid var(--status-preparing);">
+      Đang Pha Chế (<%= statusCounts['Preparing'] || 0 %>)
+    </a>
+    <a href="/admin/orders?status=Ready for Pickup<%= currentBranch ? '&branchId=' + currentBranch : '' %>"
+       class="filter-btn <%= currentStatus === 'Ready for Pickup' ? 'active' : '' %>" style="border-left: 3px solid var(--status-ready);">
+      Chờ Khách Nhận (<%= statusCounts['Ready for Pickup'] || 0 %>)
+    </a>
+    <a href="/admin/orders?status=Completed<%= currentBranch ? '&branchId=' + currentBranch : '' %>"
+       class="filter-btn <%= currentStatus === 'Completed' ? 'active' : '' %>" style="border-left: 3px solid var(--status-completed);">
+      Hoàn Tất (<%= statusCounts['Completed'] || 0 %>)
+    </a>
+  </div>
+
+  <form method="GET" action="/admin/orders" style="display: flex; align-items: center; gap: 0.5rem;">
+    <% if (currentStatus) { %>
+      <input type="hidden" name="status" value="<%= currentStatus %>">
+    <% } %>
+    <select name="branchId" class="filter-select" onchange="this.form.submit()">
+      <option value="">-- Tất cả 4 Chi nhánh Đà Nẵng --</option>
+      <% branches.forEach(function(b) { %>
+        <option value="<%= b._id %>" <%= currentBranch === b._id.toString() ? 'selected' : '' %>>
+          <%= b.name %>
+        </option>
+      <% }); %>
+    </select>
+  </form>
+</div>
+
+<!-- Lưới Thẻ Đơn Hàng KDS Barista -->
+<% if (!orders || orders.length === 0) { %>
+  <div class="card-box" style="text-align: center; padding: 3rem 1rem;">
+    <div style="font-size: 3rem; margin-bottom: 1rem;">☕</div>
+    <h3 style="color: var(--primary-dark); font-size: 1.25rem; font-weight: 700;">Không có đơn hàng nào trong danh mục này</h3>
+    <p style="color: var(--text-muted); margin-top: 0.5rem;">Khi có khách hàng đặt món Pick-up, đơn hàng sẽ lập tức hiển thị tại đây.</p>
+  </div>
+<% } else { %>
+  <div class="kds-grid">
+    <% orders.forEach(function(order) { %>
+      <div class="kds-card status-<%= order.status.replace(/\s+/g, '_') %>">
+        <!-- Đầu Thẻ: Mã Đơn & Badge Trạng Thái -->
+        <div class="kds-card-header">
+          <div>
+            <div class="kds-order-code">
+              <%= order.orderCode %>
+            </div>
+            <div class="kds-pickup-badge">
+              ⏰ Hẹn lấy: <%= order.pickupTime %>
+            </div>
+          </div>
+          <div>
+            <span class="status-badge badge-<%= order.status.replace(/\s+/g, '_') %>">
+              <%= order.status %>
+            </span>
+          </div>
+        </div>
+
+        <!-- Thông Tin Khách & Chi Nhánh -->
+        <div class="kds-customer-info">
+          <div>
+            👤 <strong><%= order.userId ? order.userId.fullName : 'Khách vãng lai' %></strong>
+            (<%= order.userId ? order.userId.phone : 'N/A' %>)
+          </div>
+          <div>
+            📍 <%= order.branchId ? order.branchId.name.split('(')[0] : 'Đà Nẵng' %>
+          </div>
+        </div>
+
+        <!-- Danh Sách Chi Tiết Món Khách Đặt -->
+        <div class="kds-items-list">
+          <% order.items.forEach(function(item) { %>
+            <div class="kds-item-row">
+              <div style="flex: 1;">
+                <span class="item-qty"><%= item.quantity %>x</span>
+                <span class="item-name"><%= item.name %></span>
+                <span class="item-size-badge">Size <%= item.size %></span>
+                
+                <div class="item-options">
+                  🍬 Đường: <strong><%= item.sugarLevel || '100%' %></strong> | 
+                  🧊 Đá: <strong><%= item.iceLevel || '100%' %></strong>
+                </div>
+
+                <% if (item.note && item.note.trim() !== '') { %>
+                  <div class="item-note">
+                    📝 Dặn dò: <%= item.note %>
+                  </div>
+                <% } %>
+              </div>
+              <div style="font-weight: 600; font-size: 0.9rem; color: var(--primary-dark);">
+                <%= Number((item.price || 0) * (item.quantity || 1)).toLocaleString('vi-VN') %> đ
+              </div>
+            </div>
+          <% }); %>
+        </div>
+
+        <!-- Chân Thẻ: Tổng Tiền & Nút Hành Động KDS Barista -->
+        <div class="kds-card-footer">
+          <div class="kds-totals">
+            <div>
+              <span class="kds-pay-badge pay-<%= order.paymentStatus %>">
+                <%= order.paymentStatus === 'PAID' ? 'ĐÃ THANH TOÁN' : 'CHƯA THANH TOÁN' %>
+              </span>
+              <small style="color: var(--text-muted); margin-left: 0.25rem;">
+                (<%= order.paymentMethod %>)
+              </small>
+            </div>
+            <div class="kds-price">
+              <%= Number(order.totalAmount || 0).toLocaleString('vi-VN') %> đ
+            </div>
+          </div>
+
+          <!-- Các nút chuyển trạng thái quy trình Barista -->
+          <div class="kds-actions">
+            <% if (order.status === 'Received') { %>
+              <form method="POST" action="/admin/orders/<%= order._id %>/status" style="flex: 1; display: flex;">
+                <input type="hidden" name="status" value="Preparing">
+                <button type="submit" class="btn btn-info" style="width: 100%;">
+                  ▶ Bắt đầu pha chế (Preparing)
+                </button>
+              </form>
+              <form method="POST" action="/admin/orders/<%= order._id %>/status">
+                <input type="hidden" name="status" value="Cancelled">
+                <button type="submit" class="btn btn-danger-outline" onclick="return confirm('Bạn có chắc chắn muốn hủy đơn <%= order.orderCode %>?')">
+                  Hủy
+                </button>
+              </form>
+            <% } else if (order.status === 'Preparing') { %>
+              <form method="POST" action="/admin/orders/<%= order._id %>/status" style="flex: 1; display: flex;">
+                <input type="hidden" name="status" value="Ready for Pickup">
+                <button type="submit" class="btn btn-purple" style="width: 100%;">
+                  ☕ Pha chế xong (Ready for Pickup)
+                </button>
+              </form>
+              <form method="POST" action="/admin/orders/<%= order._id %>/status">
+                <input type="hidden" name="status" value="Cancelled">
+                <button type="submit" class="btn btn-danger-outline" onclick="return confirm('Bạn có chắc chắn muốn hủy đơn?')">
+                  Hủy
+                </button>
+              </form>
+            <% } else if (order.status === 'Ready for Pickup') { %>
+              <form method="POST" action="/admin/orders/<%= order._id %>/status" style="flex: 1; display: flex;">
+                <input type="hidden" name="status" value="Completed">
+                <button type="submit" class="btn btn-success" style="width: 100%;">
+                  ✅ Giao khách & Thu tiền (Completed)
+                </button>
+              </form>
+            <% } else if (order.status === 'Completed') { %>
+              <div style="flex: 1; text-align: center; color: var(--status-completed); font-weight: 700; font-size: 0.85rem; padding: 0.5rem;">
+                ✓ Đơn đã hoàn tất
+              </div>
+            <% } else if (order.status === 'Cancelled') { %>
+              <div style="flex: 1; text-align: center; color: var(--status-cancelled); font-weight: 700; font-size: 0.85rem; padding: 0.5rem;">
+                ✕ Đơn đã hủy
+              </div>
+            <% } %>
+
+            <!-- Nút Tải Hóa Đơn Bán Lẻ qua res.download (Slot 12) -->
+            <a href="/api/orders/<%= order._id %>/invoice" class="btn btn-outline" title="Tải file hóa đơn biên nhận về máy">
+              📄 Hóa đơn
+            </a>
+          </div>
+        </div>
+      </div>
+    <% }); %>
+  </div>
+<% } %>
+

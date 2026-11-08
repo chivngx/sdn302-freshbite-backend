@@ -5,6 +5,7 @@ const http = require('http');
 const cors = require('cors');
 const helmet = require('helmet');
 const path = require('path');
+const expressLayouts = require('express-ejs-layouts');
 const connectDB = require('./config/db');
 const { initSocket } = require('./config/socket');
 const { notFound, errorHandler } = require('./middlewares/errorMiddleware');
@@ -18,6 +19,8 @@ const branchRoutes = require('./routes/branchRoutes');
 const chatRoutes = require('./routes/chatRoutes');
 const reviewRoutes = require('./routes/reviewRoutes');
 const reportRoutes = require('./routes/reportRoutes');
+const uploadRoutes = require('./routes/uploadRoutes');
+const adminWebRoutes = require('./routes/adminWebRoutes');
 
 const app = express();
 const server = http.createServer(app);
@@ -25,7 +28,18 @@ const server = http.createServer(app);
 // Khởi tạo Socket.IO hỗ trợ Live Chat real-time
 initSocket(server);
 
-app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
+// Cấu hình View Engine EJS & Express Layouts (Slot 7 - Lê Tự Nhật Thạch)
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+app.use(expressLayouts);
+app.set('layout', 'layouts/main');
+
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
+    crossOriginResourcePolicy: { policy: 'cross-origin' }
+  })
+);
 app.use(cors());
 app.use(requestLogger);
 app.use(express.json());
@@ -50,6 +64,8 @@ app.use('/api/branches', branchRoutes);
 app.use('/api/chats', chatRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/reports', reportRoutes);
+app.use('/api/upload', uploadRoutes);
+app.use('/admin', adminWebRoutes);
 
 // middleware bat loi phai dat o cuoi cung sau tat ca routes
 app.use(notFound);
