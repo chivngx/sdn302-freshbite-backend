@@ -20,23 +20,20 @@ exports.adminWebAuth = async (req, res, next) => {
       try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const user = await User.findById(decoded.id).lean();
-        if (user && user.role === 'admin') {
+        if (user && (user.role === 'admin' || user.role === 'staff')) {
           req.user = user;
           res.locals.currentUser = user;
           return next();
         }
       } catch (tokenErr) {
+        res.clearCookie('freshbite_admin_token', { path: '/' });
         res.clearCookie('freshbite_admin_token');
+        res.clearCookie('token', { path: '/' });
+        res.clearCookie('token');
       }
     }
 
-    // Nếu không có token: Cho phép test runner hoặc gắn user fallback
-    if (process.env.NODE_ENV === 'test' || !req.headers.cookie) {
-      res.locals.currentUser = { fullName: 'Lê Tự Nhật Thạch', email: 'thachltn@freshbite.vn', role: 'admin' };
-      return next();
-    }
-
-    // Nếu là browser truy cập thực tế chưa đăng nhập -> chuyển hướng login
+    // Nếu không có token hợp lệ -> Chuyển hướng bắt buộc về trang đăng nhập
     return res.redirect('/admin/login');
   } catch (error) {
     next(error);
@@ -116,7 +113,8 @@ exports.postLogin = async (req, res, next) => {
 
     res.cookie('freshbite_admin_token', token, {
       httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000
+      maxAge: 24 * 60 * 60 * 1000,
+      path: '/'
     });
 
     res.redirect('/admin/dashboard');
@@ -130,7 +128,10 @@ exports.postLogin = async (req, res, next) => {
  * Đăng xuất và xóa phiên cookie
  */
 exports.getLogout = (req, res) => {
+  res.clearCookie('freshbite_admin_token', { path: '/' });
   res.clearCookie('freshbite_admin_token');
+  res.clearCookie('token', { path: '/' });
+  res.clearCookie('token');
   res.redirect('/admin/login?message=logged_out');
 };
 

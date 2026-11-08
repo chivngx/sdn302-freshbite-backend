@@ -296,9 +296,11 @@ const runTests = async () => {
     // -------------------------------------------------------------
     console.log('\n--- PHẦN 3: SERVER-SIDE RENDERING EJS WEB ADMIN (Slot 7) ---');
 
+    const authHeaders = { Cookie: `freshbite_admin_token=${adminToken}` };
+
     // Test 13: GET /admin (Dashboard SSR)
     {
-      const res = await fetch(`${BASE_URL}/admin`);
+      const res = await fetch(`${BASE_URL}/admin`, { headers: authHeaders });
       const contentType = res.headers.get('content-type') || '';
       const html = await res.text();
       assert(
@@ -309,7 +311,7 @@ const runTests = async () => {
 
     // Test 14: GET /admin/dashboard
     {
-      const res = await fetch(`${BASE_URL}/admin/dashboard`);
+      const res = await fetch(`${BASE_URL}/admin/dashboard`, { headers: authHeaders });
       const html = await res.text();
       assert(
         res.status === 200 && html.includes('Hệ thống giám sát kinh doanh'),
@@ -319,7 +321,7 @@ const runTests = async () => {
 
     // Test 15: GET /admin/orders (KDS Barista Screen SSR)
     {
-      const res = await fetch(`${BASE_URL}/admin/orders`);
+      const res = await fetch(`${BASE_URL}/admin/orders`, { headers: authHeaders });
       const html = await res.text();
       assert(
         res.status === 200 && html.includes('Màn Hình Quầy Barista (KDS)'),
@@ -329,7 +331,7 @@ const runTests = async () => {
 
     // Test 16: Loc don hang theo chi nhanh tren man hinh KDS
     {
-      const res = await fetch(`${BASE_URL}/admin/orders?branchId=${testBranchId}`);
+      const res = await fetch(`${BASE_URL}/admin/orders?branchId=${testBranchId}`, { headers: authHeaders });
       const html = await res.text();
       assert(
         res.status === 200 && html.includes('Chi Nhánh'),
@@ -346,7 +348,8 @@ const runTests = async () => {
       const res = await fetch(`${BASE_URL}/admin/orders/${testOrderId}/status`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
+          'Content-Type': 'application/x-www-form-urlencoded',
+          ...authHeaders
         },
         body: params,
         redirect: 'manual'
@@ -361,7 +364,7 @@ const runTests = async () => {
 
     // Test 18: GET /admin/products (Quan ly thuc don SSR)
     {
-      const res = await fetch(`${BASE_URL}/admin/products`);
+      const res = await fetch(`${BASE_URL}/admin/products`, { headers: authHeaders });
       const html = await res.text();
       assert(
         res.status === 200 && html.includes('Quản Lý Thực Đơn & Món Ăn'),
@@ -376,6 +379,7 @@ const runTests = async () => {
 
       const res = await fetch(`${BASE_URL}/admin/products/${testProductId}/toggle`, {
         method: 'POST',
+        headers: authHeaders,
         redirect: 'manual'
       });
 
@@ -392,7 +396,7 @@ const runTests = async () => {
 
     // Test 20: GET /admin/branches (Danh sach 4 chi nhanh Da Nang SSR)
     {
-      const res = await fetch(`${BASE_URL}/admin/branches`);
+      const res = await fetch(`${BASE_URL}/admin/branches`, { headers: authHeaders });
       const html = await res.text();
       assert(
         res.status === 200 && html.includes('Hệ Thống Chi Nhánh FreshBite Đà Nẵng'),
@@ -465,6 +469,17 @@ const runTests = async () => {
       assert(
         res.status === 302 && (res.headers.get('location') || '').includes('/admin/login'),
         '25. GET /admin/logout - Đăng xuất và điều hướng trở lại trang Login an toàn (302)'
+      );
+    }
+
+    // Test 26: Bảo vệ bảo mật - Truy cập /admin sau khi đăng xuất hoặc không có Cookie phải chuyển hướng về /admin/login
+    {
+      const res = await fetch(`${BASE_URL}/admin`, {
+        redirect: 'manual'
+      });
+      assert(
+        res.status === 302 && (res.headers.get('location') || '').includes('/admin/login'),
+        '26. Security Guard - Chặn truy cập /admin khi chưa đăng nhập và bắt buộc chuyển hướng về /admin/login (302)'
       );
     }
 
