@@ -347,7 +347,11 @@ const runThachTests = async () => {
     const resDashboard = await request({ method: 'GET', path: '/admin/dashboard' });
     assert(resDashboard.statusCode === 200, 'GET /admin/dashboard render HTML EJS thành công 200 OK');
     assert(resDashboard.text.includes('Bảng Tổng Quan Hoạt Động &amp; Doanh Thu') || resDashboard.text.includes('Bảng Tổng Quan Hoạt Động & Doanh Thu'), 'Trang chứa tiêu đề bảng tổng quan');
-    assert(resDashboard.text.includes('Tổng Doanh Thu') && resDashboard.text.includes('FreshBite Đà Nẵng'), 'Trang dashboard hiển thị số liệu doanh thu và 4 chi nhánh');
+    assert(
+      resDashboard.text.includes('Tổng Doanh Thu') &&
+        (resDashboard.text.includes('FRESHBITE') || resDashboard.text.includes('FreshBite')),
+      'Trang dashboard hiển thị số liệu doanh thu và 4 chi nhánh'
+    );
 
     // 3.3: Render Màn hình KDS Bếp & Quầy Barista (/admin/orders)
     const resKds = await request({ method: 'GET', path: '/admin/orders' });

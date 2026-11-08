@@ -1,15 +1,15 @@
-<!-- Trang Quản Lý Món Ăn & Upload Ảnh Multer -->
+<!-- Trang Quản Lý Món Ăn & Thực Đơn -->
 <div class="page-header">
   <div>
     <h1 class="page-title">Quản Lý Món Ăn & Thực Đơn Đà Nẵng</h1>
-    <p class="page-subtitle">Kiểm soát danh mục, bật/tắt trạng thái còn hàng và tải lên hình ảnh món ăn qua Multer</p>
+    <p class="page-subtitle">Kiểm soát danh mục thực đơn và trạng thái phục vụ tại chuỗi chi nhánh</p>
   </div>
 </div>
 
-<!-- Form Thêm Món Ăn Mới Kèm Upload Ảnh Tĩnh Multer -->
+<!-- Form Thêm Món Ăn Mới -->
 <div class="card-box">
   <h2 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 1.25rem; color: var(--primary-dark);">
-    Thêm Món Mới Vào Thực Đơn (Upload ảnh qua Multer)
+    Thêm Món Mới Vào Thực Đơn
   </h2>
 
   <form method="POST" action="/admin/products" enctype="multipart/form-data">
@@ -50,9 +50,9 @@
       </div>
 
       <div class="form-group">
-        <label class="form-label">Tải lên ảnh món ăn (Multer DiskStorage) *</label>
+        <label class="form-label">Hình ảnh món ăn *</label>
         <input type="file" name="image" class="form-file" accept="image/*">
-        <small style="color: var(--text-muted); font-size: 0.75rem;">Chấp nhận .jpg, .png, .webp (tối đa 5MB). Nếu không chọn sẽ dùng ảnh mặc định.</small>
+        <small style="color: var(--text-muted); font-size: 0.75rem;">Chấp nhận .jpg, .png, .webp (tối đa 5MB).</small>
       </div>
 
       <div class="form-group" style="display: flex; flex-direction: row; align-items: center; gap: 0.5rem; margin-top: 1.5rem;">
@@ -65,7 +65,7 @@
 
     <div style="margin-top: 1.25rem; display: flex; justify-content: flex-end;">
       <button type="submit" class="btn btn-warning" style="padding: 0.65rem 1.5rem;">
-        Lưu Món Ăn & Tải Ảnh Lên Server
+        Lưu Món Ăn
       </button>
     </div>
   </form>

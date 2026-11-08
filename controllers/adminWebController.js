@@ -56,7 +56,7 @@ exports.renderDashboard = async (req, res, next) => {
       .lean();
 
     return res.render('dashboard', {
-      title: 'FreshBite Đà Nẵng - Tổng Quan Hoạt Động',
+      title: 'FRESHBITE COFFEE & BAKERY (ĐÀ NẴNG) - Tổng Quan Hoạt Động',
       activeTab: 'dashboard',
       stats,
       branches,
@@ -111,7 +111,7 @@ exports.renderOrders = async (req, res, next) => {
     });
 
     return res.render('orders', {
-      title: 'Màn Hình Bếp KDS Quầy Barista - FreshBite Đà Nẵng',
+      title: 'FRESHBITE COFFEE & BAKERY (ĐÀ NẴNG) - Màn Hình Bếp KDS',
       activeTab: 'orders',
       orders,
       branches,
@@ -181,7 +181,7 @@ exports.renderProducts = async (req, res, next) => {
     const categories = await Category.find().sort({ name: 1 }).lean();
 
     return res.render('products', {
-      title: 'Quản Lý Thực Đơn & Upload Ảnh - FreshBite',
+      title: 'FRESHBITE COFFEE & BAKERY (ĐÀ NẴNG) - Quản Lý Thực Đơn',
       activeTab: 'products',
       products,
       categories,
