@@ -1,0 +1,135 @@
+<%- include('partials/header') %>
+
+<div class="page-header">
+  <div>
+    <h1 class="page-title">📊 Bảng Quản Trị & Doanh Thu Quầy</h1>
+    <p class="page-subtitle">Hệ thống giám sát kinh doanh & vận hành 4 chi nhánh FreshBite Đà Nẵng</p>
+  </div>
+  <div class="header-actions">
+    <a href="/api/uploads/template/product-import" class="btn btn-secondary">📥 Tải Mẫu CSV Thực Đơn</a>
+    <a href="/admin/orders" class="btn btn-primary">☕ Mở Màn Hình KDS Barista</a>
+  </div>
+</div>
+
+<!-- KPI Cards -->
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-icon icon-revenue">💰</div>
+    <div class="stat-content">
+      <div class="stat-label">Doanh Thu Đã Hoàn Tất</div>
+      <div class="stat-value"><%= (stats.totalRevenue || 0).toLocaleString('vi-VN') %> <span class="currency">VNĐ</span></div>
+      <div class="stat-desc">Tính trên các đơn hàng trạng thái Completed</div>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-icon icon-orders">📦</div>
+    <div class="stat-content">
+      <div class="stat-label">Tổng Số Đơn Hàng</div>
+      <div class="stat-value"><%= stats.totalOrders || 0 %></div>
+      <div class="stat-desc">Toàn bộ đơn hàng ghi nhận trong hệ thống</div>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-icon icon-pending">⏳</div>
+    <div class="stat-content">
+      <div class="stat-label">Đang Chờ & Đang Làm</div>
+      <div class="stat-value"><%= (stats.statusCounts.Pending || 0) + (stats.statusCounts.Preparing || 0) %></div>
+      <div class="stat-desc"><%= stats.statusCounts.Pending || 0 %> chờ tiếp nhận • <%= stats.statusCounts.Preparing || 0 %> đang pha chế</div>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-icon icon-completed">✅</div>
+    <div class="stat-content">
+      <div class="stat-label">Đã Giao Khách Thành Công</div>
+      <div class="stat-value"><%= stats.statusCounts.Completed || 0 %></div>
+      <div class="stat-desc"><%= stats.statusCounts['Ready for Pickup'] || 0 %> đơn đang đợi khách lấy</div>
+    </div>
+  </div>
+</div>
+
+<!-- Trạng Thái Chi Tiết -->
+<div class="status-summary-bar">
+  <div class="summary-pill pill-pending">Chờ xác nhận: <strong><%= stats.statusCounts.Pending || 0 %></strong></div>
+  <div class="summary-pill pill-preparing">Đang pha chế: <strong><%= stats.statusCounts.Preparing || 0 %></strong></div>
+  <div class="summary-pill pill-ready">Sẵn sàng nhận: <strong><%= stats.statusCounts['Ready for Pickup'] || 0 %></strong></div>
+  <div class="summary-pill pill-completed">Hoàn tất: <strong><%= stats.statusCounts.Completed || 0 %></strong></div>
+  <div class="summary-pill pill-cancelled">Đã hủy: <strong><%= stats.statusCounts.Cancelled || 0 %></strong></div>
+</div>
+
+<!-- Bảng Đơn Hàng Mới Nhất -->
+<div class="card">
+  <div class="card-header">
+    <h2 class="card-title">🕒 Đơn Hàng Gần Đây</h2>
+    <a href="/admin/orders" class="card-link">Xem tất cả trên màn hình KDS →</a>
+  </div>
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Mã Đơn</th>
+          <th>Khách Hàng</th>
+          <th>Chi Nhánh</th>
+          <th>Thời Gian Đặt</th>
+          <th>Phương Thức TT</th>
+          <th>Tổng Tiền</th>
+          <th>Trạng Thái</th>
+          <th>Hành Động</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (recentOrders && recentOrders.length > 0) { %>
+          <% recentOrders.forEach(order => { %>
+            <tr>
+              <td><span class="order-code"><%= order.orderCode || order._id %></span></td>
+              <td>
+                <div class="customer-info">
+                  <strong><%= (order.userId && order.userId.fullName) || 'Khách vãng lai' %></strong>
+                  <small><%= (order.userId && order.userId.phone) || '' %></small>
+                </div>
+              </td>
+              <td>
+                <span class="branch-tag"><%= (order.branchId && order.branchId.name) || 'Đà Nẵng' %></span>
+              </td>
+              <td>
+                <%= new Date(order.createdAt).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit' }) %>
+              </td>
+              <td>
+                <span class="payment-badge"><%= order.paymentMethod %></span>
+              </td>
+              <td>
+                <strong class="price-text"><%= (order.totalAmount || 0).toLocaleString('vi-VN') %>đ</strong>
+              </td>
+              <td>
+                <% 
+                  let badgeClass = 'badge-pending';
+                  if (order.status === 'Preparing') badgeClass = 'badge-preparing';
+                  else if (order.status === 'Ready for Pickup') badgeClass = 'badge-ready';
+                  else if (order.status === 'Completed') badgeClass = 'badge-completed';
+                  else if (order.status === 'Cancelled') badgeClass = 'badge-cancelled';
+                %>
+                <span class="badge <%= badgeClass %>"><%= order.status %></span>
+              </td>
+              <td>
+                <div class="action-buttons">
+                  <a href="/api/uploads/orders/<%= order._id %>/invoice" class="btn-sm btn-outline" title="Tải Hóa Đơn Bán Lẻ (res.download - Slot 12)">📄 Hóa đơn</a>
+                  <a href="/admin/orders?status=<%= order.status %>" class="btn-sm btn-primary">Xử lý</a>
+                </div>
+              </td>
+            </tr>
+          <% }) %>
+        <% } else { %>
+          <tr>
+            <td colspan="8" class="text-center empty-state">
+              Chưa có đơn hàng nào trong hệ thống. Hãy thực hiện đặt đơn hoặc chạy <code>npm run seed:all</code> để tạo dữ liệu mẫu!
+            </td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

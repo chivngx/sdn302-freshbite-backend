@@ -1,0 +1,48 @@
+<%- include('partials/header') %>
+
+<div class="page-header">
+  <div>
+    <h1 class="page-title">📍 Hệ Thống Chi Nhánh FreshBite Đà Nẵng</h1>
+    <p class="page-subtitle">4 chi nhánh hoạt động tại các quận trung tâm và ven biển Đà Nẵng</p>
+  </div>
+  <div class="header-actions">
+    <a href="/admin/orders" class="btn btn-primary">☕ Xem Đơn Hàng Theo Chi Nhánh</a>
+  </div>
+</div>
+
+<div class="branch-grid">
+  <% if (branches && branches.length > 0) { %>
+    <% branches.forEach(branch => { %>
+      <div class="branch-card">
+        <div class="branch-image-wrapper">
+          <img src="<%= branch.imageUrl || 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800' %>" 
+               alt="<%= branch.name %>" class="branch-cover">
+          <span class="branch-district-tag"><%= branch.district %></span>
+        </div>
+        <div class="branch-content">
+          <h3 class="branch-title"><%= branch.name %></h3>
+          <p class="branch-address">🏠 <%= branch.address %></p>
+          <div class="branch-meta">
+            <span>📞 <%= branch.phone || '0236.730.0999' %></span>
+            <span>⏰ <%= branch.openingHours || '06:30 - 22:30' %></span>
+          </div>
+          <div class="branch-gps">
+            <span>🌐 GPS: <code><%= branch.latitude %>, <%= branch.longitude %></code></span>
+          </div>
+          <div class="branch-footer">
+            <span class="badge <%= branch.isActive ? 'badge-completed' : 'badge-cancelled' %>">
+              <%= branch.isActive ? '🟢 Đang mở cửa' : '🔴 Tạm nghỉ' %>
+            </span>
+            <a href="/admin/orders?branchId=<%= branch._id %>" class="btn-sm btn-primary">Xem KDS Quầy →</a>
+          </div>
+        </div>
+      </div>
+    <% }) %>
+  <% } else { %>
+    <div class="empty-state">
+      Chưa có dữ liệu chi nhánh. Hãy chạy <code>npm run seed:branches</code>!
+    </div>
+  <% } %>
+</div>
+
+<%- include('partials/footer') %>

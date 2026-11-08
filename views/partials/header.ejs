@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title || 'FreshBite Admin & Barista KDS' %></title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="/admin/dashboard" class="brand">
+        <span class="brand-badge">⚡ KDS</span>
+        <span class="brand-text">FreshBite <span>Admin</span></span>
+      </a>
+      <nav class="nav-links">
+        <a href="/admin/dashboard" class="nav-link">📊 Tổng Quan</a>
+        <a href="/admin/orders" class="nav-link nav-highlight">☕ Màn Hình KDS Barista</a>
+        <a href="/admin/products" class="nav-link">🍰 Quản Lý Món</a>
+        <a href="/admin/branches" class="nav-link">📍 Chi Nhánh</a>
+        <a href="/api/health" target="_blank" class="nav-link nav-tag">🟢 API Status</a>
+      </nav>
+    </div>
+  </header>
+  <main class="main-container">

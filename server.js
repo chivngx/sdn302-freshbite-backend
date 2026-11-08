@@ -16,14 +16,29 @@ const branchRoutes = require('./routes/branchRoutes');
 const chatRoutes = require('./routes/chatRoutes');
 const reviewRoutes = require('./routes/reviewRoutes');
 const reportRoutes = require('./routes/reportRoutes');
+const uploadRoutes = require('./routes/uploadRoutes');
+const adminWebRoutes = require('./routes/adminWebRoutes');
 
 const app = express();
 
-app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
+// Cau hinh Helmet bao mat va ho tro EJS SSR giao dien
+app.use(
+  helmet({
+    crossOriginResourcePolicy: { policy: 'cross-origin' },
+    contentSecurityPolicy: false
+  })
+);
 app.use(cors());
 app.use(requestLogger);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Cau hinh EJS View Engine (Slot 7 - Web Admin & Barista KDS)
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+
+// Static assets: public/ cho CSS/JS giao dien va uploads/ cho anh tinh
+app.use(express.static(path.join(__dirname, 'public')));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.get('/', (req, res) => {
@@ -34,6 +49,7 @@ app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
+// Cac API Endpoints
 app.use('/api/auth', authRoutes);
 app.use('/api/users', authRoutes); // ho tro routing /api/users/favorites theo dac ta
 app.use('/api/categories', categoryRoutes);
@@ -43,6 +59,11 @@ app.use('/api/branches', branchRoutes);
 app.use('/api/chats', chatRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/reports', reportRoutes);
+app.use('/api/uploads', uploadRoutes);
+app.use('/api/upload', uploadRoutes); // alias theo dac ta
+
+// Web Admin SSR (Slot 7: EJS Server-Side Rendering)
+app.use('/admin', adminWebRoutes);
 
 // middleware bat loi phai dat o cuoi cung sau tat ca routes
 app.use(notFound);
