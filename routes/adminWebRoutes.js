@@ -12,6 +12,7 @@ const {
   toggleProductAvailability,
   getBranchesAdmin
 } = require('../controllers/adminWebController');
+const { downloadOrderInvoice } = require('../controllers/uploadController');
 
 // 0. Authenication routes (Login & Logout)
 router.get('/login', getLoginPage);
@@ -25,6 +26,7 @@ router.get('/dashboard', adminWebAuth, getDashboard);
 
 // 2. KDS Barista quầy hiển thị đơn hàng (Protected)
 router.get('/orders', adminWebAuth, getOrdersKDS);
+router.get('/orders/:id/invoice', adminWebAuth, downloadOrderInvoice);
 router.post('/orders/:id/status', adminWebAuth, updateOrderStatusWeb);
 
 // 3. Quản lý thực đơn món ăn (Protected)

@@ -8,7 +8,7 @@ const {
   downloadProductTemplate
 } = require('../controllers/uploadController');
 const { uploadSingle, uploadMultiple } = require('../middlewares/uploadMiddleware');
-const { verifyToken } = require('../middlewares/authMiddleware');
+const { verifyToken, optionalAuth } = require('../middlewares/authMiddleware');
 
 // 1. Upload hinh anh don le (POST /api/uploads/single hoac POST /api/uploads)
 router.post('/single', verifyToken, uploadSingle('image'), uploadSingleImage);
@@ -21,7 +21,7 @@ router.post('/multiple', verifyToken, uploadMultiple('images', 5), uploadMultipl
 router.get('/template/product-import', downloadProductTemplate);
 
 // 4. Xuat va tai hoa don ban le theo ma don hang (GET /api/uploads/orders/:id/invoice)
-router.get('/orders/:id/invoice', verifyToken, downloadOrderInvoice);
+router.get('/orders/:id/invoice', optionalAuth, downloadOrderInvoice);
 
 // 5. Tai file bat ky tu uploads/ bang res.download (GET /api/uploads/download/:filename)
 router.get('/download/:filename', downloadFile);
