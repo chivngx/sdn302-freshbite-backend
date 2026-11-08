@@ -7,11 +7,15 @@ const path = require('path');
 const connectDB = require('./config/db');
 const { notFound, errorHandler } = require('./middlewares/errorMiddleware');
 const { requestLogger, errorLogger } = require('./middlewares/loggerMiddleware');
+
 const authRoutes = require('./routes/authRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
 const productRoutes = require('./routes/productRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const branchRoutes = require('./routes/branchRoutes');
+const chatRoutes = require('./routes/chatRoutes');
+const reviewRoutes = require('./routes/reviewRoutes');
+const reportRoutes = require('./routes/reportRoutes');
 
 const app = express();
 
@@ -36,6 +40,9 @@ app.use('/api/categories', categoryRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/branches', branchRoutes);
+app.use('/api/chats', chatRoutes);
+app.use('/api/reviews', reviewRoutes);
+app.use('/api/reports', reportRoutes);
 
 // middleware bat loi phai dat o cuoi cung sau tat ca routes
 app.use(notFound);
