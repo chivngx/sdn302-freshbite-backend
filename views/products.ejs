@@ -4,17 +4,17 @@
 <div class="island-header-bar">
   <div class="island-title-block">
     <div class="island-category-badge">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
-      <span>DANH MỤC THỰC ĐƠN & ĐỊNH GIÁ TOÀN HỆ THỐNG</span>
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+      <span>THỰC ĐƠN HỆ THỐNG</span>
     </div>
     <h1 class="island-heading">Quản Lý Thực Đơn & Món Ăn</h1>
-    <p class="island-description">Danh mục cà phê specialty nguyên bản, trà hoa quả tươi và bánh ngọt thủ công đồng bộ 4 chi nhánh Đà Nẵng.</p>
+    <p class="island-description">Danh mục cà phê specialty, trà hoa quả tươi và bánh thủ công đồng bộ 4 chi nhánh Đà Nẵng.</p>
   </div>
   
   <div class="island-actions-group">
     <a href="/api/uploads/template/product-import" class="m3-btn m3-btn-tonal">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-      <span>Tải Mẫu CSV Thực Đơn</span>
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+      <span>Tải Mẫu CSV</span>
     </a>
   </div>
 </div>
@@ -23,29 +23,25 @@
 <div class="upload-artisan-card">
   <div class="upload-artisan-header">
     <div class="upload-icon-circle">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
     </div>
     <div>
-      <h3 style="font-size: 1.05rem; font-weight: 800; color: var(--md-sys-color-primary);">Tải Lên Hình Ảnh Món Ăn (Multer Multipart Engine)</h3>
-      <p style="font-size: 0.8rem; color: var(--md-sys-color-on-surface-variant);">Thử nghiệm upload tệp tin tĩnh theo chuẩn Slot 12 lưu trữ vào thư mục tĩnh <code>/uploads</code></p>
+      <h3 style="font-size: 0.95rem; font-weight: 800; color: var(--md-sys-color-primary);">Tải Ảnh Thức Uống (Slot 12)</h3>
+      <p style="font-size: 0.74rem; color: var(--md-sys-color-on-surface-variant);">Lưu trữ vào thư mục <code>/uploads</code> (JPEG, PNG, WEBP max 5MB)</p>
     </div>
   </div>
 
   <form action="/api/uploads/single" method="POST" enctype="multipart/form-data" target="_blank" class="upload-form-box">
     <label for="imageFileInput" class="custom-file-target">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-      <span id="selectedFileName">Chọn ảnh món ăn từ máy...</span>
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+      <span id="selectedFileName">Chọn ảnh từ máy...</span>
     </label>
-    <input type="file" name="image" id="imageFileInput" accept="image/*" required class="hidden-real-file" onchange="document.getElementById('selectedFileName').textContent = (this.files && this.files[0]) ? this.files[0].name : 'Chọn ảnh món ăn từ máy...'">
+    <input type="file" name="image" id="imageFileInput" accept="image/*" required class="hidden-real-file" onchange="document.getElementById('selectedFileName').textContent = (this.files && this.files[0]) ? this.files[0].name : 'Chọn ảnh từ máy...'">
 
-    <button type="submit" class="m3-btn m3-btn-filled" style="height: 40px;">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
-      <span>Tải Lên Máy Chủ</span>
+    <button type="submit" class="m3-btn m3-btn-filled" style="height: 36px; font-size: 0.78rem;">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+      <span>Tải Lên</span>
     </button>
-
-    <span style="font-size: 0.78rem; color: var(--md-sys-color-on-surface-variant);">
-      Hỗ trợ: JPEG, PNG, WEBP, GIF (Tối đa 5MB) • Trả link URL tĩnh
-    </span>
   </form>
 </div>
 
@@ -53,8 +49,8 @@
 <div class="m3-table-card">
   <div class="table-top-bar">
     <div>
-      <h2 class="table-top-title">Thực Đơn Đang Kinh Doanh (<%= products ? products.length : 0 %> món)</h2>
-      <p class="table-top-caption">Danh mục sản phẩm đồng bộ trên ứng dụng di động khách hàng và máy POS quầy bar</p>
+      <h2 class="table-top-title">Thực Đơn Đang Bán (<%= products ? products.length : 0 %> món)</h2>
+      <p class="table-top-caption">Đồng bộ tự động trên máy POS quầy bar và ứng dụng FreshBite</p>
     </div>
   </div>
 
@@ -62,11 +58,11 @@
     <table class="m3-table">
       <thead>
         <tr>
-          <th style="width: 70px;">ẢNH MÓN</th>
-          <th>TÊN THỨC UỐNG & MÔ TẢ</th>
+          <th style="width: 56px;">ẢNH</th>
+          <th>TÊN THỨC UỐNG</th>
           <th>DANH MỤC</th>
           <th style="text-align: right;">GIÁ CƠ BẢN</th>
-          <th>BẢNG GIÁ THEO SIZE (S / M / L)</th>
+          <th>GIÁ THEO SIZE (S / M / L)</th>
           <th>CALO</th>
           <th>TRẠNG THÁI</th>
           <th style="text-align: center;">KHO HÀNG</th>
@@ -81,19 +77,19 @@
                      alt="<%= prod.name %>" class="product-thumb-img">
               </td>
               <td>
-                <div style="font-weight: 800; color: var(--md-sys-color-primary); font-size: 0.95rem;">
+                <div style="font-weight: 700; color: var(--md-sys-color-primary); font-size: 0.88rem;">
                   <%= prod.name %>
                 </div>
-                <div style="font-size: 0.78rem; color: var(--md-sys-color-on-surface-variant); margin-top: 2px; max-width: 280px; line-height: 1.3;">
-                  <%= prod.description || 'Thức uống thủ công pha chế theo công thức riêng FreshBite' %>
+                <div class="product-desc-clamped">
+                  <%= prod.description || 'Thức uống đặc sản pha chế công thức riêng' %>
                 </div>
               </td>
               <td>
-                <span style="font-size: 0.78rem; font-weight: 700; color: var(--md-sys-color-secondary);">
+                <span style="font-size: 0.76rem; font-weight: 600; color: var(--md-sys-color-secondary); white-space: nowrap;">
                   <%= (prod.categoryId && prod.categoryId.name) || 'Specialty Coffee' %>
                 </span>
               </td>
-              <td style="text-align: right; font-family: var(--font-mono); font-weight: 800; font-size: 0.9rem; color: var(--md-sys-color-primary); white-space: nowrap;">
+              <td style="text-align: right; font-family: var(--font-mono); font-weight: 800; font-size: 0.88rem; color: var(--md-sys-color-primary); white-space: nowrap;">
                 <%= (prod.basePrice || 0).toLocaleString('vi-VN') %>đ
               </td>
               <td>
@@ -106,10 +102,10 @@
                     <% }) %>
                   </div>
                 <% } else { %>
-                  <span style="font-size: 0.78rem; color: var(--md-sys-color-on-surface-variant);">Một cỡ duy nhất</span>
+                  <span style="font-size: 0.74rem; color: var(--md-sys-color-on-surface-variant);">Một cỡ</span>
                 <% } %>
               </td>
-              <td style="font-family: var(--font-mono); font-size: 0.82rem; white-space: nowrap;">
+              <td style="font-family: var(--font-mono); font-size: 0.78rem; white-space: nowrap;">
                 <%= prod.calories || 120 %> kcal
               </td>
               <td>
@@ -119,7 +115,7 @@
               </td>
               <td style="text-align: center;">
                 <form action="/admin/products/<%= prod._id %>/toggle" method="POST">
-                  <button type="submit" class="stock-toggle-btn <%= prod.isAvailable ? 'in-stock' : 'out-stock' %>" title="Nhấn để bật/tắt bán">
+                  <button type="submit" class="stock-toggle-btn <%= prod.isAvailable ? 'in-stock' : 'out-stock' %>">
                     <%= prod.isAvailable ? 'Bật Bán' : 'Tắt Bán' %>
                   </button>
                 </form>
@@ -128,8 +124,8 @@
           <% }) %>
         <% } else { %>
           <tr>
-            <td colspan="8" style="text-align: center; padding: 40px; color: var(--md-sys-color-on-surface-variant);">
-              <p>Chưa có món ăn nào trong thực đơn. Chạy lệnh <code>npm run seed:all</code> để nạp thực đơn mẫu!</p>
+            <td colspan="8" style="text-align: center; padding: 32px; color: var(--md-sys-color-on-surface-variant);">
+              Chưa có món ăn nào trong thực đơn
             </td>
           </tr>
         <% } %>

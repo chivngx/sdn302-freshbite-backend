@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><%= title || 'FreshBite Specialty Coffee & Tea - Chuỗi Cửa Hàng & KDS' %></title>
   
-  <!-- Google Plus Jakarta Sans & JetBrains Mono Typography -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -14,13 +13,13 @@
 </head>
 <body class="freshbite-app">
   <div class="m3-shell-wrapper">
-    <!-- Google Workspace Style Left Navigation Sidebar -->
+    <!-- Left Navigation Sidebar -->
     <aside class="m3-sidebar">
       <div>
         <!-- Brand Identity Lockup -->
         <a href="/admin/dashboard" class="sidebar-brand-lockup">
           <div class="brand-emblem-badge">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M18 8h1a4 4 0 0 1 0 8h-1"></path>
               <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path>
               <line x1="6" y1="1" x2="6" y2="4"></line>
@@ -30,12 +29,12 @@
           </div>
           <div class="brand-text-block">
             <span class="brand-title">FreshBite</span>
-            <span class="brand-subtitle">Specialty Coffee & Tea</span>
+            <span class="brand-subtitle">Coffee & Tea</span>
           </div>
         </a>
 
         <!-- Main Navigation Pills -->
-        <div class="nav-section-label">HỆ THỐNG VẬN HÀNH</div>
+        <div class="nav-section-label">HỆ THỐNG</div>
         <nav class="sidebar-nav-menu">
           <a href="/admin/dashboard" class="m3-nav-pill <%= (typeof title !== 'undefined' && (title.includes('Bảng Quản Trị') || title.includes('Doanh Thu'))) ? 'active' : '' %>">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -53,7 +52,7 @@
               <path d="M6 2v4"></path>
               <path d="M18 2v4"></path>
             </svg>
-            <span>Màn Hình KDS Barista</span>
+            <span>Trạm Barista KDS</span>
             <span class="kds-live-pill">LIVE</span>
           </a>
 
@@ -70,74 +69,68 @@
               <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
               <polyline points="9 22 9 12 15 12 15 22"></polyline>
             </svg>
-            <span>Chi Nhánh Cửa Hàng</span>
+            <span>Chi Nhánh</span>
           </a>
         </nav>
 
-        <div class="nav-section-label" style="margin-top: 14px;">CÔNG CỤ & TÀI NGUYÊN</div>
+        <div class="nav-section-label" style="margin-top: 10px;">TIỆN ÍCH</div>
         <nav class="sidebar-nav-menu">
-          <a href="/api/uploads/template/product-import" class="m3-nav-pill" title="Tải file mẫu CSV thực đơn">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <a href="/api/uploads/template/product-import" class="m3-nav-pill" title="Tải mẫu CSV thực đơn">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
               <polyline points="7 10 12 15 17 10"></polyline>
               <line x1="12" y1="15" x2="12" y2="3"></line>
             </svg>
-            <span>Tải Mẫu CSV Thực Đơn</span>
+            <span>Tải Mẫu CSV</span>
           </a>
 
-          <a href="/api/health" target="_blank" class="m3-nav-pill" title="API Status Check">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <a href="/api/health" target="_blank" class="m3-nav-pill" title="API Status">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
             </svg>
-            <span>Máy Chủ API: 200 OK</span>
+            <span>API Status: 200 OK</span>
           </a>
         </nav>
       </div>
 
-      <!-- Shift Card / Station Info -->
+      <!-- Minimal Shift & Status Strip -->
       <div class="sidebar-footer-card">
         <div class="station-badge">
           <span class="status-dot-live"></span>
-          <span>TRẠM ĐÀ NẴNG KẾT NỐI</span>
+          <span>Đà Nẵng Central</span>
         </div>
-        <div class="station-details">
-          Mạng lưới 4 chi nhánh • Máy pha Espresso La Marzocco sẵn sàng
-        </div>
-        <div class="shift-time-pill">
-          Ca Hoạt Động: 06:30 - 23:00
-        </div>
+        <span style="font-size: 0.72rem; color: var(--md-sys-color-on-surface-variant); font-family: var(--font-mono); font-weight: 600;">
+          06:30 - 23:00
+        </span>
       </div>
     </aside>
 
     <!-- Main Content Stage Area -->
     <div class="m3-main-stage">
-      <!-- Top App Bar (Tinted Shell) -->
+      <!-- Top App Bar -->
       <header class="m3-top-appbar">
         <div class="appbar-left-group">
           <div class="appbar-search-pill">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="11" cy="11" r="8"></circle>
               <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
             </svg>
-            <input type="text" placeholder="Tìm kiếm đơn hàng, thức uống, chi nhánh..." class="appbar-search-input">
+            <input type="text" placeholder="Tìm kiếm đơn, thức uống..." class="appbar-search-input">
           </div>
         </div>
 
         <div class="appbar-right-group">
           <div class="branch-selector-pill">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
               <circle cx="12" cy="10" r="3"></circle>
             </svg>
-            <span>Hệ Thống 4 Trạm Đà Nẵng</span>
+            <span>4 Chi Nhánh Đà Nẵng</span>
           </div>
 
           <div class="user-profile-pill">
             <div class="user-avatar-circle">FB</div>
-            <div class="user-meta">
-              <span class="user-name">Quản Lý Trưởng Ca</span>
-              <span class="user-role">FreshBite Admin</span>
-            </div>
+            <span class="user-name">Quản Lý Trưởng Ca</span>
           </div>
         </div>
       </header>

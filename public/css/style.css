@@ -1,7 +1,6 @@
 /* ==========================================================================
    FRESHBITE COFFEE & TEA - SPECIALTY CHAIN MANAGEMENT & BARISTA KDS
-   Engineered using Google Material 3 Web System & M3 Expressive Specifications
-   Derived from @material/web, material-color-utilities, & Google Workspace
+   Google Material 3 Web System & M3 Expressive Responsive Architecture
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
@@ -33,7 +32,7 @@
   --md-sys-color-on-tertiary-container: #0C281B;
 
   /* Surfaces & Canvas */
-  --md-sys-color-shell: #F5F3EF;                /* Warm Tinted Shell (Workspace canvas) */
+  --md-sys-color-shell: #F5F3EF;                /* Warm Tinted Shell */
   --md-sys-color-surface: #FFFFFF;              /* Floating Island Pure White */
   --md-sys-color-surface-dim: #EDE9E3;
   --md-sys-color-surface-container: #F9F7F4;
@@ -44,36 +43,27 @@
   --md-sys-color-on-surface: #1C1917;           /* Deep Charcoal Neutral */
   --md-sys-color-on-surface-variant: #57534E;   /* Medium Warm Slate */
   --md-sys-color-outline: #D6D1C7;
-  --md-sys-color-outline-variant: #E7E3DB;
+  --md-sys-color-outline-variant: #EAE6DF;
 
   /* KDS Status Functional Tokens */
   --kds-color-pending-bg: #EEF2FF;
   --kds-color-pending-text: #3730A3;
-  --kds-color-pending-border: #C7D2FE;
-
   --kds-color-prep-bg: #FEF3C7;
   --kds-color-prep-text: #92400E;
-  --kds-color-prep-border: #FDE68A;
-
   --kds-color-ready-bg: #DCFCE7;
   --kds-color-ready-text: #166534;
-  --kds-color-ready-border: #BBF7D0;
-
   --kds-color-completed-bg: #F3F4F6;
   --kds-color-completed-text: #4B5563;
-  --kds-color-completed-border: #E5E7EB;
-
   --kds-color-cancelled-bg: #FEE2E2;
   --kds-color-cancelled-text: #991B1B;
-  --kds-color-cancelled-border: #FECACA;
 
   /* M3 Shape System */
   --md-shape-xs: 4px;
   --md-shape-sm: 8px;
   --md-shape-md: 12px;
   --md-shape-lg: 16px;
-  --md-shape-xl: 24px;
-  --md-shape-2xl: 28px;
+  --md-shape-xl: 20px;
+  --md-shape-2xl: 24px;
   --md-shape-full: 9999px;
 
   /* M3 Dual-Shadow Elevation Formulas */
@@ -81,13 +71,13 @@
   --md-elevation-2: 0px 2px 6px 2px rgba(28, 25, 23, 0.06), 0px 1px 2px 0px rgba(28, 25, 23, 0.08);
   --md-elevation-3: 0px 4px 12px 3px rgba(28, 25, 23, 0.08), 0px 1px 3px 0px rgba(28, 25, 23, 0.10);
 
-  /* Transitions & Springs */
-  --spring-default: 280ms cubic-bezier(0.2, 0, 0, 1);
-  --spring-snappy: 180ms cubic-bezier(0.2, 0, 0, 1);
+  /* Springs & Transitions */
+  --spring-default: 260ms cubic-bezier(0.2, 0, 0, 1);
+  --spring-snappy: 160ms cubic-bezier(0.2, 0, 0, 1);
 }
 
 /* --------------------------------------------------------------------------
-   2. GLOBAL BASE STYLES & RESETS
+   2. BASE RESETS & TYPOGRAPHY
    -------------------------------------------------------------------------- */
 *, *::before, *::after {
   box-sizing: border-box;
@@ -99,11 +89,11 @@ body.freshbite-app {
   font-family: var(--font-brand);
   background-color: var(--md-sys-color-shell);
   color: var(--md-sys-color-on-surface);
-  line-height: 1.5;
+  line-height: 1.45;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
-  display: flex;
+  width: 100%;
   overflow-x: hidden;
 }
 
@@ -127,44 +117,48 @@ code {
 }
 
 /* --------------------------------------------------------------------------
-   3. GOOGLE WORKSPACE SHELL ARCHITECTURE:
-      Left Navigation Sidebar (260px) + Floating Island Main Stage
+   3. APP SHELL LAYOUT (DESKTOP + TABLET + MOBILE)
    -------------------------------------------------------------------------- */
 .m3-shell-wrapper {
   display: flex;
-  width: 100vw;
+  width: 100%;
   min-height: 100vh;
+  position: relative;
 }
 
-/* Navigation Sidebar (Docked directly on tinted shell without borders) */
+/* Left Navigation Sidebar (Desktop: 250px) */
 .m3-sidebar {
-  width: 260px;
-  min-width: 260px;
+  width: 250px;
+  min-width: 250px;
   background-color: var(--md-sys-color-shell);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 24px 16px 20px 16px;
+  padding: 20px 14px 16px 14px;
   flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
 }
 
 .sidebar-brand-lockup {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 4px 12px 24px 12px;
+  gap: 10px;
+  padding: 4px 10px 18px 10px;
 }
 
 .brand-emblem-badge {
-  width: 44px;
-  height: 44px;
+  width: 40px;
+  height: 40px;
   border-radius: var(--md-shape-md);
   background: linear-gradient(135deg, #5C3826 0%, #8C532B 100%);
   color: #FFFFFF;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 12px rgba(92, 56, 38, 0.25);
+  box-shadow: 0 4px 10px rgba(92, 56, 38, 0.22);
 }
 
 .brand-text-block {
@@ -173,134 +167,104 @@ code {
 }
 
 .brand-title {
-  font-size: 1.25rem;
+  font-size: 1.18rem;
   font-weight: 800;
   letter-spacing: -0.02em;
   color: var(--md-sys-color-primary);
-  line-height: 1.15;
+  line-height: 1.1;
 }
 
 .brand-subtitle {
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   color: var(--md-sys-color-secondary);
 }
 
-/* Navigation Menu Items (M3 Stadium Pills) */
+/* Navigation Menu Items */
 .sidebar-nav-menu {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  margin-top: 8px;
+  gap: 3px;
 }
 
 .nav-section-label {
-  font-size: 0.72rem;
-  font-weight: 700;
+  font-size: 0.68rem;
+  font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--md-sys-color-on-surface-variant);
-  padding: 12px 14px 6px 14px;
+  padding: 10px 12px 4px 12px;
 }
 
 .m3-nav-pill {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 10px 16px;
+  gap: 10px;
+  padding: 9px 14px;
   border-radius: var(--md-shape-full);
   color: var(--md-sys-color-on-surface-variant);
-  font-size: 0.9rem;
+  font-size: 0.86rem;
   font-weight: 600;
   transition: all var(--spring-snappy);
   white-space: nowrap;
-  position: relative;
-}
-
-.m3-nav-pill svg {
-  flex-shrink: 0;
-  transition: transform var(--spring-snappy);
 }
 
 .m3-nav-pill:hover {
-  background-color: rgba(92, 56, 38, 0.08);
+  background-color: rgba(92, 56, 38, 0.07);
   color: var(--md-sys-color-primary);
 }
 
-.m3-nav-pill:hover svg {
-  transform: scale(1.05);
-}
-
-/* Active Pill: Material You Stadium Pill Container */
 .m3-nav-pill.active {
   background-color: var(--md-sys-color-primary-container);
   color: var(--md-sys-color-primary);
   font-weight: 700;
 }
 
-.m3-nav-pill.active svg {
-  stroke-width: 2.3;
-}
-
 .kds-live-pill {
   margin-left: auto;
-  font-size: 0.65rem;
+  font-size: 0.62rem;
   font-weight: 800;
   letter-spacing: 0.04em;
   background-color: #EF4444;
   color: #FFFFFF;
-  padding: 2px 7px;
+  padding: 1px 6px;
   border-radius: var(--md-shape-full);
   animation: pulse-ring 2s infinite ease-in-out;
 }
 
 @keyframes pulse-ring {
   0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.85; transform: scale(1.05); }
+  50% { opacity: 0.8; transform: scale(1.06); }
 }
 
-/* Sidebar Footer / Shift Card */
+/* Minimal Shift & Status Strip */
 .sidebar-footer-card {
   background-color: var(--md-sys-color-surface-container);
   border-radius: var(--md-shape-lg);
-  padding: 14px;
+  padding: 12px;
   display: flex;
-  flex-direction: column;
-  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
   border: 1px solid var(--md-sys-color-outline-variant);
 }
 
 .station-badge {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 0.78rem;
+  gap: 6px;
+  font-size: 0.75rem;
   font-weight: 700;
   color: var(--md-sys-color-tertiary);
 }
 
 .status-dot-live {
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
   background-color: #22C55E;
   box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2);
-}
-
-.station-details {
-  font-size: 0.75rem;
-  color: var(--md-sys-color-on-surface-variant);
-  line-height: 1.4;
-}
-
-.shift-time-pill {
-  display: inline-block;
-  font-family: var(--font-mono);
-  font-weight: 600;
-  font-size: 0.75rem;
-  color: var(--md-sys-color-primary);
 }
 
 /* --------------------------------------------------------------------------
@@ -311,46 +275,51 @@ code {
   display: flex;
   flex-direction: column;
   min-width: 0;
-  padding: 16px 20px 20px 4px;
+  padding: 14px 18px 18px 0;
   height: 100vh;
-  overflow: hidden;
 }
 
-/* Top App Bar (Sits on the tinted shell, zero border lines) */
+/* Top App Bar (Tinted Shell) */
 .m3-top-appbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 8px 12px 16px 12px;
-  gap: 16px;
+  padding: 4px 8px 14px 8px;
+  gap: 14px;
 }
 
 .appbar-left-group {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
   flex: 1;
+}
+
+.mobile-menu-btn {
+  display: none;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--md-shape-full);
+  background-color: var(--md-sys-color-surface);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--md-sys-color-primary);
 }
 
 .appbar-search-pill {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   background-color: var(--md-sys-color-surface);
   border-radius: var(--md-shape-full);
-  padding: 8px 18px;
+  padding: 7px 16px;
   width: 100%;
-  max-width: 380px;
+  max-width: 340px;
   box-shadow: var(--md-elevation-1);
   color: var(--md-sys-color-on-surface-variant);
-  font-size: 0.88rem;
-  border: 1px solid transparent;
-  transition: all var(--spring-snappy);
-}
-
-.appbar-search-pill:focus-within {
-  border-color: var(--md-sys-color-primary);
-  box-shadow: 0 0 0 3px var(--md-sys-color-primary-container);
+  font-size: 0.84rem;
 }
 
 .appbar-search-input {
@@ -364,35 +333,36 @@ code {
 .appbar-right-group {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
 .branch-selector-pill {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   background-color: var(--md-sys-color-surface);
   border-radius: var(--md-shape-full);
-  padding: 6px 14px;
+  padding: 6px 12px;
   box-shadow: var(--md-elevation-1);
-  font-size: 0.82rem;
-  font-weight: 600;
+  font-size: 0.78rem;
+  font-weight: 700;
   color: var(--md-sys-color-primary);
+  white-space: nowrap;
 }
 
 .user-profile-pill {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 4px 10px 4px 4px;
+  gap: 8px;
+  padding: 3px 8px 3px 3px;
   background-color: var(--md-sys-color-surface);
   border-radius: var(--md-shape-full);
   box-shadow: var(--md-elevation-1);
 }
 
 .user-avatar-circle {
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   background: linear-gradient(135deg, #8C532B, #5C3826);
   color: #FFFFFF;
@@ -400,27 +370,16 @@ code {
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  font-size: 0.8rem;
-}
-
-.user-meta {
-  display: flex;
-  flex-direction: column;
+  font-size: 0.75rem;
 }
 
 .user-name {
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-weight: 700;
-  line-height: 1.1;
   color: var(--md-sys-color-on-surface);
 }
 
-.user-role {
-  font-size: 0.68rem;
-  color: var(--md-sys-color-on-surface-variant);
-}
-
-/* Floating Rounded Island Canvas (Google M3 Signature) */
+/* Floating Rounded Island Canvas */
 .m3-floating-island {
   flex: 1;
   background-color: var(--md-sys-color-surface);
@@ -430,82 +389,77 @@ code {
   flex-direction: column;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 32px;
+  padding: 24px 28px;
   position: relative;
 }
 
-/* Custom Sleek Scrollbar */
 .m3-floating-island::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
 }
 .m3-floating-island::-webkit-scrollbar-thumb {
   background-color: var(--md-sys-color-outline);
   border-radius: var(--md-shape-full);
 }
-.m3-floating-island::-webkit-scrollbar-track {
-  background: transparent;
-}
 
 /* --------------------------------------------------------------------------
-   5. SPECIALTY COFFEE WORKSPACE HEADERS & ACTIONS
+   5. WORKSPACE HEADERS & BUTTONS (CONCISE & CLEAN)
    -------------------------------------------------------------------------- */
 .island-header-bar {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 24px;
-  margin-bottom: 28px;
+  gap: 16px;
+  margin-bottom: 22px;
 }
 
 .island-title-block {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 3px;
 }
 
 .island-category-badge {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  font-size: 0.72rem;
+  gap: 5px;
+  font-size: 0.68rem;
   font-weight: 800;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--md-sys-color-secondary);
 }
 
 .island-heading {
-  font-size: 1.85rem;
+  font-size: 1.65rem;
   font-weight: 800;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.025em;
   color: var(--md-sys-color-primary);
   line-height: 1.2;
 }
 
 .island-description {
-  font-size: 0.92rem;
+  font-size: 0.86rem;
   color: var(--md-sys-color-on-surface-variant);
-  max-width: 650px;
+  max-width: 600px;
 }
 
 .island-actions-group {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   flex-shrink: 0;
 }
 
-/* M3 Button System */
+/* Buttons */
 .m3-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  height: 42px;
-  padding: 0 20px;
+  gap: 6px;
+  height: 38px;
+  padding: 0 16px;
   border-radius: var(--md-shape-full);
-  font-size: 0.88rem;
+  font-size: 0.82rem;
   font-weight: 700;
   border: none;
   cursor: pointer;
@@ -514,18 +468,17 @@ code {
 }
 
 .m3-btn:active {
-  transform: scale(0.98);
+  transform: scale(0.97);
 }
 
 .m3-btn-filled {
   background-color: var(--md-sys-color-primary);
   color: var(--md-sys-color-on-primary);
-  box-shadow: 0 2px 6px rgba(92, 56, 38, 0.25);
+  box-shadow: 0 2px 5px rgba(92, 56, 38, 0.22);
 }
 
 .m3-btn-filled:hover {
   background-color: var(--md-sys-color-primary-hover);
-  box-shadow: 0 4px 10px rgba(92, 56, 38, 0.35);
 }
 
 .m3-btn-tonal {
@@ -549,31 +502,67 @@ code {
 }
 
 /* --------------------------------------------------------------------------
-   6. BENTO METRICS GRID (DASHBOARD)
+   6. CUSTOM M3 SELECT DROPDOWNS (ZERO DEFAULT OS SLOP)
+   -------------------------------------------------------------------------- */
+.m3-select-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.m3-select-custom {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: var(--md-sys-color-surface);
+  border: 1px solid var(--md-sys-color-outline);
+  border-radius: var(--md-shape-full);
+  padding: 8px 34px 8px 14px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--md-sys-color-primary);
+  outline: none;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%235C3826' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 11px center;
+  transition: all var(--spring-snappy);
+}
+
+.m3-select-custom:hover {
+  border-color: var(--md-sys-color-primary);
+  background-color: var(--md-sys-color-primary-container);
+}
+
+.m3-select-custom:focus {
+  border-color: var(--md-sys-color-primary);
+  box-shadow: 0 0 0 3px rgba(92, 56, 38, 0.14);
+}
+
+/* --------------------------------------------------------------------------
+   7. BENTO METRICS GRID (DASHBOARD)
    -------------------------------------------------------------------------- */
 .m3-bento-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
-  margin-bottom: 28px;
+  gap: 14px;
+  margin-bottom: 20px;
 }
 
 .m3-bento-card {
   background-color: var(--md-sys-color-surface-container);
-  border-radius: var(--md-shape-xl);
-  padding: 20px;
+  border-radius: var(--md-shape-lg);
+  padding: 16px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  position: relative;
-  overflow: hidden;
   border: 1px solid var(--md-sys-color-outline-variant);
-  transition: transform var(--spring-snappy), box-shadow var(--spring-snappy);
+  transition: transform var(--spring-snappy);
 }
 
 .m3-bento-card:hover {
   transform: translateY(-2px);
-  box-shadow: var(--md-elevation-2);
 }
 
 .bento-accent-espresso {
@@ -585,13 +574,13 @@ code {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 
 .bento-icon-box {
-  width: 40px;
-  height: 40px;
-  border-radius: var(--md-shape-md);
+  width: 34px;
+  height: 34px;
+  border-radius: var(--md-shape-sm);
   background-color: #FFFFFF;
   color: var(--md-sys-color-primary);
   display: flex;
@@ -601,28 +590,28 @@ code {
 }
 
 .bento-label {
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.05em;
   color: var(--md-sys-color-on-surface-variant);
 }
 
 .bento-value-block {
-  margin-bottom: 12px;
+  margin-bottom: 6px;
 }
 
 .bento-number {
   font-family: var(--font-mono);
-  font-size: 1.85rem;
+  font-size: 1.6rem;
   font-weight: 800;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.02em;
   color: var(--md-sys-color-on-surface);
   line-height: 1.1;
 }
 
 .bento-unit {
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   font-weight: 600;
   color: var(--md-sys-color-secondary);
   margin-left: 2px;
@@ -631,42 +620,43 @@ code {
 .bento-footnote {
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 0.75rem;
+  gap: 5px;
+  font-size: 0.72rem;
   color: var(--md-sys-color-on-surface-variant);
 }
 
-/* Operational Status Bar Strip */
+/* Status Flow Strip */
 .m3-status-flow-bar {
   display: flex;
   align-items: center;
   background-color: var(--md-sys-color-surface-container);
   border-radius: var(--md-shape-full);
-  padding: 6px 12px;
-  gap: 8px;
-  margin-bottom: 28px;
+  padding: 4px 8px;
+  gap: 6px;
+  margin-bottom: 22px;
   overflow-x: auto;
   border: 1px solid var(--md-sys-color-outline-variant);
+  scrollbar-width: none;
 }
+.m3-status-flow-bar::-webkit-scrollbar { display: none; }
 
 .flow-step-chip {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 6px 14px;
+  gap: 6px;
+  padding: 4px 10px;
   border-radius: var(--md-shape-full);
-  font-size: 0.78rem;
+  font-size: 0.74rem;
   font-weight: 600;
   white-space: nowrap;
   background-color: #FFFFFF;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
 }
 
 .flow-step-count {
   font-family: var(--font-mono);
   font-weight: 700;
-  font-size: 0.85rem;
-  padding: 1px 7px;
+  font-size: 0.78rem;
+  padding: 1px 6px;
   border-radius: var(--md-shape-full);
 }
 
@@ -676,59 +666,62 @@ code {
 .chip-completed .flow-step-count { background: var(--kds-color-completed-bg); color: var(--kds-color-completed-text); }
 
 /* --------------------------------------------------------------------------
-   7. BORDERLESS DATA TABLE WITH TONAL ROW HOVER (M3 SIGNATURE)
+   8. BORDERLESS DATA TABLE (CLEAN & CONCISE)
    -------------------------------------------------------------------------- */
 .m3-table-card {
   background-color: #FFFFFF;
-  border-radius: var(--md-shape-xl);
+  border-radius: var(--md-shape-lg);
   border: 1px solid var(--md-sys-color-outline-variant);
   overflow: hidden;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
 
 .table-top-bar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px 24px 16px 24px;
+  padding: 16px 20px 12px 20px;
 }
 
 .table-top-title {
-  font-size: 1.15rem;
+  font-size: 1.05rem;
   font-weight: 800;
   color: var(--md-sys-color-on-surface);
 }
 
 .table-top-caption {
-  font-size: 0.82rem;
+  font-size: 0.76rem;
   color: var(--md-sys-color-on-surface-variant);
 }
 
 .m3-table-wrapper {
   overflow-x: auto;
   width: 100%;
+  -webkit-overflow-scrolling: touch;
 }
 
 .m3-table {
   width: 100%;
   border-collapse: collapse;
   text-align: left;
+  min-width: 680px;
 }
 
 .m3-table th {
-  padding: 12px 20px;
-  font-size: 0.72rem;
+  padding: 10px 16px;
+  font-size: 0.68rem;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--md-sys-color-on-surface-variant);
   background-color: var(--md-sys-color-surface-container);
   border-bottom: 1px solid var(--md-sys-color-outline-variant);
+  white-space: nowrap;
 }
 
 .m3-table td {
-  padding: 16px 20px;
-  font-size: 0.88rem;
+  padding: 12px 16px;
+  font-size: 0.84rem;
   color: var(--md-sys-color-on-surface);
   border-bottom: 1px solid var(--md-sys-color-outline-variant);
   vertical-align: middle;
@@ -741,31 +734,31 @@ code {
 .order-code-tag {
   font-family: var(--font-mono);
   font-weight: 700;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   background-color: var(--md-sys-color-surface-container-high);
   color: var(--md-sys-color-primary);
-  padding: 4px 8px;
+  padding: 3px 6px;
   border-radius: var(--md-shape-sm);
+  white-space: nowrap;
 }
 
 .customer-name-cell {
   font-weight: 700;
   color: var(--md-sys-color-on-surface);
+  font-size: 0.84rem;
 }
 
 .customer-sub-cell {
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   color: var(--md-sys-color-on-surface-variant);
 }
 
-/* Status Badges */
 .m3-badge {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 4px 10px;
+  padding: 3px 8px;
   border-radius: var(--md-shape-full);
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-weight: 700;
   white-space: nowrap;
 }
@@ -776,10 +769,9 @@ code {
 .badge-completed { background-color: var(--kds-color-completed-bg); color: var(--kds-color-completed-text); }
 .badge-cancelled { background-color: var(--kds-color-cancelled-bg); color: var(--kds-color-cancelled-text); }
 
-/* Table Action Buttons */
 .m3-btn-icon {
-  width: 34px;
-  height: 34px;
+  width: 32px;
+  height: 32px;
   border-radius: var(--md-shape-full);
   display: inline-flex;
   align-items: center;
@@ -797,93 +789,77 @@ code {
 }
 
 /* --------------------------------------------------------------------------
-   8. REAL SPECIALTY CAFE BARISTA KDS (KITCHEN DISPLAY SYSTEM)
+   9. SPECIALTY CAFE BARISTA KDS SCREEN
    -------------------------------------------------------------------------- */
 .kds-action-strip {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  gap: 12px;
   background-color: var(--md-sys-color-surface-container);
-  border-radius: var(--md-shape-xl);
-  padding: 12px 18px;
-  margin-bottom: 24px;
+  border-radius: var(--md-shape-lg);
+  padding: 10px 14px;
+  margin-bottom: 20px;
   border: 1px solid var(--md-sys-color-outline-variant);
 }
 
-.kds-filter-tabs {
+.kds-filter-form-bar {
   display: flex;
   align-items: center;
-  gap: 6px;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  width: 100%;
 }
 
-.kds-tab-pill {
-  padding: 6px 14px;
-  border-radius: var(--md-shape-full);
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: var(--md-sys-color-on-surface-variant);
-  transition: all var(--spring-snappy);
+.kds-select-field {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 200px;
 }
 
-.kds-tab-pill.active {
-  background-color: var(--md-sys-color-primary);
-  color: #FFFFFF;
+.kds-select-field .m3-select-custom {
+  width: 100%;
 }
 
-.kds-branch-dropdown {
-  background-color: #FFFFFF;
-  border: 1px solid var(--md-sys-color-outline);
-  border-radius: var(--md-shape-full);
-  padding: 8px 16px;
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: var(--md-sys-color-primary);
-  outline: none;
-  cursor: pointer;
-}
-
-/* KDS Multi-Ticket Station Grid */
 .kds-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 18px;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
 }
 
 .kds-ticket {
   background-color: #FFFFFF;
-  border-radius: var(--md-shape-xl);
+  border-radius: var(--md-shape-lg);
   border: 1px solid var(--md-sys-color-outline-variant);
   box-shadow: var(--md-elevation-1);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   overflow: hidden;
-  transition: transform var(--spring-snappy), box-shadow var(--spring-snappy);
-  position: relative;
+  transition: transform var(--spring-snappy);
 }
 
 .kds-ticket:hover {
   transform: translateY(-2px);
-  box-shadow: var(--md-elevation-2);
 }
 
-/* Colored Header Stripe per KDS Stage */
-.kds-ticket.ticket-pending { border-top: 5px solid #6366F1; }
-.kds-ticket.ticket-preparing { border-top: 5px solid #F59E0B; }
-.kds-ticket.ticket-ready { border-top: 5px solid #10B981; }
-.kds-ticket.ticket-completed { border-top: 5px solid #9CA3AF; opacity: 0.85; }
+.kds-ticket.ticket-pending { border-top: 4px solid #6366F1; }
+.kds-ticket.ticket-preparing { border-top: 4px solid #F59E0B; }
+.kds-ticket.ticket-ready { border-top: 4px solid #10B981; }
+.kds-ticket.ticket-completed { border-top: 4px solid #9CA3AF; opacity: 0.85; }
 
 .ticket-header-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 16px 10px 16px;
+  padding: 12px 14px 8px 14px;
 }
 
 .ticket-order-tag {
   font-family: var(--font-mono);
-  font-size: 1.15rem;
+  font-size: 1.05rem;
   font-weight: 800;
   color: var(--md-sys-color-on-surface);
 }
@@ -891,18 +867,18 @@ code {
 .ticket-timer-pill {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
   font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-weight: 700;
   color: var(--md-sys-color-on-surface-variant);
   background-color: var(--md-sys-color-surface-container);
-  padding: 3px 8px;
+  padding: 2px 7px;
   border-radius: var(--md-shape-full);
 }
 
 .ticket-customer-strip {
-  padding: 0 16px 12px 16px;
+  padding: 0 14px 10px 14px;
   border-bottom: 1px dashed var(--md-sys-color-outline-variant);
   display: flex;
   align-items: center;
@@ -910,34 +886,33 @@ code {
 }
 
 .ticket-guest-name {
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   font-weight: 700;
   color: var(--md-sys-color-primary);
 }
 
 .ticket-branch-tag {
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   color: var(--md-sys-color-on-surface-variant);
 }
 
-/* KDS Line Items (Artisanal Coffee Drink Customizations) */
 .ticket-items-list {
-  padding: 14px 16px;
+  padding: 12px 14px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
   flex: 1;
 }
 
 .ticket-item-row {
   display: flex;
   align-items: flex-start;
-  gap: 10px;
+  gap: 8px;
 }
 
 .item-qty-pill {
-  width: 26px;
-  height: 26px;
+  width: 24px;
+  height: 24px;
   border-radius: var(--md-shape-sm);
   background-color: var(--md-sys-color-primary-container);
   color: var(--md-sys-color-primary);
@@ -945,7 +920,7 @@ code {
   align-items: center;
   justify-content: center;
   font-family: var(--font-mono);
-  font-size: 0.8rem;
+  font-size: 0.76rem;
   font-weight: 800;
   flex-shrink: 0;
 }
@@ -953,10 +928,11 @@ code {
 .item-content {
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 
 .item-name-text {
-  font-size: 0.9rem;
+  font-size: 0.86rem;
   font-weight: 700;
   color: var(--md-sys-color-on-surface);
   line-height: 1.25;
@@ -965,40 +941,39 @@ code {
 .item-spec-tags {
   display: flex;
   align-items: center;
-  gap: 6px;
-  margin-top: 3px;
-  font-size: 0.72rem;
+  gap: 5px;
+  margin-top: 2px;
+  font-size: 0.7rem;
   color: var(--md-sys-color-on-surface-variant);
 }
 
 .size-pill-tag {
   background-color: var(--md-sys-color-surface-container-highest);
   color: var(--md-sys-color-primary);
-  padding: 1px 6px;
+  padding: 1px 5px;
   border-radius: var(--md-shape-xs);
   font-weight: 700;
 }
 
-/* KDS Bottom Bar: Ergonomic 44px Barista Action Buttons */
 .ticket-footer-actions {
-  padding: 12px 16px 14px 16px;
+  padding: 10px 14px 12px 14px;
   background-color: var(--md-sys-color-surface-container);
   border-top: 1px solid var(--md-sys-color-outline-variant);
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
 }
 
 .kds-btn-step {
   width: 100%;
-  height: 42px;
+  height: 38px;
   border-radius: var(--md-shape-full);
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 6px;
   cursor: pointer;
   border: none;
   transition: all var(--spring-snappy);
@@ -1019,41 +994,40 @@ code {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-top: 4px;
+  padding-top: 2px;
 }
 
 .kds-link-invoice {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  font-size: 0.75rem;
+  gap: 4px;
+  font-size: 0.72rem;
   font-weight: 600;
   color: var(--md-sys-color-secondary);
-  transition: color var(--spring-snappy);
 }
 .kds-link-invoice:hover { color: var(--md-sys-color-primary); }
 
 /* --------------------------------------------------------------------------
-   9. PRODUCTS & MENU CATALOG WITH MULTER WORKSHOP (SLOT 12)
+   10. PRODUCTS & UPLOADS WORKSHOP
    -------------------------------------------------------------------------- */
 .upload-artisan-card {
   background: linear-gradient(135deg, #FAF7F2 0%, #F5ECE4 100%);
-  border-radius: var(--md-shape-xl);
+  border-radius: var(--md-shape-lg);
   border: 1px solid #EBDDCF;
-  padding: 24px;
-  margin-bottom: 28px;
+  padding: 16px 20px;
+  margin-bottom: 22px;
 }
 
 .upload-artisan-header {
   display: flex;
   align-items: center;
-  gap: 14px;
-  margin-bottom: 16px;
+  gap: 10px;
+  margin-bottom: 12px;
 }
 
 .upload-icon-circle {
-  width: 44px;
-  height: 44px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
   background-color: #FFFFFF;
   color: var(--md-sys-color-secondary);
@@ -1066,20 +1040,20 @@ code {
 .upload-form-box {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
   flex-wrap: wrap;
 }
 
 .custom-file-target {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   background-color: #FFFFFF;
   border: 1px dashed var(--md-sys-color-outline);
   border-radius: var(--md-shape-full);
-  padding: 10px 20px;
+  padding: 8px 16px;
   cursor: pointer;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-weight: 600;
   color: var(--md-sys-color-primary);
   transition: all var(--spring-snappy);
@@ -1099,136 +1073,123 @@ code {
 }
 
 .product-thumb-img {
-  width: 52px;
-  height: 52px;
+  width: 44px;
+  height: 44px;
   border-radius: var(--md-shape-md);
   object-fit: cover;
   box-shadow: var(--md-elevation-1);
 }
 
+.product-desc-clamped {
+  font-size: 0.74rem;
+  color: var(--md-sys-color-on-surface-variant);
+  margin-top: 2px;
+  max-width: 240px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .sizes-badge-group {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
   flex-wrap: wrap;
 }
 
 .size-item-pill {
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   font-weight: 700;
-  padding: 3px 8px;
+  padding: 2px 6px;
   background-color: var(--md-sys-color-surface-container);
   border: 1px solid var(--md-sys-color-outline-variant);
-  border-radius: var(--md-shape-sm);
+  border-radius: var(--md-shape-xs);
   color: var(--md-sys-color-on-surface);
 }
 
 .stock-toggle-btn {
-  padding: 4px 12px;
+  padding: 3px 10px;
   border-radius: var(--md-shape-full);
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-weight: 700;
   border: none;
   cursor: pointer;
   transition: all var(--spring-snappy);
 }
 
-.stock-toggle-btn.in-stock {
-  background-color: #DCFCE7;
-  color: #166534;
-}
-.stock-toggle-btn.out-stock {
-  background-color: #FEE2E2;
-  color: #991B1B;
-}
+.stock-toggle-btn.in-stock { background-color: #DCFCE7; color: #166534; }
+.stock-toggle-btn.out-stock { background-color: #FEE2E2; color: #991B1B; }
 
 /* --------------------------------------------------------------------------
-   10. DA NANG BRANCHES NETWORK CARDS
+   11. BRANCHES NETWORK
    -------------------------------------------------------------------------- */
 .branches-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 18px;
 }
 
 .branch-store-card {
   background-color: #FFFFFF;
-  border-radius: var(--md-shape-xl);
+  border-radius: var(--md-shape-lg);
   border: 1px solid var(--md-sys-color-outline-variant);
   overflow: hidden;
   box-shadow: var(--md-elevation-1);
   display: flex;
   flex-direction: column;
-  transition: transform var(--spring-snappy), box-shadow var(--spring-snappy);
+  transition: transform var(--spring-snappy);
 }
 
 .branch-store-card:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--md-elevation-2);
+  transform: translateY(-2px);
 }
 
 .branch-cover-stage {
   position: relative;
-  height: 180px;
+  height: 150px;
   width: 100%;
-  overflow: hidden;
 }
 
 .branch-cover-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 600ms cubic-bezier(0.2, 0, 0, 1);
-}
-
-.branch-store-card:hover .branch-cover-img {
-  transform: scale(1.04);
 }
 
 .branch-district-tag {
   position: absolute;
-  top: 14px;
-  left: 14px;
-  background: rgba(28, 25, 23, 0.82);
-  backdrop-filter: blur(8px);
+  top: 10px;
+  left: 10px;
+  background: rgba(28, 25, 23, 0.85);
+  backdrop-filter: blur(6px);
   color: #FFFFFF;
-  padding: 4px 12px;
+  padding: 3px 10px;
   border-radius: var(--md-shape-full);
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   font-weight: 800;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  display: flex;
-  align-items: center;
-  gap: 6px;
 }
 
 .branch-card-body {
-  padding: 20px;
+  padding: 16px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 10px;
   flex: 1;
 }
 
-.branch-name-row {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
-}
-
 .branch-title-text {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   font-weight: 800;
   color: var(--md-sys-color-primary);
-  line-height: 1.25;
+  line-height: 1.2;
 }
 
 .branch-status-chip {
-  padding: 3px 10px;
+  padding: 2px 8px;
   border-radius: var(--md-shape-full);
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   font-weight: 700;
 }
 .status-open { background-color: #DCFCE7; color: #166534; }
@@ -1237,82 +1198,204 @@ code {
 .branch-address-text {
   display: flex;
   align-items: flex-start;
-  gap: 8px;
-  font-size: 0.85rem;
+  gap: 6px;
+  font-size: 0.78rem;
   color: var(--md-sys-color-on-surface-variant);
-  line-height: 1.4;
+  line-height: 1.35;
 }
 
 .branch-meta-row {
   display: flex;
   align-items: center;
-  gap: 16px;
-  font-size: 0.78rem;
+  gap: 14px;
+  font-size: 0.74rem;
   color: var(--md-sys-color-on-surface-variant);
-  padding: 10px 0;
+  padding: 8px 0;
   border-top: 1px solid var(--md-sys-color-outline-variant);
   border-bottom: 1px solid var(--md-sys-color-outline-variant);
 }
 
-.branch-meta-item {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.branch-card-actions {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: auto;
-}
-
 /* --------------------------------------------------------------------------
-   11. RESPONSIVE BREAKPOINTS (MOBILE & TABLET ADAPTATION)
+   12. ADAPTIVE RESPONSIVE BREAKPOINTS (MOBILE & TABLET ADAPTATION)
    -------------------------------------------------------------------------- */
+/* Tablet & Medium Screens (< 1024px) */
 @media (max-width: 1024px) {
   .m3-shell-wrapper {
     flex-direction: column;
+    width: 100%;
+    overflow-x: hidden;
   }
   .m3-sidebar {
     width: 100%;
     min-width: 100%;
-    flex-direction: row;
-    align-items: center;
-    padding: 12px 16px;
     height: auto;
+    position: static;
+    flex-direction: column;
+    padding: 12px 16px;
+    gap: 8px;
+  }
+  .sidebar-brand-lockup {
+    padding: 0 0 6px 0;
+    margin-right: 0;
   }
   .sidebar-nav-menu {
     flex-direction: row;
     overflow-x: auto;
-    margin-top: 0;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+    gap: 6px;
   }
+  .sidebar-nav-menu::-webkit-scrollbar { display: none; }
   .nav-section-label, .sidebar-footer-card {
     display: none;
   }
   .m3-main-stage {
-    padding: 0 12px 12px 12px;
+    padding: 0 12px 14px 12px;
     height: auto;
-    overflow: visible;
+    width: 100%;
+    box-sizing: border-box;
   }
   .m3-floating-island {
     padding: 20px;
     border-radius: var(--md-shape-xl);
+    width: 100%;
+    box-sizing: border-box;
   }
   .m3-bento-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
+/* Mobile Screens (< 640px) */
 @media (max-width: 640px) {
-  .m3-bento-grid {
-    grid-template-columns: 1fr;
+  html, body {
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100vw;
+  }
+  .m3-shell-wrapper {
+    width: 100%;
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
+  .m3-sidebar {
+    padding: 10px 12px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .sidebar-brand-lockup {
+    justify-content: flex-start;
+  }
+  .sidebar-brand-lockup .brand-subtitle {
+    display: none;
+  }
+  .sidebar-nav-menu {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    white-space: nowrap;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    gap: 6px;
+    width: 100%;
+  }
+  .m3-nav-pill {
+    padding: 7px 12px;
+    font-size: 0.8rem;
+  }
+  .m3-top-appbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    padding: 4px 0 10px 0;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .appbar-left-group {
+    width: 100%;
+  }
+  .appbar-search-pill {
+    max-width: 100%;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .appbar-right-group {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+  .branch-selector-pill {
+    font-size: 0.72rem;
+    padding: 4px 10px;
+  }
+  .m3-main-stage {
+    padding: 0 8px 12px 8px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .m3-floating-island {
+    padding: 14px 12px;
+    border-radius: var(--md-shape-lg);
+    width: 100%;
+    box-sizing: border-box;
   }
   .island-header-bar {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
+    gap: 10px;
+  }
+  .island-heading {
+    font-size: 1.35rem;
+    line-height: 1.25;
+  }
+  .island-description {
+    font-size: 0.8rem;
+  }
+  .island-actions-group {
+    flex-direction: row;
+    width: 100%;
+    gap: 8px;
+  }
+  .island-actions-group .m3-btn {
+    flex: 1;
+    height: 36px;
+    padding: 0 10px;
+    font-size: 0.78rem;
+  }
+  .m3-bento-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
   }
   .branches-grid {
     grid-template-columns: 1fr;
+  }
+  .kds-action-strip {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 8px 10px;
+  }
+  .kds-action-strip form {
+    flex-direction: column;
+    align-items: stretch !important;
+    gap: 8px !important;
+  }
+  .kds-action-strip form > div {
+    width: 100% !important;
+    margin-left: 0 !important;
+  }
+  .m3-select-custom {
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .kds-grid {
+    grid-template-columns: 1fr;
+  }
+  .table-top-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    padding: 10px 12px;
   }
 }
