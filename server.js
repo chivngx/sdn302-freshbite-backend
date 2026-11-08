@@ -58,14 +58,18 @@ app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 
-connectDB().then(() => {
-  server.listen(PORT, () => {
-    console.log(`Server running on port ${PORT} with Socket.IO enabled`);
+if (require.main === module) {
+  connectDB().then(() => {
+    server = app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+    });
   });
-});
+}
 
 process.on('unhandledRejection', (err) => {
   console.error(`Unhandled Rejection: ${err.message}`);
   if (server) server.close(() => process.exit(1));
   else process.exit(1);
 });
+
+module.exports = app;

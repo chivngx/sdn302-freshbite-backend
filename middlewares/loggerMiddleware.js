@@ -53,7 +53,7 @@ const morganFormat = ':timestamp :colored-method :url :colored-status :response-
 
 // Middleware ghi log request HTTP
 const requestLogger = morgan(morganFormat, {
-  skip: (req) => req.url === '/api/health' || req.url === '/favicon.ico'
+  skip: (req) => req.url === '/api/health' || req.url === '/favicon.ico' || process.env.NODE_ENV === 'test'
 });
 
 // Helper xác định mã HTTP status phù hợp cho error
@@ -77,6 +77,9 @@ const getErrorStatusCode = (err, res) => {
 
 // Middleware ghi log lỗi khi có exception xảy ra
 const errorLogger = (err, req, res, next) => {
+  if (process.env.NODE_ENV === 'test') {
+    return next(err);
+  }
   const status = getErrorStatusCode(err, res);
   const logMessage = `[${getTimestamp()}] [ERROR] ${req.method} ${req.originalUrl} - Status: ${status} - ${err.message}`;
 

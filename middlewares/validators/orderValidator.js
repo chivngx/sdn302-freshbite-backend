@@ -37,6 +37,11 @@ exports.validateCreateOrder = [
     .isMongoId()
     .withMessage('ID sản phẩm không hợp lệ!'),
 
+  body('items.*.size')
+    .optional({ checkFalsy: true })
+    .isIn(['S', 'M', 'L'])
+    .withMessage('Kích thước món (size) không hợp lệ! Chấp nhận: S, M, L'),
+
   body('items.*.quantity')
     .notEmpty()
     .withMessage('Vui lòng nhập số lượng sản phẩm!')
@@ -57,6 +62,10 @@ exports.validateCreateOrder = [
     .optional({ checkFalsy: true })
     .isIn(['CASH_AT_COUNTER', 'MOCK_MOMO', 'PAYOS'])
     .withMessage('Phương thức thanh toán không hợp lệ! Chấp nhận: CASH_AT_COUNTER, MOCK_MOMO, PAYOS'),
+
+  body('voucherCode')
+    .optional({ nullable: true })
+    .trim(),
 
   handleValidationErrors
 ];

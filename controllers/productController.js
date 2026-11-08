@@ -116,6 +116,7 @@ exports.createProduct = async (req, res, next) => {
       name,
       categoryId,
       price,
+      sizePricing,
       description,
       calories,
       ingredients,
@@ -193,6 +194,11 @@ exports.createProduct = async (req, res, next) => {
       name: name.trim(),
       categoryId,
       price: Number(price),
+      sizePricing: {
+        S: sizePricing && sizePricing.S !== undefined ? Number(sizePricing.S) : 0,
+        M: sizePricing && sizePricing.M !== undefined ? Number(sizePricing.M) : 6000,
+        L: sizePricing && sizePricing.L !== undefined ? Number(sizePricing.L) : 10000
+      },
       description: description.trim(),
       imageUrl: imageUrl.trim(),
       calories: calories !== undefined && !isNaN(calories) ? Number(calories) : 150,
@@ -266,6 +272,14 @@ exports.updateProduct = async (req, res, next) => {
         });
       }
       updates.price = Number(updates.price);
+    }
+
+    if (updates.sizePricing !== undefined && typeof updates.sizePricing === 'object' && updates.sizePricing !== null) {
+      updates.sizePricing = {
+        S: updates.sizePricing.S !== undefined ? Number(updates.sizePricing.S) : 0,
+        M: updates.sizePricing.M !== undefined ? Number(updates.sizePricing.M) : 6000,
+        L: updates.sizePricing.L !== undefined ? Number(updates.sizePricing.L) : 10000
+      };
     }
 
     if (updates.description !== undefined) {

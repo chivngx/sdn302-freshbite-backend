@@ -63,7 +63,7 @@ exports.validateCreateBranch = [
     .trim()
     .notEmpty()
     .withMessage('Số điện thoại không được để trống!')
-    .matches(/^(0[3|5|7|8|9][0-9]{8}|0236\.[0-9]{3}\.[0-9]{3,4})$/)
+    .matches(/^(0[35789][0-9]{8}|0[3|5|7|8|9][0-9]{8}|0236\.?[0-9]{3}\.?[0-9]{3,4})$/)
     .withMessage('Số điện thoại phải là số di động VN hoặc số cố định Đà Nẵng (VD: 0236.730.0999 hoặc 0901234567)!'),
 
   body('openingHours')
@@ -124,7 +124,7 @@ exports.validateUpdateBranch = [
   body('phone')
     .optional()
     .trim()
-    .matches(/^(0[3|5|7|8|9][0-9]{8}|0236\.[0-9]{3}\.[0-9]{3,4})$/)
+    .matches(/^(0[35789][0-9]{8}|0[3|5|7|8|9][0-9]{8}|0236\.?[0-9]{3}\.?[0-9]{3,4})$/)
     .withMessage('Số điện thoại phải là số di động VN hoặc số cố định Đà Nẵng!'),
 
   body('openingHours')
