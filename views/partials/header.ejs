@@ -90,6 +90,15 @@
             </svg>
             <span>API Status: 200 OK</span>
           </a>
+
+          <a href="/admin/logout" class="m3-nav-pill" style="color: #991B1B;" title="Đăng Xuất Khỏi Hệ Thống">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+            <span>Đăng Xuất Phiên</span>
+          </a>
         </nav>
       </div>
 
@@ -129,8 +138,15 @@
           </div>
 
           <div class="user-profile-pill">
-            <div class="user-avatar-circle">FB</div>
-            <span class="user-name">Quản Lý Trưởng Ca</span>
+            <div class="user-avatar-circle">
+              <%= (typeof currentUser !== 'undefined' && currentUser && currentUser.fullName) ? currentUser.fullName.substring(0, 2).toUpperCase() : 'LT' %>
+            </div>
+            <span class="user-name">
+              <%= (typeof currentUser !== 'undefined' && currentUser && currentUser.fullName) ? currentUser.fullName : 'Lê Tự Nhật Thạch' %>
+            </span>
+            <a href="/admin/logout" title="Đăng Xuất Khỏi Hệ Thống" style="margin-left: 4px; display: flex; align-items: center; color: var(--md-sys-color-on-surface-variant);">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+            </a>
           </div>
         </div>
       </header>

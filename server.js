@@ -4,6 +4,7 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const path = require('path');
+const cookieParser = require('cookie-parser');
 const connectDB = require('./config/db');
 const { notFound, errorHandler } = require('./middlewares/errorMiddleware');
 const { requestLogger, errorLogger } = require('./middlewares/loggerMiddleware');
@@ -32,6 +33,7 @@ app.use(cors());
 app.use(requestLogger);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 // Cau hinh EJS View Engine (Slot 7 - Web Admin & Barista KDS)
 app.set('view engine', 'ejs');

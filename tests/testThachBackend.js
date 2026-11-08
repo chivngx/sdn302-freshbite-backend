@@ -410,6 +410,64 @@ const runTests = async () => {
       );
     }
 
+    // -------------------------------------------------------------
+    // MODULE 4: WEB ADMIN AUTHENTICATION (Login, Session & Logout)
+    // -------------------------------------------------------------
+    console.log('\n--- PHẦN 4: XÁC THỰC WEB ADMIN & BARISTA KDS (Login & Session) ---');
+
+    // Test 22: GET /admin/login (Trang đăng nhập M3)
+    {
+      const res = await fetch(`${BASE_URL}/admin/login`);
+      const html = await res.text();
+      assert(
+        res.status === 200 && html.includes('FreshBite Coffee & Tea') && html.includes('Đăng Nhập Vào Trạm'),
+        '22. GET /admin/login - Render trang đăng nhập Web Admin & Barista KDS thành công (200)'
+      );
+    }
+
+    // Test 23: POST /admin/login (Đăng nhập thành công, cấp cookie session)
+    let sessionCookie = '';
+    {
+      const res = await fetch(`${BASE_URL}/admin/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'email=admin@freshbite.vn&password=password123',
+        redirect: 'manual'
+      });
+      const cookie = res.headers.get('set-cookie') || '';
+      sessionCookie = cookie.split(';')[0];
+      assert(
+        res.status === 302 && res.headers.get('location') === '/admin/dashboard' && cookie.includes('freshbite_admin_token'),
+        '23. POST /admin/login - Đăng nhập quản trị viên thành công, thiết lập Cookie phiên an toàn (302)'
+      );
+    }
+
+    // Test 24: POST /admin/login (Từ chối khi mật khẩu sai)
+    {
+      const res = await fetch(`${BASE_URL}/admin/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'email=admin@freshbite.vn&password=sai_mat_khau_123',
+        redirect: 'manual'
+      });
+      assert(
+        res.status === 401,
+        '24. POST /admin/login - Từ chối khi mật khẩu không chính xác (401)'
+      );
+    }
+
+    // Test 25: GET /admin/logout (Đăng xuất xóa session)
+    {
+      const res = await fetch(`${BASE_URL}/admin/logout`, {
+        headers: { Cookie: sessionCookie },
+        redirect: 'manual'
+      });
+      assert(
+        res.status === 302 && (res.headers.get('location') || '').includes('/admin/login'),
+        '25. GET /admin/logout - Đăng xuất và điều hướng trở lại trang Login an toàn (302)'
+      );
+    }
+
     console.log('\n================================================================');
     console.log(`  KẾT QUẢ KIỂM THỬ: ${stats.passed}/${stats.total} PASSED (${Math.round((stats.passed / stats.total) * 100)}%)`);
     console.log('================================================================\n');
