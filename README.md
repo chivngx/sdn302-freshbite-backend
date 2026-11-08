@@ -80,6 +80,28 @@ sdn302-freshbite-backend/
 | `PUT` | `/api/branches/:id` | Admin | Cập nhật thông tin chi nhánh |
 | `DELETE` | `/api/branches/:id` | Admin | Xóa chi nhánh (tự động chuyển sang `isActive: false` nếu đã có đơn hàng) |
 
+## API Endpoints (Uploads & File Downloads - Slot 12 - Lê Tự Nhật Thạch)
+
+| Method | Endpoint | Access | Description |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/api/upload` | Bearer Token / Admin | Tải lên 1 hình ảnh tĩnh qua Multer (lưu thư mục `/uploads`) |
+| `POST` | `/api/upload/multiple` | Bearer Token / Admin | Tải lên tối đa 5 hình ảnh cùng lúc |
+| `GET` | `/api/orders/:id/invoice` | Bearer Token | Tải file hóa đơn biên nhận đơn hàng UTF-8 qua `res.download()` |
+| `GET` | `/api/upload/orders/:id/invoice` | Bearer Token | Tải file hóa đơn qua Upload Router qua `res.download()` |
+| `GET` | `/api/reports/shift/export` | Admin | Xuất & tải file báo cáo đối soát ca quầy Barista dạng CSV qua `res.download()` |
+
+## Web Admin SSR & KDS Barista (Slot 7 EJS - Lê Tự Nhật Thạch)
+
+| Method | URL Web Route | Access | Description |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/admin` | Web Browser | Chuyển hướng 302 sang `/admin/dashboard` |
+| `GET` | `/admin/dashboard` | Web Browser | Giao diện SSR: Bảng tổng quan doanh thu ca, tiền mặt vs điện tử, 4 chi nhánh |
+| `GET` | `/admin/orders` | Web Browser | Màn hình KDS Bếp/Quầy Barista: Thẻ đơn hàng, bấm nút chuyển trạng thái, tải hóa đơn |
+| `POST` | `/admin/orders/:id/status` | Web Form | Xử lý chuyển trạng thái đơn hàng KDS (`Preparing` → `Ready for Pickup` → `Completed`) |
+| `GET` | `/admin/products` | Web Browser | Màn hình Quản lý món ăn thực đơn Đà Nẵng |
+| `POST` | `/admin/products` | Web Form (Multipart) | Thêm món ăn mới kèm Upload ảnh thật từ máy tính qua Multer |
+| `POST` | `/admin/products/:id/toggle` | Web Form | Bật/tắt nhanh trạng thái Còn Hàng / Hết Hàng (`isAvailable`) |
+
 ## Middlewares & System Utilities
 
 - **Global Error Handling (`middlewares/errorMiddleware.js`):** Xử lý toàn cục 404 Not Found, Mongoose CastError (ObjectId), Mongoose ValidationError, Unique Index Conflict (11000), JWT Token Expired / Invalid, Multer upload errors, Express SyntaxError.
@@ -98,7 +120,18 @@ npm test
 - 9 test cases cho Middleware Bắt lỗi toàn cục (HTTP 400 Bad Request, HTTP 404 Not Found, HTTP 500 Internal Server Error, JSON SyntaxError).
 - 4 test cases cho Logger Middleware.
 
-### 2. Postman Collection Test Suite
+### 2. Automated Test Suite (31 Scenarios - Lê Tự Nhật Thạch)
+Chạy bộ kiểm thử tự động toàn diện dành cho các module của **Lê Tự Nhật Thạch**:
+```bash
+npm run test:thach
+# hoặc: pnpm run test:thach
+```
+Đạt chuẩn `31/31 PASSED` gồm:
+- 10 test cases cho Multer Upload ảnh tĩnh (`POST /api/upload`), Static File Serving (`/uploads`) và Tải file hóa đơn (`res.download() - Slot 12`).
+- 8 test cases cho tính toàn vẹn của 3 Script Seed Data Đà Nẵng (`seedData.js`, `testSeed.js` có cờ `isAvailable: false`, `userSeed.js` dùng `User.create()`).
+- 13 test cases cho Giao diện Web Admin SSR EJS (`/admin/dashboard`, màn hình KDS `/admin/orders`, chuyển trạng thái KDS, quản lý món ăn `/admin/products`).
+
+### 3. Postman Collection Test Suite
 Import `docs/FreshBite_DaNang_API.postman_collection.json` vào Postman. Bộ kịch bản bao gồm:
 - `0. Automated Test Runner (16 Scenarios - Full Flow)`
 - `1. Authentication & Security (Nguyen Chi Vuong)`
@@ -107,5 +140,6 @@ Import `docs/FreshBite_DaNang_API.postman_collection.json` vào Postman. Bộ k�
 - `4. Orders & KDS (Pick-up) (Nguyen Xuan Thinh)`
 - `5. Branches - Da Nang Stores (Nguyen Dac Thinh)`
 - `6. Global Error Handling & HTTP Status Showcase (Nguyen Dac Thinh)`
+- `7. Uploads, File Download & Web Admin SSR (Le Tu Nhat Thach)`
 
 Kiểm thử đầy đủ các mã HTTP (200, 201, 400, 401, 403, 404) phục vụ thuyết trình bảo vệ đồ án.
