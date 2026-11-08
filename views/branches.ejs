@@ -1,46 +1,79 @@
 <%- include('partials/header') %>
 
-<div class="page-header">
-  <div>
-    <h1 class="page-title">📍 Hệ Thống Chi Nhánh FreshBite Đà Nẵng</h1>
-    <p class="page-subtitle">4 chi nhánh hoạt động tại các quận trung tâm và ven biển Đà Nẵng</p>
+<div class="workspace-hero">
+  <div class="hero-text-block">
+    <div class="hero-tag">
+      <span class="material-symbols-outlined icon-inline">hub</span>
+      <span>MẠNG LƯỚI BÁN LẺ & TRẠM VẬN HÀNH</span>
+    </div>
+    <h1 class="hero-heading">Hệ Thống Chi Nhánh FreshBite Đà Nẵng</h1>
+    <p class="hero-subheading">4 chi nhánh hoạt động tại các quận trung tâm và ven biển Đà Nẵng</p>
   </div>
-  <div class="header-actions">
-    <a href="/admin/orders" class="btn btn-primary">☕ Xem Đơn Hàng Theo Chi Nhánh</a>
+  
+  <div class="hero-actions">
+    <a href="/admin/orders" class="btn btn-primary">
+      <span class="material-symbols-outlined">coffee_maker</span>
+      <span>Xem Đơn Hàng Theo Chi Nhánh</span>
+    </a>
   </div>
 </div>
 
-<div class="branch-grid">
+<div class="branches-cards-grid">
   <% if (branches && branches.length > 0) { %>
     <% branches.forEach(branch => { %>
-      <div class="branch-card">
-        <div class="branch-image-wrapper">
+      <div class="store-card">
+        <div class="store-image-stage">
           <img src="<%= branch.imageUrl || 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800' %>" 
-               alt="<%= branch.name %>" class="branch-cover">
-          <span class="branch-district-tag"><%= branch.district %></span>
+               alt="<%= branch.name %>" class="store-cover-img">
+          <div class="store-district-overlay">
+            <span class="material-symbols-outlined icon-micro">near_me</span>
+            <span><%= branch.district %></span>
+          </div>
         </div>
-        <div class="branch-content">
-          <h3 class="branch-title"><%= branch.name %></h3>
-          <p class="branch-address">🏠 <%= branch.address %></p>
-          <div class="branch-meta">
-            <span>📞 <%= branch.phone || '0236.730.0999' %></span>
-            <span>⏰ <%= branch.openingHours || '06:30 - 22:30' %></span>
-          </div>
-          <div class="branch-gps">
-            <span>🌐 GPS: <code><%= branch.latitude %>, <%= branch.longitude %></code></span>
-          </div>
-          <div class="branch-footer">
-            <span class="badge <%= branch.isActive ? 'badge-completed' : 'badge-cancelled' %>">
-              <%= branch.isActive ? '🟢 Đang mở cửa' : '🔴 Tạm nghỉ' %>
+
+        <div class="store-body">
+          <div class="store-title-row">
+            <h3 class="store-name"><%= branch.name %></h3>
+            <span class="store-status-pill <%= branch.isActive ? 'status-open' : 'status-closed' %>">
+              <span class="material-symbols-outlined icon-micro"><%= branch.isActive ? 'check_circle' : 'do_not_disturb_on' %></span>
+              <span><%= branch.isActive ? 'Đang Mở Cửa' : 'Tạm Nghỉ' %></span>
             </span>
-            <a href="/admin/orders?branchId=<%= branch._id %>" class="btn-sm btn-primary">Xem KDS Quầy →</a>
+          </div>
+
+          <p class="store-address">
+            <span class="material-symbols-outlined icon-micro">location_on</span>
+            <span><%= branch.address %></span>
+          </p>
+
+          <div class="store-specs-list">
+            <div class="store-spec-item">
+              <span class="material-symbols-outlined icon-micro">call</span>
+              <span><%= branch.phone || '0236.730.0999' %></span>
+            </div>
+            <div class="store-spec-item">
+              <span class="material-symbols-outlined icon-micro">schedule</span>
+              <span><%= branch.openingHours || '06:30 - 22:30' %></span>
+            </div>
+          </div>
+
+          <div class="store-gps-block">
+            <span class="material-symbols-outlined icon-micro">explore</span>
+            <span>Tọa độ GPS: <code><%= branch.latitude %>, <%= branch.longitude %></code></span>
+          </div>
+
+          <div class="store-actions-bar">
+            <a href="/admin/orders?branchId=<%= branch._id %>" class="btn-store-kds">
+              <span class="material-symbols-outlined">coffee_maker</span>
+              <span>Mở Màn Hình KDS Trạm Này</span>
+            </a>
           </div>
         </div>
       </div>
     <% }) %>
   <% } else { %>
-    <div class="empty-state">
-      Chưa có dữ liệu chi nhánh. Hãy chạy <code>npm run seed:branches</code>!
+    <div class="empty-cell">
+      <span class="material-symbols-outlined empty-icon">storefront</span>
+      <p>Chưa có dữ liệu chi nhánh. Hãy chạy lệnh <code>npm run seed:branches</code> hoặc <code>npm run seed:all</code>!</p>
     </div>
   <% } %>
 </div>

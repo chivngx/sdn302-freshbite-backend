@@ -3,26 +3,74 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><%= title || 'FreshBite Admin & Barista KDS' %></title>
-  <link rel="stylesheet" href="/css/style.css">
+  <title><%= title || 'FreshBite Coffee Chain Management & Barista KDS' %></title>
+  
+  <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Material Symbols Outlined (Google's official icon system) -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  
+  <!-- FreshBite Brand Stylesheet -->
+  <link rel="stylesheet" href="/css/style.css">
 </head>
-<body>
-  <header class="navbar">
-    <div class="nav-container">
-      <a href="/admin/dashboard" class="brand">
-        <span class="brand-badge">⚡ KDS</span>
-        <span class="brand-text">FreshBite <span>Admin</span></span>
-      </a>
-      <nav class="nav-links">
-        <a href="/admin/dashboard" class="nav-link">📊 Tổng Quan</a>
-        <a href="/admin/orders" class="nav-link nav-highlight">☕ Màn Hình KDS Barista</a>
-        <a href="/admin/products" class="nav-link">🍰 Quản Lý Món</a>
-        <a href="/admin/branches" class="nav-link">📍 Chi Nhánh</a>
-        <a href="/api/health" target="_blank" class="nav-link nav-tag">🟢 API Status</a>
+<body class="freshbite-app">
+  <!-- Top Application Bar -->
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="brand-group">
+        <a href="/admin/dashboard" class="brand-link">
+          <div class="brand-symbol">
+            <span class="material-symbols-outlined">local_cafe</span>
+          </div>
+          <div class="brand-titles">
+            <span class="brand-name">FreshBite</span>
+            <span class="brand-tagline">COFFEE CHAIN & KDS</span>
+          </div>
+        </a>
+        <div class="chain-badge">
+          <span class="pulse-indicator"></span>
+          <span>4 Chi Nhánh Đà Nẵng</span>
+        </div>
+      </div>
+
+      <nav class="nav-cluster">
+        <a href="/admin/dashboard" class="nav-item">
+          <span class="material-symbols-outlined">dashboard</span>
+          <span>Bảng Quản Trị</span>
+        </a>
+        <a href="/admin/orders" class="nav-item nav-kds">
+          <span class="material-symbols-outlined">coffee_maker</span>
+          <span>Màn Hình KDS Barista</span>
+          <span class="kds-live-chip">LIVE</span>
+        </a>
+        <a href="/admin/products" class="nav-item">
+          <span class="material-symbols-outlined">inventory_2</span>
+          <span>Quản Lý Món Ăn</span>
+        </a>
+        <a href="/admin/branches" class="nav-item">
+          <span class="material-symbols-outlined">storefront</span>
+          <span>Chi Nhánh</span>
+        </a>
+        <a href="/api/health" target="_blank" class="nav-item nav-health" title="Kiểm tra hệ thống API">
+          <span class="material-symbols-outlined">verified</span>
+          <span>API 200 OK</span>
+        </a>
       </nav>
+
+      <div class="shift-info">
+        <div class="shift-icon">
+          <span class="material-symbols-outlined">schedule</span>
+        </div>
+        <div class="shift-text">
+          <div class="shift-title">Ca Hoạt Động</div>
+          <div class="shift-time">06:30 - 23:00</div>
+        </div>
+      </div>
     </div>
   </header>
-  <main class="main-container">
+
+  <!-- Main Canvas Container -->
+  <main class="app-canvas">

@@ -1,125 +1,173 @@
 <%- include('partials/header') %>
 
-<div class="page-header">
-  <div>
-    <h1 class="page-title">☕ Màn Hình Quầy Barista (KDS)</h1>
-    <p class="page-subtitle">Kitchen Display System thời gian thực phục vụ tiếp nhận & pha chế đơn hàng</p>
+<div class="workspace-hero">
+  <div class="hero-text-block">
+    <div class="hero-tag">
+      <span class="material-symbols-outlined icon-inline">terminal</span>
+      <span>KITCHEN DISPLAY SYSTEM (BARISTA STATION)</span>
+    </div>
+    <h1 class="hero-heading">Màn Hình Quầy Barista (KDS)</h1>
+    <p class="hero-subheading">Kitchen Display System thời gian thực phục vụ tiếp nhận & pha chế đơn hàng 4 chi nhánh Đà Nẵng</p>
   </div>
-  <div class="header-actions">
-    <button onclick="window.location.reload()" class="btn btn-secondary">🔄 Làm Mới</button>
+  
+  <div class="hero-actions">
+    <button onclick="window.location.reload()" class="btn btn-tonal">
+      <span class="material-symbols-outlined">sync</span>
+      <span>Làm Mới Trạm</span>
+    </button>
   </div>
 </div>
 
-<!-- Bộ lọc Chi Nhánh & Trạng Thái -->
-<div class="filter-card">
-  <form method="GET" action="/admin/orders" class="filter-form">
-    <div class="filter-group">
-      <label for="branchSelect">📍 Chi Nhánh:</label>
-      <select name="branchId" id="branchSelect" onchange="this.form.submit()" class="form-select">
-        <option value="">-- Tất cả 4 chi nhánh Đà Nẵng --</option>
-        <% branches.forEach(branch => { %>
-          <option value="<%= branch._id %>" <%= String(currentBranchId) === String(branch._id) ? 'selected' : '' %>>
-            [<%= branch.district %>] <%= branch.name %>
-          </option>
-        <% }) %>
-      </select>
+<!-- KDS Filter & Station Control Bar -->
+<div class="kds-filter-panel">
+  <form method="GET" action="/admin/orders" class="kds-filter-form">
+    <div class="filter-field">
+      <span class="material-symbols-outlined filter-field-icon">store</span>
+      <div class="filter-field-content">
+        <label for="branchSelect" class="filter-label">Trạm Chi Nhánh:</label>
+        <select name="branchId" id="branchSelect" onchange="this.form.submit()" class="kds-select">
+          <option value="">-- Tất cả 4 chi nhánh Đà Nẵng --</option>
+          <% branches.forEach(branch => { %>
+            <option value="<%= branch._id %>" <%= String(currentBranchId) === String(branch._id) ? 'selected' : '' %>>
+              [<%= branch.district %>] <%= branch.name %>
+            </option>
+          <% }) %>
+        </select>
+      </div>
     </div>
 
-    <div class="filter-group">
-      <label for="statusSelect">🏷️ Trạng Thái:</label>
-      <select name="status" id="statusSelect" onchange="this.form.submit()" class="form-select">
-        <option value="">-- Tất cả trạng thái --</option>
-        <option value="Pending" <%= currentStatus === 'Pending' ? 'selected' : '' %>>⏳ Chờ xác nhận (Pending)</option>
-        <option value="Preparing" <%= currentStatus === 'Preparing' ? 'selected' : '' %>>☕ Đang pha chế (Preparing)</option>
-        <option value="Ready for Pickup" <%= currentStatus === 'Ready for Pickup' ? 'selected' : '' %>>🔔 Sẵn sàng nhận (Ready)</option>
-        <option value="Completed" <%= currentStatus === 'Completed' ? 'selected' : '' %>>✅ Đã hoàn tất (Completed)</option>
-        <option value="Cancelled" <%= currentStatus === 'Cancelled' ? 'selected' : '' %>>❌ Đã hủy (Cancelled)</option>
-      </select>
+    <div class="filter-field">
+      <span class="material-symbols-outlined filter-field-icon">tune</span>
+      <div class="filter-field-content">
+        <label for="statusSelect" class="filter-label">Lọc Trạng Thái Vé:</label>
+        <select name="status" id="statusSelect" onchange="this.form.submit()" class="kds-select">
+          <option value="">-- Tất cả trạng thái --</option>
+          <option value="Pending" <%= currentStatus === 'Pending' ? 'selected' : '' %>>Chờ xác nhận (Pending)</option>
+          <option value="Preparing" <%= currentStatus === 'Preparing' ? 'selected' : '' %>>Đang pha chế (Preparing)</option>
+          <option value="Ready for Pickup" <%= currentStatus === 'Ready for Pickup' ? 'selected' : '' %>>Sẵn sàng nhận (Ready)</option>
+          <option value="Completed" <%= currentStatus === 'Completed' ? 'selected' : '' %>>Đã hoàn tất (Completed)</option>
+          <option value="Cancelled" <%= currentStatus === 'Cancelled' ? 'selected' : '' %>>Đã hủy (Cancelled)</option>
+        </select>
+      </div>
     </div>
   </form>
 </div>
 
-<!-- Lưới đơn hàng KDS Barista -->
-<div class="kds-grid">
+<!-- KDS Ticket Rails Grid -->
+<div class="kds-tickets-grid">
   <% if (orders && orders.length > 0) { %>
     <% orders.forEach(order => { %>
-      <div class="kds-card <%= order.status.toLowerCase().replace(/\s+/g, '-') %>">
-        <div class="kds-card-header">
-          <div>
-            <span class="kds-order-code"><%= order.orderCode || order._id %></span>
-            <span class="kds-time">
-              ⏱️ <%= new Date(order.createdAt).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) %>
+      <% 
+        let statusClass = 'kds-ticket-pending';
+        let statusIcon = 'hourglass_empty';
+        if (order.status === 'Preparing') { statusClass = 'kds-ticket-preparing'; statusIcon = 'coffee'; }
+        else if (order.status === 'Ready for Pickup') { statusClass = 'kds-ticket-ready'; statusIcon = 'notifications_active'; }
+        else if (order.status === 'Completed') { statusClass = 'kds-ticket-completed'; statusIcon = 'done_all'; }
+        else if (order.status === 'Cancelled') { statusClass = 'kds-ticket-cancelled'; statusIcon = 'cancel'; }
+      %>
+      <div class="kds-ticket-card <%= statusClass %>">
+        <!-- Ticket Header -->
+        <div class="ticket-header">
+          <div class="ticket-id-block">
+            <span class="ticket-number"><%= order.orderCode || order._id %></span>
+            <span class="ticket-clock">
+              <span class="material-symbols-outlined icon-micro">schedule</span>
+              <%= new Date(order.createdAt).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) %>
             </span>
           </div>
-          <% 
-            let badgeClass = 'badge-pending';
-            if (order.status === 'Preparing') badgeClass = 'badge-preparing';
-            else if (order.status === 'Ready for Pickup') badgeClass = 'badge-ready';
-            else if (order.status === 'Completed') badgeClass = 'badge-completed';
-            else if (order.status === 'Cancelled') badgeClass = 'badge-cancelled';
-          %>
-          <span class="badge <%= badgeClass %>"><%= order.status %></span>
+          <span class="status-badge <%= statusClass.replace('kds-ticket-', 'badge-') %>">
+            <span class="material-symbols-outlined icon-micro"><%= statusIcon %></span>
+            <%= order.status %>
+          </span>
         </div>
 
-        <div class="kds-customer">
-          <strong>👤 <%= (order.userId && order.userId.fullName) || 'Khách vãng lai' %></strong>
-          <span>📞 <%= (order.userId && order.userId.phone) || 'Không có SĐT' %></span>
-          <span class="kds-branch-badge">📍 <%= (order.branchId && order.branchId.name) || 'Chi nhánh Đà Nẵng' %></span>
+        <!-- Ticket Customer Details -->
+        <div class="ticket-client-strip">
+          <div class="client-meta">
+            <span class="material-symbols-outlined icon-micro">person</span>
+            <strong><%= (order.userId && order.userId.fullName) || 'Khách vãng lai' %></strong>
+            <span class="client-phone"><%= (order.userId && order.userId.phone) || '' %></span>
+          </div>
+          <div class="client-branch-tag">
+            <span class="material-symbols-outlined icon-micro">location_on</span>
+            <%= (order.branchId && order.branchId.name) || 'Chi nhánh Đà Nẵng' %>
+          </div>
         </div>
 
-        <div class="kds-items-list">
+        <!-- Ticket Order Items Table -->
+        <div class="ticket-items-box">
           <% (order.items || []).forEach(item => { %>
-            <div class="kds-item-row">
-              <span class="kds-item-qty"><%= item.quantity %>x</span>
-              <div class="kds-item-detail">
-                <span class="kds-item-name"><%= (item.productId && item.productId.name) || item.name || 'Sản phẩm' %></span>
-                <span class="kds-item-size">Size: <strong><%= item.size || 'M' %></strong></span>
+            <div class="ticket-item-row">
+              <span class="item-qty-tag"><%= item.quantity %>x</span>
+              <div class="item-description-block">
+                <span class="item-title"><%= (item.productId && item.productId.name) || item.name || 'Sản phẩm' %></span>
+                <span class="item-spec-chip">Size: <strong><%= item.size || 'M' %></strong></span>
               </div>
-              <span class="kds-item-price"><%= Number(item.price * item.quantity).toLocaleString('vi-VN') %>đ</span>
+              <span class="item-subtotal-text"><%= Number((item.price || 0) * (item.quantity || 1)).toLocaleString('vi-VN') %>đ</span>
             </div>
           <% }) %>
         </div>
 
-        <div class="kds-card-footer">
-          <div class="kds-total-row">
-            <span>Tổng: <strong><%= Number(order.totalAmount || 0).toLocaleString('vi-VN') %>đ</strong></span>
-            <span class="kds-pay-badge"><%= order.paymentMethod %> (<%= order.paymentStatus || 'PENDING' %>)</span>
+        <!-- Ticket Footer & Tactile Bump Actions -->
+        <div class="ticket-footer">
+          <div class="ticket-total-bar">
+            <span class="total-label">Tổng vé thanh toán:</span>
+            <span class="total-figure"><%= Number(order.totalAmount || 0).toLocaleString('vi-VN') %>đ</span>
+          </div>
+          <div class="ticket-payment-method">
+            <span class="payment-chip chip-<%= String(order.paymentMethod).toLowerCase() %>">
+              <span class="material-symbols-outlined icon-micro">payments</span>
+              <%= order.paymentMethod %> (<%= order.paymentStatus || 'PENDING' %>)
+            </span>
           </div>
 
-          <!-- Nút bấm chuyển trạng thái cho quầy Barista -->
-          <div class="kds-action-buttons">
+          <!-- Bump Bar Buttons -->
+          <div class="ticket-bump-actions">
             <% if (order.status === 'Pending') { %>
-              <form method="POST" action="/admin/orders/<%= order._id %>/status" class="inline-form">
+              <form method="POST" action="/admin/orders/<%= order._id %>/status" class="bump-form">
                 <input type="hidden" name="status" value="Preparing">
-                <button type="submit" class="btn-kds btn-preparing">☕ Pha Chế</button>
+                <button type="submit" class="bump-btn bump-preparing">
+                  <span class="material-symbols-outlined">coffee</span>
+                  <span>Bắt Đầu Pha Chế</span>
+                </button>
               </form>
-              <form method="POST" action="/admin/orders/<%= order._id %>/status" class="inline-form">
+              <form method="POST" action="/admin/orders/<%= order._id %>/status" class="bump-form-sm">
                 <input type="hidden" name="status" value="Cancelled">
-                <button type="submit" class="btn-kds btn-cancel" onclick="return confirm('Bạn có chắc muốn hủy đơn này?')">❌ Hủy</button>
+                <button type="submit" class="bump-btn bump-cancel" onclick="return confirm('Bạn có chắc muốn hủy đơn này?')">
+                  <span class="material-symbols-outlined">close</span>
+                </button>
               </form>
             <% } else if (order.status === 'Preparing') { %>
-              <form method="POST" action="/admin/orders/<%= order._id %>/status" class="inline-form">
+              <form method="POST" action="/admin/orders/<%= order._id %>/status" class="bump-form">
                 <input type="hidden" name="status" value="Ready for Pickup">
-                <button type="submit" class="btn-kds btn-ready">🔔 Sẵn Sàng</button>
+                <button type="submit" class="bump-btn bump-ready">
+                  <span class="material-symbols-outlined">notifications_active</span>
+                  <span>Sẵn Sàng Gọi Khách</span>
+                </button>
               </form>
             <% } else if (order.status === 'Ready for Pickup') { %>
-              <form method="POST" action="/admin/orders/<%= order._id %>/status" class="inline-form">
+              <form method="POST" action="/admin/orders/<%= order._id %>/status" class="bump-form">
                 <input type="hidden" name="status" value="Completed">
-                <button type="submit" class="btn-kds btn-complete">✅ Giao Xong</button>
+                <button type="submit" class="bump-btn bump-complete">
+                  <span class="material-symbols-outlined">done_all</span>
+                  <span>Khách Đã Nhận</span>
+                </button>
               </form>
             <% } %>
 
-            <a href="/api/uploads/orders/<%= order._id %>/invoice" class="btn-kds btn-invoice" title="Tải Hóa Đơn Bán Lẻ (res.download - Slot 12)">
-              📄 Hóa Đơn
+            <a href="/api/uploads/orders/<%= order._id %>/invoice" class="bump-btn bump-invoice" title="Tải Hóa Đơn Bán Lẻ (Slot 12 res.download)">
+              <span class="material-symbols-outlined">receipt_long</span>
+              <span>In Hóa Đơn</span>
             </a>
           </div>
         </div>
       </div>
     <% }) %>
   <% } else { %>
-    <div class="empty-kds">
-      <h3>☕ Hiện tại chưa có đơn hàng nào cần xử lý!</h3>
-      <p>Khi khách hàng đặt món qua ứng dụng di động hoặc web, đơn hàng sẽ lập tức xuất hiện tại đây.</p>
+    <div class="empty-kds-surface">
+      <span class="material-symbols-outlined empty-kds-icon">coffee_maker</span>
+      <h3 class="empty-kds-title">Hiện tại không có đơn hàng nào trong hàng đợi</h3>
+      <p class="empty-kds-text">Khi có khách hàng đặt món qua ứng dụng hoặc quầy, phiếu order sẽ lập tức xuất hiện trên màn hình KDS.</p>
     </div>
   <% } %>
 </div>
