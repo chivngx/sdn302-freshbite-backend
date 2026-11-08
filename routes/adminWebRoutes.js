@@ -17,6 +17,7 @@ const {
 router.get('/login', getLoginPage);
 router.post('/login', postLogin);
 router.get('/logout', getLogout);
+router.post('/logout', getLogout);
 
 // 1. Dashboard tong quan (Protected)
 router.get('/', adminWebAuth, getDashboard);
