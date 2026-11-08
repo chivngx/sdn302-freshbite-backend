@@ -1,63 +1,72 @@
 /* ==========================================================================
    FRESHBITE COFFEE & TEA - SPECIALTY CHAIN MANAGEMENT & BARISTA KDS
-   Google Material 3 Web System & M3 Expressive Responsive Architecture
+   Google Material 3 High-Clarity Visual System (Harmonious & High-Contrast)
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
-   1. CSS CUSTOM PROPERTIES & M3 SYSTEM TOKENS
+   1. HARMONIZED DESIGN TOKENS & SYSTEM PROPERTIES
    -------------------------------------------------------------------------- */
 :root {
   /* Legacy & Framework Aliases */
-  --primary: #5C3826;
-  --primary-hover: #45291B;
-  --secondary: #8C532B;
+  --primary: #2C1810;
+  --primary-hover: #1A0D08;
+  --secondary: #92400E;
 
-  /* Brand Typography */
+  /* Typography */
   --font-brand: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
 
-  /* Specialty Coffee M3 Color Palette */
-  --md-sys-color-primary: #5C3826;              /* Deep Espresso Roast */
-  --md-sys-color-primary-hover: #45291B;
+  /* Specialty Coffee Brand Colors (High-Clarity & Artisanal) */
+  --md-sys-color-primary: #2C1810;              /* Artisanal Dark Espresso Roast */
+  --md-sys-color-primary-hover: #1A0D08;
   --md-sys-color-on-primary: #FFFFFF;
-  --md-sys-color-primary-container: #F4ECE4;    /* Creamy Crema Tint */
-  --md-sys-color-on-primary-container: #2A170F;
+  --md-sys-color-primary-container: #F5EBE1;    /* Soft Warm Crema Accent */
+  --md-sys-color-on-primary-container: #2C1810;
 
-  --md-sys-color-secondary: #8C532B;            /* Warm Roasted Caramel */
-  --md-sys-color-secondary-container: #FCEFDF;
-  --md-sys-color-on-secondary-container: #3E1E07;
+  --md-sys-color-secondary: #92400E;            /* Warm Roasted Caramel Amber */
+  --md-sys-color-secondary-container: #FEF3C7;
+  --md-sys-color-on-secondary-container: #78350F;
 
-  --md-sys-color-tertiary: #2D5A43;             /* Fresh Tea Matcha Green */
-  --md-sys-color-tertiary-container: #E2EFE7;
-  --md-sys-color-on-tertiary-container: #0C281B;
+  --md-sys-color-tertiary: #047857;             /* Fresh Matcha Tea Green */
+  --md-sys-color-tertiary-container: #ECFDF5;
+  --md-sys-color-on-tertiary-container: #064E3B;
 
-  /* Surfaces & Canvas */
-  --md-sys-color-shell: #F5F3EF;                /* Warm Tinted Shell */
-  --md-sys-color-surface: #FFFFFF;              /* Floating Island Pure White */
-  --md-sys-color-surface-dim: #EDE9E3;
-  --md-sys-color-surface-container: #F9F7F4;
-  --md-sys-color-surface-container-high: #F2EFE9;
-  --md-sys-color-surface-container-highest: #E7E3DB;
+  /* Crisp Neutral Surfaces (High Contrast, Zero Muddy/Dingy Tones) */
+  --md-sys-color-shell: #F8F9FA;                /* Crisp Modern Viewport Shell */
+  --md-sys-color-surface: #FFFFFF;              /* Pure White Floating Canvas */
+  --md-sys-color-surface-dim: #F1F3F5;
+  --md-sys-color-surface-container: #F8FAFC;    /* Soft Clean Slate Container */
+  --md-sys-color-surface-container-high: #F1F5F9;
+  --md-sys-color-surface-container-highest: #E2E8F0;
 
-  /* Content & Text Colors */
-  --md-sys-color-on-surface: #1C1917;           /* Deep Charcoal Neutral */
-  --md-sys-color-on-surface-variant: #57534E;   /* Medium Warm Slate */
-  --md-sys-color-outline: #D6D1C7;
-  --md-sys-color-outline-variant: #EAE6DF;
+  /* Typography Colors (WCAG AAA Strict Contrast) */
+  --md-sys-color-on-surface: #0F172A;           /* Deep Charcoal Headings & Values */
+  --md-sys-color-on-surface-variant: #475569;   /* Balanced Medium Slate Body */
+  --md-sys-color-outline: #CBD5E1;              /* Delicate Clean Outline */
+  --md-sys-color-outline-variant: #E2E8F0;      /* Hairline Divider */
 
-  /* KDS Status Functional Tokens */
-  --kds-color-pending-bg: #EEF2FF;
-  --kds-color-pending-text: #3730A3;
-  --kds-color-prep-bg: #FEF3C7;
-  --kds-color-prep-text: #92400E;
-  --kds-color-ready-bg: #DCFCE7;
-  --kds-color-ready-text: #166534;
-  --kds-color-completed-bg: #F3F4F6;
-  --kds-color-completed-text: #4B5563;
-  --kds-color-cancelled-bg: #FEE2E2;
-  --kds-color-cancelled-text: #991B1B;
+  /* Harmonious Status Badges & KDS Indicators */
+  --kds-color-pending-bg: #EFF6FF;
+  --kds-color-pending-text: #1D4ED8;
+  --kds-color-pending-border: #BFDBFE;
 
-  /* M3 Shape System */
+  --kds-color-prep-bg: #FFFBEB;
+  --kds-color-prep-text: #B45309;
+  --kds-color-prep-border: #FDE68A;
+
+  --kds-color-ready-bg: #ECFDF5;
+  --kds-color-ready-text: #047857;
+  --kds-color-ready-border: #A7F3D0;
+
+  --kds-color-completed-bg: #F1F5F9;
+  --kds-color-completed-text: #475569;
+  --kds-color-completed-border: #CBD5E1;
+
+  --kds-color-cancelled-bg: #FFF1F2;
+  --kds-color-cancelled-text: #BE123C;
+  --kds-color-cancelled-border: #FECDD3;
+
+  /* Shapes & Corners */
   --md-shape-xs: 4px;
   --md-shape-sm: 8px;
   --md-shape-md: 12px;
@@ -66,10 +75,10 @@
   --md-shape-2xl: 24px;
   --md-shape-full: 9999px;
 
-  /* M3 Dual-Shadow Elevation Formulas */
-  --md-elevation-1: 0px 1px 3px 1px rgba(28, 25, 23, 0.05), 0px 1px 2px 0px rgba(28, 25, 23, 0.08);
-  --md-elevation-2: 0px 2px 6px 2px rgba(28, 25, 23, 0.06), 0px 1px 2px 0px rgba(28, 25, 23, 0.08);
-  --md-elevation-3: 0px 4px 12px 3px rgba(28, 25, 23, 0.08), 0px 1px 3px 0px rgba(28, 25, 23, 0.10);
+  /* Feathered Elevation Shadows */
+  --md-elevation-1: 0px 1px 3px 0px rgba(15, 23, 42, 0.05), 0px 1px 2px -1px rgba(15, 23, 42, 0.04);
+  --md-elevation-2: 0px 3px 6px -1px rgba(15, 23, 42, 0.06), 0px 2px 4px -2px rgba(15, 23, 42, 0.04);
+  --md-elevation-3: 0px 10px 15px -3px rgba(15, 23, 42, 0.07), 0px 4px 6px -4px rgba(15, 23, 42, 0.04);
 
   /* Springs & Transitions */
   --spring-default: 260ms cubic-bezier(0.2, 0, 0, 1);
@@ -153,12 +162,12 @@ code {
   width: 40px;
   height: 40px;
   border-radius: var(--md-shape-md);
-  background: linear-gradient(135deg, #5C3826 0%, #8C532B 100%);
+  background: linear-gradient(135deg, #2C1810 0%, #4A2818 100%);
   color: #FFFFFF;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 10px rgba(92, 56, 38, 0.22);
+  box-shadow: 0 4px 10px rgba(44, 24, 16, 0.2);
 }
 
 .brand-text-block {
@@ -212,14 +221,15 @@ code {
 }
 
 .m3-nav-pill:hover {
-  background-color: rgba(92, 56, 38, 0.07);
-  color: var(--md-sys-color-primary);
+  background-color: var(--md-sys-color-surface-container-high);
+  color: var(--md-sys-color-on-surface);
 }
 
 .m3-nav-pill.active {
-  background-color: var(--md-sys-color-primary-container);
+  background-color: #FFFFFF;
   color: var(--md-sys-color-primary);
-  font-weight: 700;
+  font-weight: 800;
+  box-shadow: var(--md-elevation-1);
 }
 
 .kds-live-pill {
@@ -241,13 +251,14 @@ code {
 
 /* Minimal Shift & Status Strip */
 .sidebar-footer-card {
-  background-color: var(--md-sys-color-surface-container);
+  background-color: #FFFFFF;
   border-radius: var(--md-shape-lg);
-  padding: 12px;
+  padding: 10px 14px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   border: 1px solid var(--md-sys-color-outline-variant);
+  box-shadow: var(--md-elevation-1);
 }
 
 .station-badge {
@@ -263,8 +274,8 @@ code {
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background-color: #22C55E;
-  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2);
+  background-color: #10B981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
 }
 
 /* --------------------------------------------------------------------------
@@ -279,7 +290,7 @@ code {
   height: 100vh;
 }
 
-/* Top App Bar (Tinted Shell) */
+/* Top App Bar */
 .m3-top-appbar {
   display: flex;
   align-items: center;
@@ -295,19 +306,6 @@ code {
   flex: 1;
 }
 
-.mobile-menu-btn {
-  display: none;
-  width: 38px;
-  height: 38px;
-  border-radius: var(--md-shape-full);
-  background-color: var(--md-sys-color-surface);
-  border: 1px solid var(--md-sys-color-outline-variant);
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  color: var(--md-sys-color-primary);
-}
-
 .appbar-search-pill {
   display: flex;
   align-items: center;
@@ -317,9 +315,16 @@ code {
   padding: 7px 16px;
   width: 100%;
   max-width: 340px;
+  border: 1px solid var(--md-sys-color-outline-variant);
   box-shadow: var(--md-elevation-1);
   color: var(--md-sys-color-on-surface-variant);
   font-size: 0.84rem;
+  transition: all var(--spring-snappy);
+}
+
+.appbar-search-pill:focus-within {
+  border-color: var(--md-sys-color-primary);
+  box-shadow: 0 0 0 3px rgba(44, 24, 16, 0.1);
 }
 
 .appbar-search-input {
@@ -343,6 +348,7 @@ code {
   background-color: var(--md-sys-color-surface);
   border-radius: var(--md-shape-full);
   padding: 6px 12px;
+  border: 1px solid var(--md-sys-color-outline-variant);
   box-shadow: var(--md-elevation-1);
   font-size: 0.78rem;
   font-weight: 700;
@@ -357,6 +363,7 @@ code {
   padding: 3px 8px 3px 3px;
   background-color: var(--md-sys-color-surface);
   border-radius: var(--md-shape-full);
+  border: 1px solid var(--md-sys-color-outline-variant);
   box-shadow: var(--md-elevation-1);
 }
 
@@ -364,7 +371,7 @@ code {
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #8C532B, #5C3826);
+  background: linear-gradient(135deg, #2C1810, #5C3826);
   color: #FFFFFF;
   display: flex;
   align-items: center;
@@ -384,6 +391,7 @@ code {
   flex: 1;
   background-color: var(--md-sys-color-surface);
   border-radius: var(--md-shape-2xl);
+  border: 1px solid var(--md-sys-color-outline-variant);
   box-shadow: var(--md-elevation-2);
   display: flex;
   flex-direction: column;
@@ -402,7 +410,7 @@ code {
 }
 
 /* --------------------------------------------------------------------------
-   5. WORKSPACE HEADERS & BUTTONS (CONCISE & CLEAN)
+   5. WORKSPACE HEADERS & BUTTONS
    -------------------------------------------------------------------------- */
 .island-header-bar {
   display: flex;
@@ -433,7 +441,7 @@ code {
   font-size: 1.65rem;
   font-weight: 800;
   letter-spacing: -0.025em;
-  color: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-surface);
   line-height: 1.2;
 }
 
@@ -474,7 +482,7 @@ code {
 .m3-btn-filled {
   background-color: var(--md-sys-color-primary);
   color: var(--md-sys-color-on-primary);
-  box-shadow: 0 2px 5px rgba(92, 56, 38, 0.22);
+  box-shadow: 0 2px 5px rgba(44, 24, 16, 0.2);
 }
 
 .m3-btn-filled:hover {
@@ -482,27 +490,27 @@ code {
 }
 
 .m3-btn-tonal {
-  background-color: var(--md-sys-color-primary-container);
-  color: var(--md-sys-color-primary);
+  background-color: var(--md-sys-color-surface-container-high);
+  color: var(--md-sys-color-on-surface);
+  border: 1px solid var(--md-sys-color-outline-variant);
 }
 
 .m3-btn-tonal:hover {
-  background-color: #EBDDCF;
+  background-color: var(--md-sys-color-surface-container-highest);
 }
 
 .m3-btn-outlined {
   background-color: transparent;
-  color: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-surface);
   border: 1px solid var(--md-sys-color-outline);
 }
 
 .m3-btn-outlined:hover {
-  background-color: var(--md-sys-color-primary-container);
-  border-color: var(--md-sys-color-primary);
+  background-color: var(--md-sys-color-surface-container);
 }
 
 /* --------------------------------------------------------------------------
-   6. CUSTOM M3 SELECT DROPDOWNS (ZERO DEFAULT OS SLOP)
+   6. CUSTOM M3 SELECT DROPDOWNS (HIGH CLARITY)
    -------------------------------------------------------------------------- */
 .m3-select-wrapper {
   position: relative;
@@ -514,17 +522,17 @@ code {
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
-  background-color: var(--md-sys-color-surface);
+  background-color: #FFFFFF;
   border: 1px solid var(--md-sys-color-outline);
   border-radius: var(--md-shape-full);
   padding: 8px 34px 8px 14px;
   font-size: 0.82rem;
   font-weight: 600;
-  color: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-surface);
   outline: none;
   cursor: pointer;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%235C3826' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 11px center;
   transition: all var(--spring-snappy);
@@ -532,12 +540,12 @@ code {
 
 .m3-select-custom:hover {
   border-color: var(--md-sys-color-primary);
-  background-color: var(--md-sys-color-primary-container);
+  background-color: var(--md-sys-color-surface-container);
 }
 
 .m3-select-custom:focus {
   border-color: var(--md-sys-color-primary);
-  box-shadow: 0 0 0 3px rgba(92, 56, 38, 0.14);
+  box-shadow: 0 0 0 3px rgba(44, 24, 16, 0.12);
 }
 
 /* --------------------------------------------------------------------------
@@ -558,16 +566,18 @@ code {
   flex-direction: column;
   justify-content: space-between;
   border: 1px solid var(--md-sys-color-outline-variant);
-  transition: transform var(--spring-snappy);
+  transition: transform var(--spring-snappy), box-shadow var(--spring-snappy);
 }
 
 .m3-bento-card:hover {
   transform: translateY(-2px);
+  box-shadow: var(--md-elevation-1);
 }
 
+/* Sophisticated Warm Amber Crema Accent */
 .bento-accent-espresso {
-  background: linear-gradient(145deg, #FAF7F2 0%, #F5ECE4 100%);
-  border-color: #EBDDCF;
+  background: #FFFDF9;
+  border-color: #FED7AA;
 }
 
 .bento-card-top {
@@ -587,6 +597,13 @@ code {
   align-items: center;
   justify-content: center;
   box-shadow: var(--md-elevation-1);
+  border: 1px solid var(--md-sys-color-outline-variant);
+}
+
+.bento-accent-espresso .bento-icon-box {
+  background-color: #FEF3C7;
+  color: #B45309;
+  border-color: #FDE68A;
 }
 
 .bento-label {
@@ -608,6 +625,10 @@ code {
   letter-spacing: -0.02em;
   color: var(--md-sys-color-on-surface);
   line-height: 1.1;
+}
+
+.bento-accent-espresso .bento-number {
+  color: #78350F;
 }
 
 .bento-unit {
@@ -650,6 +671,7 @@ code {
   font-weight: 600;
   white-space: nowrap;
   background-color: #FFFFFF;
+  border: 1px solid var(--md-sys-color-outline-variant);
 }
 
 .flow-step-count {
@@ -666,7 +688,7 @@ code {
 .chip-completed .flow-step-count { background: var(--kds-color-completed-bg); color: var(--kds-color-completed-text); }
 
 /* --------------------------------------------------------------------------
-   8. BORDERLESS DATA TABLE (CLEAN & CONCISE)
+   8. BORDERLESS DATA TABLE (HIGH CONTRAST & CRISP)
    -------------------------------------------------------------------------- */
 .m3-table-card {
   background-color: #FFFFFF;
@@ -681,6 +703,7 @@ code {
   align-items: center;
   justify-content: space-between;
   padding: 16px 20px 12px 20px;
+  border-bottom: 1px solid var(--md-sys-color-outline-variant);
 }
 
 .table-top-title {
@@ -723,12 +746,12 @@ code {
   padding: 12px 16px;
   font-size: 0.84rem;
   color: var(--md-sys-color-on-surface);
-  border-bottom: 1px solid var(--md-sys-color-outline-variant);
+  border-bottom: 1px solid #F1F5F9;
   vertical-align: middle;
 }
 
 .m3-table tr:hover td {
-  background-color: var(--md-sys-color-surface-container-high);
+  background-color: var(--md-sys-color-surface-container);
 }
 
 .order-code-tag {
@@ -736,10 +759,11 @@ code {
   font-weight: 700;
   font-size: 0.8rem;
   background-color: var(--md-sys-color-surface-container-high);
-  color: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-surface);
   padding: 3px 6px;
   border-radius: var(--md-shape-sm);
   white-space: nowrap;
+  border: 1px solid var(--md-sys-color-outline-variant);
 }
 
 .customer-name-cell {
@@ -756,18 +780,39 @@ code {
 .m3-badge {
   display: inline-flex;
   align-items: center;
-  padding: 3px 8px;
+  padding: 3px 9px;
   border-radius: var(--md-shape-full);
   font-size: 0.72rem;
   font-weight: 700;
   white-space: nowrap;
+  border: 1px solid transparent;
 }
 
-.badge-pending { background-color: var(--kds-color-pending-bg); color: var(--kds-color-pending-text); }
-.badge-preparing { background-color: var(--kds-color-prep-bg); color: var(--kds-color-prep-text); }
-.badge-ready { background-color: var(--kds-color-ready-bg); color: var(--kds-color-ready-text); }
-.badge-completed { background-color: var(--kds-color-completed-bg); color: var(--kds-color-completed-text); }
-.badge-cancelled { background-color: var(--kds-color-cancelled-bg); color: var(--kds-color-cancelled-text); }
+.badge-pending { 
+  background-color: var(--kds-color-pending-bg); 
+  color: var(--kds-color-pending-text); 
+  border-color: var(--kds-color-pending-border); 
+}
+.badge-preparing { 
+  background-color: var(--kds-color-prep-bg); 
+  color: var(--kds-color-prep-text); 
+  border-color: var(--kds-color-prep-border); 
+}
+.badge-ready { 
+  background-color: var(--kds-color-ready-bg); 
+  color: var(--kds-color-ready-text); 
+  border-color: var(--kds-color-ready-border); 
+}
+.badge-completed { 
+  background-color: var(--kds-color-completed-bg); 
+  color: var(--kds-color-completed-text); 
+  border-color: var(--kds-color-completed-border); 
+}
+.badge-cancelled { 
+  background-color: var(--kds-color-cancelled-bg); 
+  color: var(--kds-color-cancelled-text); 
+  border-color: var(--kds-color-cancelled-border); 
+}
 
 .m3-btn-icon {
   width: 32px;
@@ -778,14 +823,15 @@ code {
   justify-content: center;
   color: var(--md-sys-color-on-surface-variant);
   background: transparent;
-  border: none;
+  border: 1px solid transparent;
   cursor: pointer;
   transition: all var(--spring-snappy);
 }
 
 .m3-btn-icon:hover {
-  background-color: var(--md-sys-color-primary-container);
-  color: var(--md-sys-color-primary);
+  background-color: var(--md-sys-color-surface-container);
+  border-color: var(--md-sys-color-outline-variant);
+  color: var(--md-sys-color-on-surface);
 }
 
 /* --------------------------------------------------------------------------
@@ -838,17 +884,18 @@ code {
   flex-direction: column;
   justify-content: space-between;
   overflow: hidden;
-  transition: transform var(--spring-snappy);
+  transition: transform var(--spring-snappy), box-shadow var(--spring-snappy);
 }
 
 .kds-ticket:hover {
   transform: translateY(-2px);
+  box-shadow: var(--md-elevation-2);
 }
 
-.kds-ticket.ticket-pending { border-top: 4px solid #6366F1; }
+.kds-ticket.ticket-pending { border-top: 4px solid #3B82F6; }
 .kds-ticket.ticket-preparing { border-top: 4px solid #F59E0B; }
 .kds-ticket.ticket-ready { border-top: 4px solid #10B981; }
-.kds-ticket.ticket-completed { border-top: 4px solid #9CA3AF; opacity: 0.85; }
+.kds-ticket.ticket-completed { border-top: 4px solid #94A3B8; opacity: 0.9; }
 
 .ticket-header-row {
   display: flex;
@@ -873,6 +920,7 @@ code {
   font-weight: 700;
   color: var(--md-sys-color-on-surface-variant);
   background-color: var(--md-sys-color-surface-container);
+  border: 1px solid var(--md-sys-color-outline-variant);
   padding: 2px 7px;
   border-radius: var(--md-shape-full);
 }
@@ -888,7 +936,7 @@ code {
 .ticket-guest-name {
   font-size: 0.82rem;
   font-weight: 700;
-  color: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-surface);
 }
 
 .ticket-branch-tag {
@@ -914,8 +962,9 @@ code {
   width: 24px;
   height: 24px;
   border-radius: var(--md-shape-sm);
-  background-color: var(--md-sys-color-primary-container);
-  color: var(--md-sys-color-primary);
+  background-color: var(--md-sys-color-surface-container-high);
+  color: var(--md-sys-color-on-surface);
+  border: 1px solid var(--md-sys-color-outline-variant);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -948,8 +997,9 @@ code {
 }
 
 .size-pill-tag {
-  background-color: var(--md-sys-color-surface-container-highest);
-  color: var(--md-sys-color-primary);
+  background-color: var(--md-sys-color-surface-container);
+  color: var(--md-sys-color-secondary);
+  border: 1px solid var(--md-sys-color-outline-variant);
   padding: 1px 5px;
   border-radius: var(--md-shape-xs);
   font-weight: 700;
@@ -981,14 +1031,14 @@ code {
 
 .kds-btn-step:active { transform: scale(0.98); }
 
-.kds-btn-start { background-color: #F59E0B; color: #FFFFFF; }
-.kds-btn-start:hover { background-color: #D97706; }
+.kds-btn-start { background-color: #D97706; color: #FFFFFF; }
+.kds-btn-start:hover { background-color: #B45309; }
 
-.kds-btn-finish { background-color: #10B981; color: #FFFFFF; }
-.kds-btn-finish:hover { background-color: #059669; }
+.kds-btn-finish { background-color: #059669; color: #FFFFFF; }
+.kds-btn-finish:hover { background-color: #047857; }
 
-.kds-btn-deliver { background-color: var(--md-sys-color-primary); color: #FFFFFF; }
-.kds-btn-deliver:hover { background-color: var(--md-sys-color-primary-hover); }
+.kds-btn-deliver { background-color: #2C1810; color: #FFFFFF; }
+.kds-btn-deliver:hover { background-color: #1A0D08; }
 
 .kds-sub-actions {
   display: flex;
@@ -1003,7 +1053,7 @@ code {
   gap: 4px;
   font-size: 0.72rem;
   font-weight: 600;
-  color: var(--md-sys-color-secondary);
+  color: var(--md-sys-color-on-surface-variant);
 }
 .kds-link-invoice:hover { color: var(--md-sys-color-primary); }
 
@@ -1011,9 +1061,9 @@ code {
    10. PRODUCTS & UPLOADS WORKSHOP
    -------------------------------------------------------------------------- */
 .upload-artisan-card {
-  background: linear-gradient(135deg, #FAF7F2 0%, #F5ECE4 100%);
+  background: #FFFDF9;
   border-radius: var(--md-shape-lg);
-  border: 1px solid #EBDDCF;
+  border: 1px solid #FED7AA;
   padding: 16px 20px;
   margin-bottom: 22px;
 }
@@ -1029,12 +1079,12 @@ code {
   width: 34px;
   height: 34px;
   border-radius: 50%;
-  background-color: #FFFFFF;
-  color: var(--md-sys-color-secondary);
+  background-color: #FEF3C7;
+  color: #B45309;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: var(--md-elevation-1);
+  border: 1px solid #FDE68A;
 }
 
 .upload-form-box {
@@ -1049,19 +1099,19 @@ code {
   align-items: center;
   gap: 6px;
   background-color: #FFFFFF;
-  border: 1px dashed var(--md-sys-color-outline);
+  border: 1px solid var(--md-sys-color-outline);
   border-radius: var(--md-shape-full);
   padding: 8px 16px;
   cursor: pointer;
   font-size: 0.8rem;
   font-weight: 600;
-  color: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-surface);
   transition: all var(--spring-snappy);
 }
 
 .custom-file-target:hover {
   border-color: var(--md-sys-color-primary);
-  background-color: var(--md-sys-color-primary-container);
+  background-color: var(--md-sys-color-surface-container);
 }
 
 .hidden-real-file {
@@ -1077,7 +1127,7 @@ code {
   height: 44px;
   border-radius: var(--md-shape-md);
   object-fit: cover;
-  box-shadow: var(--md-elevation-1);
+  border: 1px solid var(--md-sys-color-outline-variant);
 }
 
 .product-desc-clamped {
@@ -1112,13 +1162,21 @@ code {
   border-radius: var(--md-shape-full);
   font-size: 0.72rem;
   font-weight: 700;
-  border: none;
+  border: 1px solid transparent;
   cursor: pointer;
   transition: all var(--spring-snappy);
 }
 
-.stock-toggle-btn.in-stock { background-color: #DCFCE7; color: #166534; }
-.stock-toggle-btn.out-stock { background-color: #FEE2E2; color: #991B1B; }
+.stock-toggle-btn.in-stock { 
+  background-color: #ECFDF5; 
+  color: #047857; 
+  border-color: #A7F3D0; 
+}
+.stock-toggle-btn.out-stock { 
+  background-color: #FFF1F2; 
+  color: #BE123C; 
+  border-color: #FECDD3; 
+}
 
 /* --------------------------------------------------------------------------
    11. BRANCHES NETWORK
@@ -1142,6 +1200,7 @@ code {
 
 .branch-store-card:hover {
   transform: translateY(-2px);
+  box-shadow: var(--md-elevation-2);
 }
 
 .branch-cover-stage {
@@ -1160,7 +1219,7 @@ code {
   position: absolute;
   top: 10px;
   left: 10px;
-  background: rgba(28, 25, 23, 0.85);
+  background: rgba(15, 23, 42, 0.85);
   backdrop-filter: blur(6px);
   color: #FFFFFF;
   padding: 3px 10px;
@@ -1182,7 +1241,7 @@ code {
 .branch-title-text {
   font-size: 1.1rem;
   font-weight: 800;
-  color: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-surface);
   line-height: 1.2;
 }
 
@@ -1191,9 +1250,18 @@ code {
   border-radius: var(--md-shape-full);
   font-size: 0.68rem;
   font-weight: 700;
+  border: 1px solid transparent;
 }
-.status-open { background-color: #DCFCE7; color: #166534; }
-.status-closed { background-color: #FEE2E2; color: #991B1B; }
+.status-open { 
+  background-color: #ECFDF5; 
+  color: #047857; 
+  border-color: #A7F3D0; 
+}
+.status-closed { 
+  background-color: #FFF1F2; 
+  color: #BE123C; 
+  border-color: #FECDD3; 
+}
 
 .branch-address-text {
   display: flex;
