@@ -1,204 +1,196 @@
 <%- include('partials/header') %>
 
-<div class="workspace-hero">
-  <div class="hero-text-block">
-    <div class="hero-tag">
+<!-- Island Header -->
+<div class="island-header-bar">
+  <div class="island-title-block">
+    <div class="island-category-badge">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
-      <span>HỆ THỐNG GIÁM SÁT KINH DOANH CHUỖI CỬA HÀNG</span>
+      <span>GIÁM SÁT KINH DOANH CHUỖI CÀ PHÊ ĐÀ NẴNG</span>
     </div>
-    <h1 class="hero-heading">Bảng Quản Trị & Doanh Thu Quầy</h1>
-    <p class="hero-subheading">Hệ thống giám sát kinh doanh & vận hành 4 chi nhánh FreshBite Đà Nẵng trong thời gian thực</p>
+    <h1 class="island-heading">Bảng Quản Trị & Doanh Thu Quầy</h1>
+    <p class="island-description">Hệ thống giám sát kinh doanh & vận hành 4 chi nhánh FreshBite Đà Nẵng trong thời gian thực.</p>
   </div>
   
-  <div class="hero-actions">
-    <a href="/api/uploads/template/product-import" class="btn btn-tonal">
+  <div class="island-actions-group">
+    <a href="/api/uploads/template/product-import" class="m3-btn m3-btn-tonal">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
       <span>Tải Mẫu CSV Thực Đơn</span>
     </a>
-    <a href="/admin/orders" class="btn btn-primary">
+    <a href="/admin/orders" class="m3-btn m3-btn-filled">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"></rect><path d="M6 2v4"></path><path d="M18 2v4"></path></svg>
       <span>Mở Màn Hình KDS Barista</span>
     </a>
   </div>
 </div>
 
-<!-- KPI Cards Bento Grid -->
-<div class="kpi-bento-grid">
-  <div class="kpi-card kpi-revenue">
-    <div class="kpi-top">
-      <div class="kpi-icon-bubble">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+<!-- Bento Metrics Grid -->
+<div class="m3-bento-grid">
+  <!-- Metric 1: Revenue -->
+  <div class="m3-bento-card bento-accent-espresso">
+    <div class="bento-card-top">
+      <div class="bento-icon-box">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
       </div>
-      <span class="kpi-badge kpi-badge-revenue">DOANH THU ĐÃ THU</span>
+      <span class="bento-label">DOANH THU ĐÃ THU</span>
     </div>
-    <div class="kpi-amount">
-      <%= (stats.totalRevenue || 0).toLocaleString('vi-VN') %> <span class="kpi-unit">VNĐ</span>
+    <div class="bento-value-block">
+      <div class="bento-number"><%= (stats.totalRevenue || 0).toLocaleString('vi-VN') %><span class="bento-unit">đ</span></div>
     </div>
-    <div class="kpi-footer-note">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-      <span>Tổng kết từ các đơn hàng trạng thái Completed</span>
+    <div class="bento-footnote">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+      <span>Tổng kết các đơn hàng trạng thái Completed</span>
     </div>
   </div>
 
-  <div class="kpi-card kpi-tickets">
-    <div class="kpi-top">
-      <div class="kpi-icon-bubble">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+  <!-- Metric 2: Orders Count -->
+  <div class="m3-bento-card">
+    <div class="bento-card-top">
+      <div class="bento-icon-box">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
       </div>
-      <span class="kpi-badge kpi-badge-tickets">TỔNG LƯỢNG VÉ</span>
+      <span class="bento-label">TỔNG LƯỢNG VÉ</span>
     </div>
-    <div class="kpi-amount">
-      <%= stats.totalOrders || 0 %> <span class="kpi-unit">đơn hàng</span>
+    <div class="bento-value-block">
+      <div class="bento-number"><%= stats.totalOrders || 0 %><span class="bento-unit">vé</span></div>
     </div>
-    <div class="kpi-footer-note">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
-      <span>Ghi nhận trên toàn hệ thống 4 chi nhánh</span>
-    </div>
-  </div>
-
-  <div class="kpi-card kpi-queue">
-    <div class="kpi-top">
-      <div class="kpi-icon-bubble">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-      </div>
-      <span class="kpi-badge kpi-badge-queue">HÀNG ĐỢI PHA CHẾ</span>
-    </div>
-    <div class="kpi-amount">
-      <%= (stats.statusCounts.Pending || 0) + (stats.statusCounts.Preparing || 0) %> <span class="kpi-unit">đơn</span>
-    </div>
-    <div class="kpi-footer-note">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path></svg>
-      <span><%= stats.statusCounts.Pending || 0 %> chờ nhận • <%= stats.statusCounts.Preparing || 0 %> đang trên máy pha</span>
+    <div class="bento-footnote">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+      <span>Ghi nhận trên toàn bộ 4 chi nhánh Đà Nẵng</span>
     </div>
   </div>
 
-  <div class="kpi-card kpi-completed">
-    <div class="kpi-top">
-      <div class="kpi-icon-bubble">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-      </div>
-      <span class="kpi-badge kpi-badge-completed">ĐÃ GIAO KHÁCH</span>
-    </div>
-    <div class="kpi-amount">
-      <%= stats.statusCounts.Completed || 0 %> <span class="kpi-unit">đơn</span>
-    </div>
-    <div class="kpi-footer-note">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
-      <span><%= stats.statusCounts['Ready for Pickup'] || 0 %> đơn đang đợi khách lấy tại quầy</span>
-    </div>
-  </div>
-</div>
-
-<!-- Operational Status Strip -->
-<div class="status-strip">
-  <div class="strip-item strip-pending">
-    <span class="strip-dot"></span>
-    <span class="strip-label">Chờ xác nhận:</span>
-    <span class="strip-val"><%= stats.statusCounts.Pending || 0 %></span>
-  </div>
-  <div class="strip-item strip-preparing">
-    <span class="strip-dot"></span>
-    <span class="strip-label">Đang pha chế:</span>
-    <span class="strip-val"><%= stats.statusCounts.Preparing || 0 %></span>
-  </div>
-  <div class="strip-item strip-ready">
-    <span class="strip-dot"></span>
-    <span class="strip-label">Sẵn sàng nhận:</span>
-    <span class="strip-val"><%= stats.statusCounts['Ready for Pickup'] || 0 %></span>
-  </div>
-  <div class="strip-item strip-completed">
-    <span class="strip-dot"></span>
-    <span class="strip-label">Hoàn tất:</span>
-    <span class="strip-val"><%= stats.statusCounts.Completed || 0 %></span>
-  </div>
-  <div class="strip-item strip-cancelled">
-    <span class="strip-dot"></span>
-    <span class="strip-label">Đã hủy:</span>
-    <span class="strip-val"><%= stats.statusCounts.Cancelled || 0 %></span>
-  </div>
-</div>
-
-<!-- Recent Orders Data Surface -->
-<div class="content-surface">
-  <div class="surface-header">
-    <div class="surface-title-group">
-      <div class="surface-icon">
+  <!-- Metric 3: Queue -->
+  <div class="m3-bento-card">
+    <div class="bento-card-top">
+      <div class="bento-icon-box">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
       </div>
-      <div>
-        <h2 class="surface-title">Đơn Hàng Gần Đây</h2>
-        <p class="surface-caption">Danh sách 8 đơn mới nhất được đẩy về máy chủ trung tâm</p>
-      </div>
+      <span class="bento-label">HÀNG ĐỢI PHA CHẾ</span>
     </div>
-    <a href="/admin/orders" class="btn btn-tonal-sm">
-      <span>Màn hình KDS chi tiết</span>
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+    <div class="bento-value-block">
+      <div class="bento-number"><%= (stats.statusCounts.Pending || 0) + (stats.statusCounts.Preparing || 0) %><span class="bento-unit">ly</span></div>
+    </div>
+    <div class="bento-footnote">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path></svg>
+      <span><%= stats.statusCounts.Pending || 0 %> chờ nhận • <%= stats.statusCounts.Preparing || 0 %> trên máy pha</span>
+    </div>
+  </div>
+
+  <!-- Metric 4: Completed -->
+  <div class="m3-bento-card">
+    <div class="bento-card-top">
+      <div class="bento-icon-box">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+      </div>
+      <span class="bento-label">ĐÃ GIAO KHÁCH</span>
+    </div>
+    <div class="bento-value-block">
+      <div class="bento-number"><%= stats.statusCounts.Completed || 0 %><span class="bento-unit">đơn</span></div>
+    </div>
+    <div class="bento-footnote">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path></svg>
+      <span><%= stats.statusCounts['Ready for Pickup'] || 0 %> đơn đang sẵn sàng tại quầy nhận</span>
+    </div>
+  </div>
+</div>
+
+<!-- Operational Flow Strip -->
+<div class="m3-status-flow-bar">
+  <div class="flow-step-chip chip-pending">
+    <span>Chờ xác nhận</span>
+    <span class="flow-step-count"><%= stats.statusCounts.Pending || 0 %></span>
+  </div>
+  <div class="flow-step-chip chip-prep">
+    <span>Đang pha chế</span>
+    <span class="flow-step-count"><%= stats.statusCounts.Preparing || 0 %></span>
+  </div>
+  <div class="flow-step-chip chip-ready">
+    <span>Sẵn sàng nhận</span>
+    <span class="flow-step-count"><%= stats.statusCounts['Ready for Pickup'] || 0 %></span>
+  </div>
+  <div class="flow-step-chip chip-completed">
+    <span>Đã hoàn tất</span>
+    <span class="flow-step-count"><%= stats.statusCounts.Completed || 0 %></span>
+  </div>
+  <div class="flow-step-chip">
+    <span>Đã hủy</span>
+    <span class="flow-step-count"><%= stats.statusCounts.Cancelled || 0 %></span>
+  </div>
+</div>
+
+<!-- Borderless Data Table Card -->
+<div class="m3-table-card">
+  <div class="table-top-bar">
+    <div>
+      <h2 class="table-top-title">Đơn Hàng Gần Đây</h2>
+      <p class="table-top-caption">Danh sách 8 đơn mới nhất được đồng bộ về máy chủ trung tâm FreshBite</p>
+    </div>
+    <a href="/admin/orders" class="m3-btn m3-btn-outlined" style="height: 36px; padding: 0 16px; font-size: 0.8rem;">
+      <span>Xem Màn Hình KDS</span>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
     </a>
   </div>
 
-  <div class="table-container">
-    <table class="data-table">
+  <div class="m3-table-wrapper">
+    <table class="m3-table">
       <thead>
         <tr>
-          <th style="min-width: 120px;">MÃ VÉ ĐƠN</th>
-          <th style="min-width: 170px;">KHÁCH HÀNG</th>
-          <th style="min-width: 200px;">CHI NHÁNH</th>
-          <th style="min-width: 130px; white-space: nowrap;">THỜI GIAN</th>
-          <th style="min-width: 140px;">PHƯƠNG THỨC TT</th>
-          <th style="min-width: 110px;" class="text-right">TỔNG TIỀN</th>
-          <th style="min-width: 140px;">TRẠNG THÁI</th>
-          <th style="min-width: 100px;" class="text-center">THAO TÁC</th>
+          <th>MÃ ĐƠN HÀNG</th>
+          <th>KHÁCH HÀNG</th>
+          <th>CHI NHÁNH</th>
+          <th>THỜI GIAN</th>
+          <th>THANH TOÁN</th>
+          <th style="text-align: right;">TỔNG TIỀN</th>
+          <th>TRẠNG THÁI</th>
+          <th style="text-align: center;">THAO TÁC</th>
         </tr>
       </thead>
       <tbody>
         <% if (recentOrders && recentOrders.length > 0) { %>
           <% recentOrders.forEach(order => { %>
-            <tr class="table-row">
+            <tr>
               <td>
-                <span class="order-code-badge"><%= order.orderCode || order._id %></span>
+                <span class="order-code-tag"><%= order.orderCode || order._id %></span>
               </td>
               <td>
-                <div class="customer-cell">
-                  <span class="customer-name"><%= (order.userId && order.userId.fullName) || 'Khách vãng lai' %></span>
-                  <span class="customer-phone"><%= (order.userId && order.userId.phone) || '' %></span>
-                </div>
+                <div class="customer-name-cell"><%= (order.userId && order.userId.fullName) || 'Khách vãng lai' %></div>
+                <div class="customer-sub-cell"><%= (order.userId && order.userId.phone) || 'Tại quầy' %></div>
               </td>
               <td>
-                <span class="branch-pill">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
-                  <%= (order.branchId && order.branchId.name) || 'Đà Nẵng' %>
+                <span style="font-weight: 600; font-size: 0.82rem; color: var(--md-sys-color-primary);">
+                  <%= (order.branchId && order.branchId.name) || 'Đà Nẵng Central' %>
                 </span>
               </td>
-              <td class="font-mono text-nowrap">
-                <%= new Date(order.createdAt).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) %> <span class="text-muted"><%= new Date(order.createdAt).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit' }) %></span>
+              <td style="font-family: var(--font-mono); font-size: 0.82rem; white-space: nowrap;">
+                <%= new Date(order.createdAt).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) %>
               </td>
               <td>
-                <span class="payment-chip chip-<%= String(order.paymentMethod).toLowerCase() %>">
+                <span style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--md-sys-color-secondary);">
                   <%= order.paymentMethod %>
                 </span>
               </td>
-              <td class="text-right font-mono font-bold amount-cell text-nowrap">
+              <td style="text-align: right; font-family: var(--font-mono); font-weight: 800; font-size: 0.9rem; color: var(--md-sys-color-primary); white-space: nowrap;">
                 <%= (order.totalAmount || 0).toLocaleString('vi-VN') %>đ
               </td>
               <td>
                 <% 
-                  let badgeModifier = 'badge-pending';
-                  if (order.status === 'Preparing') { badgeModifier = 'badge-preparing'; }
-                  else if (order.status === 'Ready for Pickup') { badgeModifier = 'badge-ready'; }
-                  else if (order.status === 'Completed') { badgeModifier = 'badge-completed'; }
-                  else if (order.status === 'Cancelled') { badgeModifier = 'badge-cancelled'; }
+                  let badgeClass = 'badge-pending';
+                  if (order.status === 'Preparing') { badgeClass = 'badge-preparing'; }
+                  else if (order.status === 'Ready for Pickup') { badgeClass = 'badge-ready'; }
+                  else if (order.status === 'Completed') { badgeClass = 'badge-completed'; }
+                  else if (order.status === 'Cancelled') { badgeClass = 'badge-cancelled'; }
                 %>
-                <span class="status-badge <%= badgeModifier %> text-nowrap">
-                  <span><%= order.status %></span>
+                <span class="m3-badge <%= badgeClass %>">
+                  <%= order.status %>
                 </span>
               </td>
-              <td>
-                <div class="action-flex-center">
-                  <a href="/api/uploads/orders/<%= order._id %>/invoice" class="btn-icon-action" title="Tải Hóa Đơn Bán Lẻ (Slot 12 res.download)">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+              <td style="text-align: center;">
+                <div style="display: inline-flex; align-items: center; gap: 4px;">
+                  <a href="/api/uploads/orders/<%= order._id %>/invoice" class="m3-btn-icon" title="Tải Hóa Đơn Bán Lẻ (Slot 12 res.download)">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
                   </a>
-                  <a href="/admin/orders?status=<%= order.status %>" class="btn-icon-action btn-icon-highlight" title="Xử lý trên KDS">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                  <a href="/admin/orders" class="m3-btn-icon" title="Xử lý trên KDS Barista">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
                   </a>
                 </div>
               </td>
@@ -206,9 +198,8 @@
           <% }) %>
         <% } else { %>
           <tr>
-            <td colspan="8" class="empty-cell">
-              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="empty-svg"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-              <p>Chưa có đơn hàng nào trong hệ thống. Hãy chạy lệnh <code>npm run seed:all</code> để tạo dữ liệu mẫu!</p>
+            <td colspan="8" style="text-align: center; padding: 40px; color: var(--md-sys-color-on-surface-variant);">
+              <p>Chưa có dữ liệu đơn hàng. Chạy <code>npm run seed:all</code> để nạp dữ liệu mẫu!</p>
             </td>
           </tr>
         <% } %>

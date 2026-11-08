@@ -1,174 +1,152 @@
 <%- include('partials/header') %>
 
-<div class="workspace-hero">
-  <div class="hero-text-block">
-    <div class="hero-tag">
+<!-- Island Header -->
+<div class="island-header-bar">
+  <div class="island-title-block">
+    <div class="island-category-badge">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="6" width="20" height="12" rx="2"></rect><path d="M6 2v4"></path><path d="M18 2v4"></path></svg>
       <span>KITCHEN DISPLAY SYSTEM (BARISTA STATION)</span>
     </div>
-    <h1 class="hero-heading">Màn Hình Quầy Barista (KDS)</h1>
-    <p class="hero-subheading">Kitchen Display System thời gian thực phục vụ tiếp nhận & pha chế đơn hàng 4 chi nhánh Đà Nẵng</p>
+    <h1 class="island-heading">Màn Hình Quầy Barista (KDS)</h1>
+    <p class="island-description">Hệ thống điều phối vé pha chế thời gian thực tại các quầy bar FreshBite. Tối ưu thời gian phục vụ thức uống nóng/lạnh.</p>
   </div>
   
-  <div class="hero-actions">
-    <button onclick="window.location.reload()" class="btn btn-tonal">
+  <div class="island-actions-group">
+    <button onclick="window.location.reload()" class="m3-btn m3-btn-tonal">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
-      <span>Làm Mới Trạm</span>
+      <span>Làm Mới Trạm KDS</span>
     </button>
   </div>
 </div>
 
-<!-- KDS Filter & Station Control Bar -->
-<div class="kds-filter-panel">
-  <form method="GET" action="/admin/orders" class="kds-filter-form">
-    <div class="filter-field">
-      <div class="filter-field-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
-      </div>
-      <div class="filter-field-content">
-        <label for="branchSelect" class="filter-label">TRẠM CHI NHÁNH:</label>
-        <select name="branchId" id="branchSelect" onchange="this.form.submit()" class="kds-select">
-          <option value="">-- Tất cả 4 chi nhánh Đà Nẵng --</option>
-          <% branches.forEach(branch => { %>
-            <option value="<%= branch._id %>" <%= String(currentBranchId) === String(branch._id) ? 'selected' : '' %>>
-              [<%= branch.district %>] <%= branch.name %>
-            </option>
-          <% }) %>
-        </select>
-      </div>
+<!-- KDS Filter & Action Strip -->
+<div class="kds-action-strip">
+  <form method="GET" action="/admin/orders" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap; width: 100%;">
+    <div style="display: flex; align-items: center; gap: 8px;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--md-sys-color-secondary);"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
+      <select name="branchId" onchange="this.form.submit()" class="kds-branch-dropdown">
+        <option value="">-- Tất cả 4 chi nhánh Đà Nẵng --</option>
+        <% branches.forEach(branch => { %>
+          <option value="<%= branch._id %>" <%= String(currentBranchId) === String(branch._id) ? 'selected' : '' %>>
+            [<%= branch.district %>] <%= branch.name %>
+          </option>
+        <% }) %>
+      </select>
     </div>
 
-    <div class="filter-field">
-      <div class="filter-field-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
-      </div>
-      <div class="filter-field-content">
-        <label for="statusSelect" class="filter-label">LỌC TRẠNG THÁI VÉ:</label>
-        <select name="status" id="statusSelect" onchange="this.form.submit()" class="kds-select">
-          <option value="">-- Tất cả trạng thái --</option>
-          <option value="Pending" <%= currentStatus === 'Pending' ? 'selected' : '' %>>Chờ xác nhận (Pending)</option>
-          <option value="Preparing" <%= currentStatus === 'Preparing' ? 'selected' : '' %>>Đang pha chế (Preparing)</option>
-          <option value="Ready for Pickup" <%= currentStatus === 'Ready for Pickup' ? 'selected' : '' %>>Sẵn sàng nhận (Ready)</option>
-          <option value="Completed" <%= currentStatus === 'Completed' ? 'selected' : '' %>>Đã hoàn tất (Completed)</option>
-          <option value="Cancelled" <%= currentStatus === 'Cancelled' ? 'selected' : '' %>>Đã hủy (Cancelled)</option>
-        </select>
-      </div>
+    <div style="display: flex; align-items: center; gap: 8px; margin-left: auto;">
+      <span style="font-size: 0.78rem; font-weight: 700; color: var(--md-sys-color-on-surface-variant); text-transform: uppercase;">Trạng thái vé:</span>
+      <select name="status" onchange="this.form.submit()" class="kds-branch-dropdown">
+        <option value="">-- Tất cả trạng thái --</option>
+        <option value="Pending" <%= currentStatus === 'Pending' ? 'selected' : '' %>>Chờ xác nhận (Pending)</option>
+        <option value="Preparing" <%= currentStatus === 'Preparing' ? 'selected' : '' %>>Đang pha chế (Preparing)</option>
+        <option value="Ready for Pickup" <%= currentStatus === 'Ready for Pickup' ? 'selected' : '' %>>Sẵn sàng nhận (Ready)</option>
+        <option value="Completed" <%= currentStatus === 'Completed' ? 'selected' : '' %>>Đã hoàn tất (Completed)</option>
+        <option value="Cancelled" <%= currentStatus === 'Cancelled' ? 'selected' : '' %>>Đã hủy (Cancelled)</option>
+      </select>
     </div>
   </form>
 </div>
 
-<!-- KDS Ticket Rails Grid -->
-<div class="kds-tickets-grid">
+<!-- KDS Tickets Station Grid -->
+<div class="kds-grid">
   <% if (orders && orders.length > 0) { %>
     <% orders.forEach(order => { %>
       <% 
-        let statusClass = 'kds-ticket-pending';
-        if (order.status === 'Preparing') { statusClass = 'kds-ticket-preparing'; }
-        else if (order.status === 'Ready for Pickup') { statusClass = 'kds-ticket-ready'; }
-        else if (order.status === 'Completed') { statusClass = 'kds-ticket-completed'; }
-        else if (order.status === 'Cancelled') { statusClass = 'kds-ticket-cancelled'; }
+        let ticketClass = 'ticket-pending';
+        let badgeClass = 'badge-pending';
+        if (order.status === 'Preparing') { ticketClass = 'ticket-preparing'; badgeClass = 'badge-preparing'; }
+        else if (order.status === 'Ready for Pickup') { ticketClass = 'ticket-ready'; badgeClass = 'badge-ready'; }
+        else if (order.status === 'Completed') { ticketClass = 'ticket-completed'; badgeClass = 'badge-completed'; }
+        else if (order.status === 'Cancelled') { ticketClass = 'ticket-cancelled'; badgeClass = 'badge-cancelled'; }
       %>
-      <div class="kds-ticket-card <%= statusClass %>">
-        <!-- Ticket Header -->
-        <div class="ticket-header">
-          <div class="ticket-id-block">
-            <span class="ticket-number"><%= order.orderCode || order._id %></span>
-            <span class="ticket-clock">
+      <div class="kds-ticket <%= ticketClass %>">
+        <!-- Ticket Header Row -->
+        <div class="ticket-header-row">
+          <span class="ticket-order-tag"><%= order.orderCode || order._id %></span>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <div class="ticket-timer-pill">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
               <span><%= new Date(order.createdAt).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) %></span>
-            </span>
-          </div>
-          <span class="status-badge <%= statusClass.replace('kds-ticket-', 'badge-') %> text-nowrap">
-            <%= order.status %>
-          </span>
-        </div>
-
-        <!-- Ticket Customer Details -->
-        <div class="ticket-client-strip">
-          <div class="client-meta">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-            <strong><%= (order.userId && order.userId.fullName) || 'Khách vãng lai' %></strong>
-            <span class="client-phone"><%= (order.userId && order.userId.phone) || '' %></span>
-          </div>
-          <div class="client-branch-tag">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-            <span><%= (order.branchId && order.branchId.name) || 'Chi nhánh Đà Nẵng' %></span>
-          </div>
-        </div>
-
-        <!-- Ticket Order Items Table -->
-        <div class="ticket-items-box">
-          <% (order.items || []).forEach(item => { %>
-            <div class="ticket-item-row">
-              <span class="item-qty-tag"><%= item.quantity %>x</span>
-              <div class="item-description-block">
-                <span class="item-title"><%= (item.productId && item.productId.name) || item.name || 'Sản phẩm' %></span>
-                <span class="item-spec-chip">Size: <strong><%= item.size || 'M' %></strong></span>
-              </div>
-              <span class="item-subtotal-text"><%= Number((item.price || 0) * (item.quantity || 1)).toLocaleString('vi-VN') %>đ</span>
             </div>
-          <% }) %>
+            <span class="m3-badge <%= badgeClass %>"><%= order.status %></span>
+          </div>
         </div>
 
-        <!-- Ticket Footer & Tactile Bump Actions -->
-        <div class="ticket-footer">
-          <div class="ticket-total-bar">
-            <span class="total-label">Tổng vé thanh toán:</span>
-            <span class="total-figure"><%= Number(order.totalAmount || 0).toLocaleString('vi-VN') %>đ</span>
+        <!-- Ticket Customer & Branch Strip -->
+        <div class="ticket-customer-strip">
+          <div class="ticket-guest-name">
+            <%= (order.userId && order.userId.fullName) || 'Khách vãng lai' %>
           </div>
-          <div class="ticket-payment-method">
-            <span class="payment-chip chip-<%= String(order.paymentMethod).toLowerCase() %>">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
-              <span><%= order.paymentMethod %> (<%= order.paymentStatus || 'PENDING' %>)</span>
+          <div class="ticket-branch-tag">
+            <%= (order.branchId && order.branchId.name) || 'Trạm Trung Tâm' %>
+          </div>
+        </div>
+
+        <!-- Ticket Coffee Items List -->
+        <div class="ticket-items-list">
+          <% if (order.items && order.items.length > 0) { %>
+            <% order.items.forEach(item => { %>
+              <div class="ticket-item-row">
+                <span class="item-qty-pill"><%= item.quantity %>x</span>
+                <div class="item-content">
+                  <span class="item-name-text">
+                    <%= (item.productId && item.productId.name) || item.name || 'Thức uống đặc sản' %>
+                  </span>
+                  <div class="item-spec-tags">
+                    <% if (item.size) { %>
+                      <span class="size-pill-tag">Size <%= item.size %></span>
+                    <% } %>
+                    <span><%= (item.price || 0).toLocaleString('vi-VN') %>đ</span>
+                  </div>
+                </div>
+              </div>
+            <% }) %>
+          <% } else { %>
+            <div style="font-size: 0.8rem; color: var(--md-sys-color-on-surface-variant); font-style: italic;">
+              Không có chi tiết món
+            </div>
+          <% } %>
+        </div>
+
+        <!-- Ticket Footer & Tactile Actions -->
+        <div class="ticket-footer-actions">
+          <% if (order.status === 'Pending') { %>
+            <form action="/admin/orders/<%= order._id %>/status" method="POST">
+              <input type="hidden" name="status" value="Preparing">
+              <button type="submit" class="kds-btn-step kds-btn-start">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polygon points="10 8 16 12 10 16 10 8"></polygon></svg>
+                <span>Bắt Đầu Pha Chế</span>
+              </button>
+            </form>
+          <% } else if (order.status === 'Preparing') { %>
+            <form action="/admin/orders/<%= order._id %>/status" method="POST">
+              <input type="hidden" name="status" value="Ready for Pickup">
+              <button type="submit" class="kds-btn-step kds-btn-finish">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                <span>Báo Đã Pha Xong (Sẵn Sàng)</span>
+              </button>
+            </form>
+          <% } else if (order.status === 'Ready for Pickup') { %>
+            <form action="/admin/orders/<%= order._id %>/status" method="POST">
+              <input type="hidden" name="status" value="Completed">
+              <button type="submit" class="kds-btn-step kds-btn-deliver">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                <span>Khách Đã Nhận Đơn</span>
+              </button>
+            </form>
+          <% } else { %>
+            <div style="text-align: center; font-size: 0.78rem; font-weight: 700; color: var(--md-sys-color-on-surface-variant); padding: 8px 0;">
+              Vé Đã Hoàn Tất Xử Lý
+            </div>
+          <% } %>
+
+          <div class="kds-sub-actions">
+            <span style="font-family: var(--font-mono); font-weight: 800; font-size: 0.88rem; color: var(--md-sys-color-primary);">
+              <%= (order.totalAmount || 0).toLocaleString('vi-VN') %>đ
             </span>
-          </div>
-
-          <!-- Bump Bar Buttons -->
-          <div class="ticket-bump-actions">
-            <% if (order.status === 'Pending') { %>
-              <form method="POST" action="/admin/orders/<%= order._id %>/status" class="bump-form">
-                <input type="hidden" name="status" value="Preparing">
-                <button type="submit" class="bump-btn bump-preparing">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path></svg>
-                  <span>Bắt Đầu Pha Chế</span>
-                </button>
-              </form>
-              <form method="POST" action="/admin/orders/<%= order._id %>/status" class="bump-form-sm">
-                <input type="hidden" name="status" value="Cancelled">
-                <button type="submit" class="bump-btn bump-cancel" onclick="return confirm('Bạn có chắc muốn hủy đơn này?')" title="Hủy đơn">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                </button>
-              </form>
-            <% } else if (order.status === 'Preparing') { %>
-              <form method="POST" action="/admin/orders/<%= order._id %>/status" class="bump-form">
-                <input type="hidden" name="status" value="Ready for Pickup">
-                <button type="submit" class="bump-btn bump-ready">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
-                  <span>Sẵn Sàng Gọi Khách</span>
-                </button>
-              </form>
-            <% } else if (order.status === 'Ready for Pickup') { %>
-              <form method="POST" action="/admin/orders/<%= order._id %>/status" class="bump-form">
-                <input type="hidden" name="status" value="Completed">
-                <button type="submit" class="bump-btn bump-complete">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-                  <span>Khách Đã Nhận</span>
-                </button>
-              </form>
-            <% } else if (order.status === 'Completed') { %>
-              <div class="bump-status-label completed-label">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                <span>Đã Giao Xong</span>
-              </div>
-            <% } else if (order.status === 'Cancelled') { %>
-              <div class="bump-status-label cancelled-label">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
-                <span>Đơn Đã Hủy</span>
-              </div>
-            <% } %>
-
-            <a href="/api/uploads/orders/<%= order._id %>/invoice" class="bump-btn bump-invoice" title="Tải Hóa Đơn Bán Lẻ (Slot 12 res.download)">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+            <a href="/api/uploads/orders/<%= order._id %>/invoice" class="kds-link-invoice" title="In Hóa Đơn Bán Lẻ (Slot 12)">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
               <span>In Hóa Đơn</span>
             </a>
           </div>
@@ -176,10 +154,10 @@
       </div>
     <% }) %>
   <% } else { %>
-    <div class="empty-kds-surface">
-      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="empty-kds-icon"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line></svg>
-      <h3 class="empty-kds-title">Hiện tại không có đơn hàng nào trong hàng đợi</h3>
-      <p class="empty-kds-text">Khi có khách hàng đặt món qua ứng dụng hoặc quầy, phiếu order sẽ lập tức xuất hiện trên màn hình KDS.</p>
+    <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; background-color: var(--md-sys-color-surface-container); border-radius: var(--md-shape-xl);">
+      <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color: var(--md-sys-color-secondary); margin-bottom: 12px;"><rect x="2" y="6" width="20" height="12" rx="2"></rect><path d="M6 2v4"></path><path d="M18 2v4"></path></svg>
+      <h3 style="font-weight: 800; color: var(--md-sys-color-primary); margin-bottom: 6px;">Không có vé pha chế nào cần xử lý</h3>
+      <p style="font-size: 0.85rem; color: var(--md-sys-color-on-surface-variant);">Toàn bộ đơn hàng tại các chi nhánh đã hoàn tất hoặc đang chờ khách đặt mới.</p>
     </div>
   <% } %>
 </div>

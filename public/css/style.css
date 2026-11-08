@@ -1,76 +1,94 @@
-/**
- * FreshBite Specialty Coffee & Roastery - Enterprise KDS & Chain Management Design System
- * Crisp, clean, anti-AI-slop Google Material 3 & Specialty Coffee POS/KDS Engineering
- * 100% Inline Vector SVG Icons - Zero Font Dependency & Zero Emoji
- */
+/* ==========================================================================
+   FRESHBITE COFFEE & TEA - SPECIALTY CHAIN MANAGEMENT & BARISTA KDS
+   Engineered using Google Material 3 Web System & M3 Expressive Specifications
+   Derived from @material/web, material-color-utilities, & Google Workspace
+   ========================================================================== */
 
+/* --------------------------------------------------------------------------
+   1. CSS CUSTOM PROPERTIES & M3 SYSTEM TOKENS
+   -------------------------------------------------------------------------- */
 :root {
-  /* Brand FreshBite Forest & Espresso Palette */
-  --primary: #0F766E;
-  --primary-hover: #0D9488;
-  --primary-dark: #115E59;
-  --primary-light: #CCFBF1;
-  --primary-surface: #F0FDFA;
-  --on-primary: #FFFFFF;
+  /* Legacy & Framework Aliases */
+  --primary: #5C3826;
+  --primary-hover: #45291B;
+  --secondary: #8C532B;
 
-  --accent-amber: #D97706;
-  --accent-amber-light: #FEF3C7;
-  --accent-espresso: #0F172A;
+  /* Brand Typography */
+  --font-brand: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
 
-  /* Crisp Modern Clean Canvas */
-  --canvas-bg: #F8FAFC;
-  --surface-card: #FFFFFF;
-  --surface-subtle: #F1F5F9;
-  --surface-muted: #E2E8F0;
-  
-  --border-subtle: #E2E8F0;
-  --border-strong: #CBD5E1;
+  /* Specialty Coffee M3 Color Palette */
+  --md-sys-color-primary: #5C3826;              /* Deep Espresso Roast */
+  --md-sys-color-primary-hover: #45291B;
+  --md-sys-color-on-primary: #FFFFFF;
+  --md-sys-color-primary-container: #F4ECE4;    /* Creamy Crema Tint */
+  --md-sys-color-on-primary-container: #2A170F;
 
-  /* High Legibility Typography */
-  --text-heading: #0F172A;
-  --text-body: #334155;
-  --text-muted: #64748B;
-  --text-subtle: #94A3B8;
+  --md-sys-color-secondary: #8C532B;            /* Warm Roasted Caramel */
+  --md-sys-color-secondary-container: #FCEFDF;
+  --md-sys-color-on-secondary-container: #3E1E07;
 
-  /* KDS Status Palettes */
-  --kds-pending-bg: #FFFBEB;
-  --kds-pending-border: #FCD34D;
-  --kds-pending-text: #B45309;
+  --md-sys-color-tertiary: #2D5A43;             /* Fresh Tea Matcha Green */
+  --md-sys-color-tertiary-container: #E2EFE7;
+  --md-sys-color-on-tertiary-container: #0C281B;
 
-  --kds-preparing-bg: #EFF6FF;
-  --kds-preparing-border: #93C5FD;
-  --kds-preparing-text: #1D4ED8;
+  /* Surfaces & Canvas */
+  --md-sys-color-shell: #F5F3EF;                /* Warm Tinted Shell (Workspace canvas) */
+  --md-sys-color-surface: #FFFFFF;              /* Floating Island Pure White */
+  --md-sys-color-surface-dim: #EDE9E3;
+  --md-sys-color-surface-container: #F9F7F4;
+  --md-sys-color-surface-container-high: #F2EFE9;
+  --md-sys-color-surface-container-highest: #E7E3DB;
 
-  --kds-ready-bg: #ECFDF5;
-  --kds-ready-border: #86EFAC;
-  --kds-ready-text: #047857;
+  /* Content & Text Colors */
+  --md-sys-color-on-surface: #1C1917;           /* Deep Charcoal Neutral */
+  --md-sys-color-on-surface-variant: #57534E;   /* Medium Warm Slate */
+  --md-sys-color-outline: #D6D1C7;
+  --md-sys-color-outline-variant: #E7E3DB;
 
-  --kds-completed-bg: #F8FAFC;
-  --kds-completed-border: #CBD5E1;
-  --kds-completed-text: #475569;
+  /* KDS Status Functional Tokens */
+  --kds-color-pending-bg: #EEF2FF;
+  --kds-color-pending-text: #3730A3;
+  --kds-color-pending-border: #C7D2FE;
 
-  --kds-cancelled-bg: #FEF2F2;
-  --kds-cancelled-border: #FCA5A5;
-  --kds-cancelled-text: #B91C1C;
+  --kds-color-prep-bg: #FEF3C7;
+  --kds-color-prep-text: #92400E;
+  --kds-color-prep-border: #FDE68A;
 
-  /* Typography */
-  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
+  --kds-color-ready-bg: #DCFCE7;
+  --kds-color-ready-text: #166534;
+  --kds-color-ready-border: #BBF7D0;
 
-  /* Radii & Shadows */
-  --radius-xs: 4px;
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 24px;
-  --radius-full: 9999px;
+  --kds-color-completed-bg: #F3F4F6;
+  --kds-color-completed-text: #4B5563;
+  --kds-color-completed-border: #E5E7EB;
 
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.06), 0 2px 4px -2px rgba(0, 0, 0, 0.04);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+  --kds-color-cancelled-bg: #FEE2E2;
+  --kds-color-cancelled-text: #991B1B;
+  --kds-color-cancelled-border: #FECACA;
+
+  /* M3 Shape System */
+  --md-shape-xs: 4px;
+  --md-shape-sm: 8px;
+  --md-shape-md: 12px;
+  --md-shape-lg: 16px;
+  --md-shape-xl: 24px;
+  --md-shape-2xl: 28px;
+  --md-shape-full: 9999px;
+
+  /* M3 Dual-Shadow Elevation Formulas */
+  --md-elevation-1: 0px 1px 3px 1px rgba(28, 25, 23, 0.05), 0px 1px 2px 0px rgba(28, 25, 23, 0.08);
+  --md-elevation-2: 0px 2px 6px 2px rgba(28, 25, 23, 0.06), 0px 1px 2px 0px rgba(28, 25, 23, 0.08);
+  --md-elevation-3: 0px 4px 12px 3px rgba(28, 25, 23, 0.08), 0px 1px 3px 0px rgba(28, 25, 23, 0.10);
+
+  /* Transitions & Springs */
+  --spring-default: 280ms cubic-bezier(0.2, 0, 0, 1);
+  --spring-snappy: 180ms cubic-bezier(0.2, 0, 0, 1);
 }
 
-/* Base Reset */
+/* --------------------------------------------------------------------------
+   2. GLOBAL BASE STYLES & RESETS
+   -------------------------------------------------------------------------- */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -78,1472 +96,1223 @@
 }
 
 body.freshbite-app {
-  font-family: var(--font-sans);
-  background-color: var(--canvas-bg);
-  color: var(--text-heading);
+  font-family: var(--font-brand);
+  background-color: var(--md-sys-color-shell);
+  color: var(--md-sys-color-on-surface);
   line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
   display: flex;
-  flex-direction: column;
-  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
-/* -------------------------------------------------------------
- * 1. APPLICATION NAVBAR (NO WORD WRAPPING EVER)
- * ------------------------------------------------------------- */
-.app-header {
-  background-color: #FFFFFF;
-  border-bottom: 1px solid var(--border-subtle);
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  box-shadow: var(--shadow-sm);
-}
-
-.header-inner {
-  max-width: 1440px;
-  margin: 0 auto;
-  padding: 0.65rem 1.75rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1.25rem;
-  flex-wrap: nowrap;
-}
-
-.brand-link {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
+a {
+  color: inherit;
   text-decoration: none;
+}
+
+button, input, select, textarea {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+code {
+  font-family: var(--font-mono);
+  background: var(--md-sys-color-surface-container-high);
+  color: var(--md-sys-color-secondary);
+  padding: 2px 6px;
+  border-radius: var(--md-shape-xs);
+  font-size: 0.85em;
+}
+
+/* --------------------------------------------------------------------------
+   3. GOOGLE WORKSPACE SHELL ARCHITECTURE:
+      Left Navigation Sidebar (260px) + Floating Island Main Stage
+   -------------------------------------------------------------------------- */
+.m3-shell-wrapper {
+  display: flex;
+  width: 100vw;
+  min-height: 100vh;
+}
+
+/* Navigation Sidebar (Docked directly on tinted shell without borders) */
+.m3-sidebar {
+  width: 260px;
+  min-width: 260px;
+  background-color: var(--md-sys-color-shell);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 24px 16px 20px 16px;
   flex-shrink: 0;
 }
 
-.brand-symbol {
-  width: 38px;
-  height: 38px;
-  border-radius: var(--radius-sm);
-  background: linear-gradient(135deg, #0F766E 0%, #047857 100%);
+.sidebar-brand-lockup {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 12px 24px 12px;
+}
+
+.brand-emblem-badge {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--md-shape-md);
+  background: linear-gradient(135deg, #5C3826 0%, #8C532B 100%);
   color: #FFFFFF;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 3px 8px rgba(15, 118, 110, 0.25);
+  box-shadow: 0 4px 12px rgba(92, 56, 38, 0.25);
 }
 
-.brand-titles {
+.brand-text-block {
   display: flex;
   flex-direction: column;
-  white-space: nowrap;
 }
 
-.brand-name {
-  font-size: 1.2rem;
+.brand-title {
+  font-size: 1.25rem;
   font-weight: 800;
   letter-spacing: -0.02em;
-  color: #0F172A;
-  line-height: 1.1;
+  color: var(--md-sys-color-primary);
+  line-height: 1.15;
 }
 
-.brand-tagline {
-  font-size: 0.65rem;
+.brand-subtitle {
+  font-size: 0.7rem;
   font-weight: 700;
+  text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--primary);
+  color: var(--md-sys-color-secondary);
 }
 
-.nav-cluster {
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
-.nav-item {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  padding: 0.45rem 0.85rem;
-  border-radius: var(--radius-full);
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--text-muted);
-  text-decoration: none;
-  white-space: nowrap;
-  transition: all 0.15s ease;
-}
-
-.nav-item:hover {
-  background-color: var(--surface-subtle);
-  color: var(--text-heading);
-}
-
-.nav-item.active {
-  background-color: #E2E8F0;
-  color: #0F172A;
-  font-weight: 700;
-}
-
-.nav-item.nav-kds {
-  background-color: #CCFBF1;
-  color: #0F766E;
-  font-weight: 700;
-}
-
-.nav-item.nav-kds:hover {
-  background-color: #99F6E4;
-}
-
-.nav-svg {
-  flex-shrink: 0;
-}
-
-.kds-live-chip {
-  background-color: #DC2626;
-  color: #FFFFFF;
-  font-size: 0.625rem;
-  font-weight: 800;
-  padding: 0.1rem 0.4rem;
-  border-radius: var(--radius-full);
-  letter-spacing: 0.05em;
-  line-height: 1.2;
-}
-
-.nav-health {
-  border: 1px solid #BBF7D0;
-  background-color: #F0FDF4;
-  color: #15803D;
-  font-size: 0.775rem;
-  padding: 0.35rem 0.65rem;
-}
-
-.pulse-indicator {
-  width: 7px;
-  height: 7px;
-  background-color: #16A34A;
-  border-radius: var(--radius-full);
-  box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.2);
-  display: inline-block;
-  flex-shrink: 0;
-}
-
-.shift-info {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.35rem 0.75rem;
-  background-color: var(--surface-subtle);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-sm);
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
-.shift-svg {
-  color: var(--primary);
-  flex-shrink: 0;
-}
-
-.shift-text {
+/* Navigation Menu Items (M3 Stadium Pills) */
+.sidebar-nav-menu {
   display: flex;
   flex-direction: column;
+  gap: 4px;
+  margin-top: 8px;
 }
 
-.shift-title {
-  font-size: 0.675rem;
-  font-weight: 600;
-  color: var(--text-muted);
-  line-height: 1.1;
-}
-
-.shift-time {
-  font-size: 0.775rem;
+.nav-section-label {
+  font-size: 0.72rem;
   font-weight: 700;
-  color: var(--text-heading);
-  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--md-sys-color-on-surface-variant);
+  padding: 12px 14px 6px 14px;
 }
 
-/* -------------------------------------------------------------
- * 2. MAIN APPLICATION CANVAS & HERO SECTION
- * ------------------------------------------------------------- */
-.app-canvas {
-  max-width: 1440px;
-  width: 100%;
-  margin: 0 auto;
-  padding: 1.75rem 1.75rem 3.5rem 1.75rem;
+.m3-nav-pill {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  border-radius: var(--md-shape-full);
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all var(--spring-snappy);
+  white-space: nowrap;
+  position: relative;
+}
+
+.m3-nav-pill svg {
+  flex-shrink: 0;
+  transition: transform var(--spring-snappy);
+}
+
+.m3-nav-pill:hover {
+  background-color: rgba(92, 56, 38, 0.08);
+  color: var(--md-sys-color-primary);
+}
+
+.m3-nav-pill:hover svg {
+  transform: scale(1.05);
+}
+
+/* Active Pill: Material You Stadium Pill Container */
+.m3-nav-pill.active {
+  background-color: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-primary);
+  font-weight: 700;
+}
+
+.m3-nav-pill.active svg {
+  stroke-width: 2.3;
+}
+
+.kds-live-pill {
+  margin-left: auto;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  background-color: #EF4444;
+  color: #FFFFFF;
+  padding: 2px 7px;
+  border-radius: var(--md-shape-full);
+  animation: pulse-ring 2s infinite ease-in-out;
+}
+
+@keyframes pulse-ring {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.85; transform: scale(1.05); }
+}
+
+/* Sidebar Footer / Shift Card */
+.sidebar-footer-card {
+  background-color: var(--md-sys-color-surface-container);
+  border-radius: var(--md-shape-lg);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border: 1px solid var(--md-sys-color-outline-variant);
+}
+
+.station-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--md-sys-color-tertiary);
+}
+
+.status-dot-live {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #22C55E;
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2);
+}
+
+.station-details {
+  font-size: 0.75rem;
+  color: var(--md-sys-color-on-surface-variant);
+  line-height: 1.4;
+}
+
+.shift-time-pill {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 0.75rem;
+  color: var(--md-sys-color-primary);
+}
+
+/* --------------------------------------------------------------------------
+   4. MAIN VIEWPORT & FLOATING ISLAND ARCHITECTURE
+   -------------------------------------------------------------------------- */
+.m3-main-stage {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 16px 20px 20px 4px;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Top App Bar (Sits on the tinted shell, zero border lines) */
+.m3-top-appbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px 16px 12px;
+  gap: 16px;
+}
+
+.appbar-left-group {
+  display: flex;
+  align-items: center;
+  gap: 16px;
   flex: 1;
 }
 
-.workspace-hero {
+.appbar-search-pill {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  margin-bottom: 1.75rem;
-  flex-wrap: wrap;
-  gap: 1.25rem;
+  align-items: center;
+  gap: 10px;
+  background-color: var(--md-sys-color-surface);
+  border-radius: var(--md-shape-full);
+  padding: 8px 18px;
+  width: 100%;
+  max-width: 380px;
+  box-shadow: var(--md-elevation-1);
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: 0.88rem;
+  border: 1px solid transparent;
+  transition: all var(--spring-snappy);
 }
 
-.hero-tag {
+.appbar-search-pill:focus-within {
+  border-color: var(--md-sys-color-primary);
+  box-shadow: 0 0 0 3px var(--md-sys-color-primary-container);
+}
+
+.appbar-search-input {
+  border: none;
+  outline: none;
+  background: transparent;
+  width: 100%;
+  color: var(--md-sys-color-on-surface);
+}
+
+.appbar-right-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.branch-selector-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--md-sys-color-surface);
+  border-radius: var(--md-shape-full);
+  padding: 6px 14px;
+  box-shadow: var(--md-elevation-1);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--md-sys-color-primary);
+}
+
+.user-profile-pill {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 10px 4px 4px;
+  background-color: var(--md-sys-color-surface);
+  border-radius: var(--md-shape-full);
+  box-shadow: var(--md-elevation-1);
+}
+
+.user-avatar-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #8C532B, #5C3826);
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.8rem;
+}
+
+.user-meta {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-name {
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--md-sys-color-on-surface);
+}
+
+.user-role {
+  font-size: 0.68rem;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+/* Floating Rounded Island Canvas (Google M3 Signature) */
+.m3-floating-island {
+  flex: 1;
+  background-color: var(--md-sys-color-surface);
+  border-radius: var(--md-shape-2xl);
+  box-shadow: var(--md-elevation-2);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 32px;
+  position: relative;
+}
+
+/* Custom Sleek Scrollbar */
+.m3-floating-island::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.m3-floating-island::-webkit-scrollbar-thumb {
+  background-color: var(--md-sys-color-outline);
+  border-radius: var(--md-shape-full);
+}
+.m3-floating-island::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* --------------------------------------------------------------------------
+   5. SPECIALTY COFFEE WORKSPACE HEADERS & ACTIONS
+   -------------------------------------------------------------------------- */
+.island-header-bar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 28px;
+}
+
+.island-title-block {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.island-category-badge {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  font-size: 0.725rem;
+  gap: 6px;
+  font-size: 0.72rem;
   font-weight: 800;
-  letter-spacing: 0.06em;
-  color: var(--primary);
-  margin-bottom: 0.25rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--md-sys-color-secondary);
 }
 
-.hero-heading {
+.island-heading {
   font-size: 1.85rem;
   font-weight: 800;
-  color: var(--text-heading);
-  letter-spacing: -0.025em;
+  letter-spacing: -0.03em;
+  color: var(--md-sys-color-primary);
   line-height: 1.2;
 }
 
-.hero-subheading {
-  color: var(--text-muted);
-  font-size: 0.925rem;
-  margin-top: 0.25rem;
+.island-description {
+  font-size: 0.92rem;
+  color: var(--md-sys-color-on-surface-variant);
+  max-width: 650px;
 }
 
-.hero-actions {
+.island-actions-group {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 10px;
+  flex-shrink: 0;
 }
 
-/* Buttons */
-.btn {
+/* M3 Button System */
+.m3-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.45rem;
-  padding: 0.6rem 1.2rem;
-  border-radius: var(--radius-full);
-  font-size: 0.85rem;
+  gap: 8px;
+  height: 42px;
+  padding: 0 20px;
+  border-radius: var(--md-shape-full);
+  font-size: 0.88rem;
   font-weight: 700;
-  text-decoration: none;
-  cursor: pointer;
   border: none;
+  cursor: pointer;
+  transition: all var(--spring-snappy);
   white-space: nowrap;
-  transition: all 0.15s ease-in-out;
-  box-shadow: var(--shadow-sm);
 }
 
-.btn-primary {
-  background-color: var(--primary);
-  color: #FFFFFF;
+.m3-btn:active {
+  transform: scale(0.98);
 }
 
-.btn-primary:hover {
-  background-color: var(--primary-hover);
-  box-shadow: var(--shadow-md);
+.m3-btn-filled {
+  background-color: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+  box-shadow: 0 2px 6px rgba(92, 56, 38, 0.25);
 }
 
-.btn-tonal {
-  background-color: #FFFFFF;
-  color: var(--text-heading);
-  border: 1px solid var(--border-subtle);
+.m3-btn-filled:hover {
+  background-color: var(--md-sys-color-primary-hover);
+  box-shadow: 0 4px 10px rgba(92, 56, 38, 0.35);
 }
 
-.btn-tonal:hover {
-  background-color: var(--surface-subtle);
-  border-color: var(--border-strong);
+.m3-btn-tonal {
+  background-color: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-primary);
 }
 
-.btn-tonal-sm {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  padding: 0.35rem 0.8rem;
-  background-color: #FFFFFF;
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-full);
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--text-heading);
-  text-decoration: none;
-  white-space: nowrap;
-  transition: all 0.15s ease;
+.m3-btn-tonal:hover {
+  background-color: #EBDDCF;
 }
 
-.btn-tonal-sm:hover {
-  background-color: var(--surface-subtle);
-  border-color: var(--border-strong);
+.m3-btn-outlined {
+  background-color: transparent;
+  color: var(--md-sys-color-primary);
+  border: 1px solid var(--md-sys-color-outline);
 }
 
-/* -------------------------------------------------------------
- * 3. KPI METRICS BENTO GRID (DASHBOARD)
- * ------------------------------------------------------------- */
-.kpi-bento-grid {
+.m3-btn-outlined:hover {
+  background-color: var(--md-sys-color-primary-container);
+  border-color: var(--md-sys-color-primary);
+}
+
+/* --------------------------------------------------------------------------
+   6. BENTO METRICS GRID (DASHBOARD)
+   -------------------------------------------------------------------------- */
+.m3-bento-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 1.25rem;
-  margin-bottom: 1.5rem;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 28px;
 }
 
-.kpi-card {
-  background-color: var(--surface-card);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-lg);
-  padding: 1.35rem;
-  box-shadow: var(--shadow-sm);
+.m3-bento-card {
+  background-color: var(--md-sys-color-surface-container);
+  border-radius: var(--md-shape-xl);
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-
-.kpi-card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
-}
-
-.kpi-top {
-  display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.75rem;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--md-sys-color-outline-variant);
+  transition: transform var(--spring-snappy), box-shadow var(--spring-snappy);
 }
 
-.kpi-icon-bubble {
+.m3-bento-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--md-elevation-2);
+}
+
+.bento-accent-espresso {
+  background: linear-gradient(145deg, #FAF7F2 0%, #F5ECE4 100%);
+  border-color: #EBDDCF;
+}
+
+.bento-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.bento-icon-box {
   width: 40px;
   height: 40px;
-  border-radius: var(--radius-md);
+  border-radius: var(--md-shape-md);
+  background-color: #FFFFFF;
+  color: var(--md-sys-color-primary);
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: var(--md-elevation-1);
 }
 
-.kpi-revenue .kpi-icon-bubble { background-color: #ECFDF5; color: #059669; }
-.kpi-tickets .kpi-icon-bubble { background-color: #EFF6FF; color: #2563EB; }
-.kpi-queue .kpi-icon-bubble { background-color: #FFFBEB; color: #D97706; }
-.kpi-completed .kpi-icon-bubble { background-color: #F0FDF4; color: #16A34A; }
-
-.kpi-badge {
-  font-size: 0.675rem;
+.bento-label {
+  font-size: 0.72rem;
   font-weight: 800;
-  letter-spacing: 0.05em;
-  padding: 0.2rem 0.55rem;
-  border-radius: var(--radius-full);
-  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--md-sys-color-on-surface-variant);
 }
 
-.kpi-badge-revenue { background-color: #D1FAE5; color: #065F46; }
-.kpi-badge-tickets { background-color: #DBEAFE; color: #1E40AF; }
-.kpi-badge-queue { background-color: #FEF3C7; color: #92400E; }
-.kpi-badge-completed { background-color: #DCFCE7; color: #166534; }
+.bento-value-block {
+  margin-bottom: 12px;
+}
 
-.kpi-amount {
-  font-size: 1.75rem;
-  font-weight: 800;
-  color: var(--text-heading);
+.bento-number {
   font-family: var(--font-mono);
-  line-height: 1.15;
-  letter-spacing: -0.02em;
+  font-size: 1.85rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--md-sys-color-on-surface);
+  line-height: 1.1;
 }
 
-.kpi-amount .kpi-unit {
-  font-size: 0.9rem;
+.bento-unit {
+  font-size: 0.95rem;
   font-weight: 600;
-  color: var(--text-muted);
-  font-family: var(--font-sans);
+  color: var(--md-sys-color-secondary);
+  margin-left: 2px;
 }
 
-.kpi-footer-note {
-  margin-top: 0.75rem;
-  font-size: 0.775rem;
-  color: var(--text-muted);
+.bento-footnote {
   display: flex;
   align-items: center;
-  gap: 0.35rem;
-  border-top: 1px dashed var(--border-subtle);
-  padding-top: 0.65rem;
+  gap: 6px;
+  font-size: 0.75rem;
+  color: var(--md-sys-color-on-surface-variant);
 }
 
-/* Status Strip */
-.status-strip {
+/* Operational Status Bar Strip */
+.m3-status-flow-bar {
   display: flex;
-  gap: 0.6rem;
-  margin-bottom: 1.75rem;
-  flex-wrap: wrap;
+  align-items: center;
+  background-color: var(--md-sys-color-surface-container);
+  border-radius: var(--md-shape-full);
+  padding: 6px 12px;
+  gap: 8px;
+  margin-bottom: 28px;
+  overflow-x: auto;
+  border: 1px solid var(--md-sys-color-outline-variant);
 }
 
-.strip-item {
-  display: inline-flex;
+.flow-step-chip {
+  display: flex;
   align-items: center;
-  gap: 0.45rem;
-  padding: 0.45rem 0.85rem;
-  background-color: #FFFFFF;
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-full);
-  font-size: 0.8rem;
-  box-shadow: var(--shadow-sm);
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: var(--md-shape-full);
+  font-size: 0.78rem;
+  font-weight: 600;
   white-space: nowrap;
-}
-
-.strip-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: var(--radius-full);
-  flex-shrink: 0;
-}
-
-.strip-pending .strip-dot { background-color: #F59E0B; }
-.strip-preparing .strip-dot { background-color: #3B82F6; }
-.strip-ready .strip-dot { background-color: #10B981; }
-.strip-completed .strip-dot { background-color: #64748B; }
-.strip-cancelled .strip-dot { background-color: #EF4444; }
-
-.strip-label {
-  color: var(--text-muted);
-}
-
-.strip-val {
-  font-weight: 800;
-  font-family: var(--font-mono);
-  color: var(--text-heading);
-}
-
-/* -------------------------------------------------------------
- * 4. SURFACES & DATA TABLES (EXECUTIVE VIEW)
- * ------------------------------------------------------------- */
-.content-surface {
-  background-color: var(--surface-card);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
-  overflow: hidden;
-  margin-bottom: 2rem;
-}
-
-.surface-header {
-  padding: 1.1rem 1.5rem;
-  border-bottom: 1px solid var(--border-subtle);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   background-color: #FFFFFF;
-  flex-wrap: wrap;
-  gap: 1rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
 }
 
-.surface-title-group {
+.flow-step-count {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 1px 7px;
+  border-radius: var(--md-shape-full);
+}
+
+.chip-pending .flow-step-count { background: var(--kds-color-pending-bg); color: var(--kds-color-pending-text); }
+.chip-prep .flow-step-count { background: var(--kds-color-prep-bg); color: var(--kds-color-prep-text); }
+.chip-ready .flow-step-count { background: var(--kds-color-ready-bg); color: var(--kds-color-ready-text); }
+.chip-completed .flow-step-count { background: var(--kds-color-completed-bg); color: var(--kds-color-completed-text); }
+
+/* --------------------------------------------------------------------------
+   7. BORDERLESS DATA TABLE WITH TONAL ROW HOVER (M3 SIGNATURE)
+   -------------------------------------------------------------------------- */
+.m3-table-card {
+  background-color: #FFFFFF;
+  border-radius: var(--md-shape-xl);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.table-top-bar {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  justify-content: space-between;
+  padding: 20px 24px 16px 24px;
 }
 
-.surface-icon {
-  width: 36px;
-  height: 36px;
-  border-radius: var(--radius-sm);
-  background-color: var(--primary-light);
-  color: var(--primary);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.surface-title {
-  font-size: 1.1rem;
+.table-top-title {
+  font-size: 1.15rem;
   font-weight: 800;
-  color: var(--text-heading);
-  letter-spacing: -0.01em;
+  color: var(--md-sys-color-on-surface);
 }
 
-.surface-caption {
-  font-size: 0.8rem;
-  color: var(--text-muted);
+.table-top-caption {
+  font-size: 0.82rem;
+  color: var(--md-sys-color-on-surface-variant);
 }
 
-.surface-body {
-  padding: 1.5rem;
-}
-
-.table-container {
+.m3-table-wrapper {
   overflow-x: auto;
   width: 100%;
 }
 
-.data-table {
+.m3-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.875rem;
-}
-
-.data-table th {
-  background-color: #F8FAFC;
-  padding: 0.8rem 1rem;
   text-align: left;
-  font-size: 0.7rem;
-  font-weight: 800;
-  color: var(--text-muted);
-  letter-spacing: 0.06em;
-  border-bottom: 1px solid var(--border-subtle);
-  white-space: nowrap;
 }
 
-.data-table td {
-  padding: 0.9rem 1rem;
-  border-bottom: 1px solid #F1F5F9;
+.m3-table th {
+  padding: 12px 20px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--md-sys-color-on-surface-variant);
+  background-color: var(--md-sys-color-surface-container);
+  border-bottom: 1px solid var(--md-sys-color-outline-variant);
+}
+
+.m3-table td {
+  padding: 16px 20px;
+  font-size: 0.88rem;
+  color: var(--md-sys-color-on-surface);
+  border-bottom: 1px solid var(--md-sys-color-outline-variant);
   vertical-align: middle;
 }
 
-.table-row:hover {
-  background-color: #F8FAFC;
+.m3-table tr:hover td {
+  background-color: var(--md-sys-color-surface-container-high);
 }
 
-.order-code-badge {
+.order-code-tag {
   font-family: var(--font-mono);
   font-weight: 700;
-  font-size: 0.825rem;
-  color: #0F766E;
-  background-color: #CCFBF1;
-  padding: 0.2rem 0.5rem;
-  border-radius: var(--radius-xs);
-  white-space: nowrap;
+  font-size: 0.85rem;
+  background-color: var(--md-sys-color-surface-container-high);
+  color: var(--md-sys-color-primary);
+  padding: 4px 8px;
+  border-radius: var(--md-shape-sm);
 }
 
-.customer-cell {
-  display: flex;
-  flex-direction: column;
-}
-
-.customer-name {
+.customer-name-cell {
   font-weight: 700;
-  color: var(--text-heading);
-  white-space: nowrap;
+  color: var(--md-sys-color-on-surface);
 }
 
-.customer-phone {
+.customer-sub-cell {
   font-size: 0.75rem;
-  color: var(--text-muted);
-  font-family: var(--font-mono);
-  white-space: nowrap;
+  color: var(--md-sys-color-on-surface-variant);
 }
 
-.branch-pill {
+/* Status Badges */
+.m3-badge {
   display: inline-flex;
   align-items: center;
-  gap: 0.3rem;
-  background-color: #F1F5F9;
-  border: 1px solid var(--border-subtle);
-  padding: 0.2rem 0.6rem;
-  border-radius: var(--radius-full);
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--text-body);
-  white-space: nowrap;
-}
-
-.payment-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  padding: 0.2rem 0.5rem;
-  border-radius: var(--radius-xs);
-  font-size: 0.725rem;
-  font-weight: 700;
-  background-color: #F1F5F9;
-  color: var(--text-body);
-  white-space: nowrap;
-}
-
-.amount-cell {
-  color: var(--text-heading);
-  font-size: 0.9rem;
-}
-
-.status-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-  padding: 0.25rem 0.65rem;
-  border-radius: var(--radius-full);
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: var(--md-shape-full);
   font-size: 0.75rem;
   font-weight: 700;
   white-space: nowrap;
 }
 
-.badge-pending {
-  background-color: var(--kds-pending-bg);
-  border: 1px solid var(--kds-pending-border);
-  color: var(--kds-pending-text);
-}
+.badge-pending { background-color: var(--kds-color-pending-bg); color: var(--kds-color-pending-text); }
+.badge-preparing { background-color: var(--kds-color-prep-bg); color: var(--kds-color-prep-text); }
+.badge-ready { background-color: var(--kds-color-ready-bg); color: var(--kds-color-ready-text); }
+.badge-completed { background-color: var(--kds-color-completed-bg); color: var(--kds-color-completed-text); }
+.badge-cancelled { background-color: var(--kds-color-cancelled-bg); color: var(--kds-color-cancelled-text); }
 
-.badge-preparing {
-  background-color: var(--kds-preparing-bg);
-  border: 1px solid var(--kds-preparing-border);
-  color: var(--kds-preparing-text);
-}
-
-.badge-ready {
-  background-color: var(--kds-ready-bg);
-  border: 1px solid var(--kds-ready-border);
-  color: var(--kds-ready-text);
-}
-
-.badge-completed {
-  background-color: var(--kds-completed-bg);
-  border: 1px solid var(--kds-completed-border);
-  color: var(--kds-completed-text);
-}
-
-.badge-cancelled {
-  background-color: var(--kds-cancelled-bg);
-  border: 1px solid var(--kds-cancelled-border);
-  color: var(--kds-cancelled-text);
-}
-
-.action-flex-center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.4rem;
-  white-space: nowrap;
-}
-
-.btn-icon-action {
-  width: 32px;
-  height: 32px;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border-subtle);
-  background-color: #FFFFFF;
-  color: var(--text-muted);
+/* Table Action Buttons */
+.m3-btn-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: var(--md-shape-full);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  text-decoration: none;
-  transition: all 0.15s ease;
+  color: var(--md-sys-color-on-surface-variant);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all var(--spring-snappy);
 }
 
-.btn-icon-action:hover {
-  background-color: var(--surface-subtle);
-  color: var(--primary);
-  border-color: var(--primary);
+.m3-btn-icon:hover {
+  background-color: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-primary);
 }
 
-.btn-icon-highlight {
-  background-color: #CCFBF1;
-  color: #0F766E;
-  border-color: transparent;
+/* --------------------------------------------------------------------------
+   8. REAL SPECIALTY CAFE BARISTA KDS (KITCHEN DISPLAY SYSTEM)
+   -------------------------------------------------------------------------- */
+.kds-action-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background-color: var(--md-sys-color-surface-container);
+  border-radius: var(--md-shape-xl);
+  padding: 12px 18px;
+  margin-bottom: 24px;
+  border: 1px solid var(--md-sys-color-outline-variant);
 }
 
-.btn-icon-highlight:hover {
-  background-color: #0F766E;
+.kds-filter-tabs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.kds-tab-pill {
+  padding: 6px 14px;
+  border-radius: var(--md-shape-full);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--md-sys-color-on-surface-variant);
+  transition: all var(--spring-snappy);
+}
+
+.kds-tab-pill.active {
+  background-color: var(--md-sys-color-primary);
   color: #FFFFFF;
 }
 
-.empty-cell {
-  text-align: center;
-  padding: 3.5rem 1.5rem;
-  color: var(--text-muted);
-}
-
-.empty-svg {
-  color: var(--text-subtle);
-  margin-bottom: 0.5rem;
-}
-
-/* -------------------------------------------------------------
- * 5. KITCHEN DISPLAY SYSTEM (KDS) & TICKET BUMP CARDS
- * ------------------------------------------------------------- */
-.kds-filter-panel {
-  background-color: var(--surface-card);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-lg);
-  padding: 1rem 1.35rem;
-  margin-bottom: 1.75rem;
-  box-shadow: var(--shadow-sm);
-}
-
-.kds-filter-form {
-  display: flex;
-  gap: 1.75rem;
-  flex-wrap: wrap;
-}
-
-.filter-field {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  flex: 1;
-  min-width: 250px;
-}
-
-.filter-field-icon {
-  color: var(--primary);
-  display: flex;
-  align-items: center;
-}
-
-.filter-field-content {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-}
-
-.filter-label {
-  font-size: 0.675rem;
-  font-weight: 800;
-  letter-spacing: 0.05em;
-  color: var(--text-muted);
-  margin-bottom: 0.25rem;
-}
-
-.kds-select {
-  padding: 0.5rem 0.8rem;
-  background-color: #F8FAFC;
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-sm);
-  font-size: 0.85rem;
-  font-family: var(--font-sans);
+.kds-branch-dropdown {
+  background-color: #FFFFFF;
+  border: 1px solid var(--md-sys-color-outline);
+  border-radius: var(--md-shape-full);
+  padding: 8px 16px;
+  font-size: 0.82rem;
   font-weight: 600;
-  color: var(--text-heading);
+  color: var(--md-sys-color-primary);
   outline: none;
   cursor: pointer;
-  transition: border-color 0.15s ease;
 }
 
-.kds-select:focus {
-  border-color: var(--primary);
-  background-color: #FFFFFF;
-}
-
-.kds-tickets-grid {
+/* KDS Multi-Ticket Station Grid */
+.kds-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 18px;
 }
 
-.kds-ticket-card {
-  background-color: var(--surface-card);
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--border-subtle);
-  box-shadow: var(--shadow-sm);
-  display: flex;
-  flex-direction: column;
-  min-height: 330px;
-  overflow: hidden;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-
-.kds-ticket-card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
-}
-
-/* KDS Status Urgency Stripes */
-.kds-ticket-pending { border-top: 5px solid #F59E0B; }
-.kds-ticket-preparing { border-top: 5px solid #3B82F6; }
-.kds-ticket-ready { border-top: 5px solid #10B981; }
-.kds-ticket-completed { border-top: 5px solid #94A3B8; }
-.kds-ticket-cancelled { border-top: 5px solid #EF4444; }
-
-.ticket-header {
-  padding: 0.85rem 1.15rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #F8FAFC;
-  border-bottom: 1px solid var(--border-subtle);
-}
-
-.ticket-id-block {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.ticket-number {
-  font-family: var(--font-mono);
-  font-size: 1.1rem;
-  font-weight: 800;
-  color: var(--text-heading);
-}
-
-.ticket-clock {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  font-family: var(--font-mono);
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-}
-
-.ticket-client-strip {
-  padding: 0.75rem 1.15rem;
-  border-bottom: 1px dashed var(--border-subtle);
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
+.kds-ticket {
   background-color: #FFFFFF;
-}
-
-.client-meta {
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-  font-size: 0.85rem;
-  color: var(--text-heading);
-}
-
-.client-phone {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  font-family: var(--font-mono);
-  margin-left: 0.25rem;
-}
-
-.client-branch-tag {
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--primary);
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-}
-
-.ticket-items-box {
-  padding: 1rem 1.15rem;
-  flex: 1;
+  border-radius: var(--md-shape-xl);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  box-shadow: var(--md-elevation-1);
   display: flex;
   flex-direction: column;
-  gap: 0.65rem;
+  justify-content: space-between;
+  overflow: hidden;
+  transition: transform var(--spring-snappy), box-shadow var(--spring-snappy);
+  position: relative;
+}
+
+.kds-ticket:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--md-elevation-2);
+}
+
+/* Colored Header Stripe per KDS Stage */
+.kds-ticket.ticket-pending { border-top: 5px solid #6366F1; }
+.kds-ticket.ticket-preparing { border-top: 5px solid #F59E0B; }
+.kds-ticket.ticket-ready { border-top: 5px solid #10B981; }
+.kds-ticket.ticket-completed { border-top: 5px solid #9CA3AF; opacity: 0.85; }
+
+.ticket-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px 10px 16px;
+}
+
+.ticket-order-tag {
+  font-family: var(--font-mono);
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--md-sys-color-on-surface);
+}
+
+.ticket-timer-pill {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--md-sys-color-on-surface-variant);
+  background-color: var(--md-sys-color-surface-container);
+  padding: 3px 8px;
+  border-radius: var(--md-shape-full);
+}
+
+.ticket-customer-strip {
+  padding: 0 16px 12px 16px;
+  border-bottom: 1px dashed var(--md-sys-color-outline-variant);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ticket-guest-name {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--md-sys-color-primary);
+}
+
+.ticket-branch-tag {
+  font-size: 0.72rem;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+/* KDS Line Items (Artisanal Coffee Drink Customizations) */
+.ticket-items-list {
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
 }
 
 .ticket-item-row {
   display: flex;
   align-items: flex-start;
-  gap: 0.65rem;
+  gap: 10px;
 }
 
-.item-qty-tag {
-  background-color: #E2E8F0;
-  color: #0F172A;
-  font-weight: 800;
-  font-size: 0.775rem;
+.item-qty-pill {
+  width: 26px;
+  height: 26px;
+  border-radius: var(--md-shape-sm);
+  background-color: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-family: var(--font-mono);
-  padding: 0.15rem 0.45rem;
-  border-radius: var(--radius-xs);
+  font-size: 0.8rem;
+  font-weight: 800;
   flex-shrink: 0;
 }
 
-.item-description-block {
-  flex: 1;
-}
-
-.item-title {
-  font-weight: 700;
-  font-size: 0.875rem;
-  color: var(--text-heading);
-  display: block;
-}
-
-.item-spec-chip {
-  font-size: 0.725rem;
-  color: var(--text-muted);
-}
-
-.item-spec-chip strong {
-  color: var(--primary);
-}
-
-.item-subtotal-text {
-  font-family: var(--font-mono);
-  font-weight: 700;
-  font-size: 0.85rem;
-  color: var(--text-heading);
-  white-space: nowrap;
-}
-
-.ticket-footer {
-  padding: 0.85rem 1.15rem;
-  background-color: #F8FAFC;
-  border-top: 1px solid var(--border-subtle);
-  margin-top: auto;
-}
-
-.ticket-total-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.35rem;
-}
-
-.total-label {
-  font-size: 0.775rem;
-  font-weight: 600;
-  color: var(--text-muted);
-}
-
-.total-figure {
-  font-family: var(--font-mono);
-  font-size: 1.05rem;
-  font-weight: 800;
-  color: var(--text-heading);
-}
-
-.ticket-payment-method {
-  margin-bottom: 0.75rem;
-}
-
-.ticket-bump-actions {
-  display: flex;
-  gap: 0.45rem;
-  align-items: center;
-}
-
-.bump-form {
-  flex: 1;
-}
-
-.bump-form-sm {
-  width: auto;
-}
-
-.bump-btn {
-  width: 100%;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.4rem;
-  padding: 0.65rem 0.5rem;
-  border-radius: var(--radius-sm);
-  font-size: 0.825rem;
-  font-weight: 800;
-  border: none;
-  cursor: pointer;
-  text-decoration: none;
-  white-space: nowrap;
-  transition: all 0.15s ease;
-  box-shadow: var(--shadow-sm);
-}
-
-.bump-preparing {
-  background-color: #2563EB;
-  color: #FFFFFF;
-}
-.bump-preparing:hover { background-color: #1D4ED8; }
-
-.bump-ready {
-  background-color: #10B981;
-  color: #FFFFFF;
-}
-.bump-ready:hover { background-color: #059669; }
-
-.bump-complete {
-  background-color: #0F766E;
-  color: #FFFFFF;
-}
-.bump-complete:hover { background-color: #0D9488; }
-
-.bump-cancel {
-  background-color: #FEE2E2;
-  color: #DC2626;
-  padding: 0.65rem 0.65rem;
-}
-.bump-cancel:hover { background-color: #FCA5A5; }
-
-.bump-invoice {
-  width: auto;
-  padding: 0.65rem 0.75rem;
-  background-color: #FFFFFF;
-  color: var(--text-body);
-  border: 1px solid var(--border-subtle);
-}
-.bump-invoice:hover {
-  background-color: var(--surface-subtle);
-  border-color: var(--primary);
-  color: var(--primary);
-}
-
-.bump-status-label {
-  flex: 1;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.35rem;
-  padding: 0.65rem 0.5rem;
-  border-radius: var(--radius-sm);
-  font-size: 0.8rem;
-  font-weight: 700;
-}
-
-.completed-label {
-  background-color: #F1F5F9;
-  color: #475569;
-  border: 1px solid var(--border-subtle);
-}
-
-.cancelled-label {
-  background-color: #FEF2F2;
-  color: #B91C1C;
-  border: 1px solid #FECACA;
-}
-
-.empty-kds-surface {
-  grid-column: 1 / -1;
-  text-align: center;
-  padding: 4.5rem 1.5rem;
-  background-color: var(--surface-card);
-  border: 1px dashed var(--border-strong);
-  border-radius: var(--radius-xl);
-}
-
-.empty-kds-icon {
-  color: var(--primary);
-  margin-bottom: 0.65rem;
-}
-
-.empty-kds-title {
-  font-size: 1.2rem;
-  font-weight: 800;
-  color: var(--text-heading);
-}
-
-.empty-kds-text {
-  color: var(--text-muted);
-  font-size: 0.875rem;
-  margin-top: 0.25rem;
-}
-
-/* -------------------------------------------------------------
- * 6. PRODUCTS CATALOG & MULTER UPLOAD WORKSHOP
- * ------------------------------------------------------------- */
-.artisan-upload-form {
+.item-content {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  max-width: 600px;
 }
 
-.drop-zone-box {
-  border: 2px dashed var(--border-strong);
-  border-radius: var(--radius-md);
-  padding: 1.75rem 1.5rem;
-  text-align: center;
-  background-color: #F8FAFC;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.4rem;
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.drop-zone-box:hover {
-  border-color: var(--primary);
-  background-color: #F0FDFA;
-}
-
-.drop-svg {
-  color: var(--primary);
-}
-
-.drop-text-col strong {
+.item-name-text {
   font-size: 0.9rem;
-  color: var(--text-heading);
-  display: block;
+  font-weight: 700;
+  color: var(--md-sys-color-on-surface);
+  line-height: 1.25;
 }
 
-.drop-text-col span {
+.item-spec-tags {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 3px;
+  font-size: 0.72rem;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.size-pill-tag {
+  background-color: var(--md-sys-color-surface-container-highest);
+  color: var(--md-sys-color-primary);
+  padding: 1px 6px;
+  border-radius: var(--md-shape-xs);
+  font-weight: 700;
+}
+
+/* KDS Bottom Bar: Ergonomic 44px Barista Action Buttons */
+.ticket-footer-actions {
+  padding: 12px 16px 14px 16px;
+  background-color: var(--md-sys-color-surface-container);
+  border-top: 1px solid var(--md-sys-color-outline-variant);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.kds-btn-step {
+  width: 100%;
+  height: 42px;
+  border-radius: var(--md-shape-full);
+  font-size: 0.85rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  border: none;
+  transition: all var(--spring-snappy);
+}
+
+.kds-btn-step:active { transform: scale(0.98); }
+
+.kds-btn-start { background-color: #F59E0B; color: #FFFFFF; }
+.kds-btn-start:hover { background-color: #D97706; }
+
+.kds-btn-finish { background-color: #10B981; color: #FFFFFF; }
+.kds-btn-finish:hover { background-color: #059669; }
+
+.kds-btn-deliver { background-color: var(--md-sys-color-primary); color: #FFFFFF; }
+.kds-btn-deliver:hover { background-color: var(--md-sys-color-primary-hover); }
+
+.kds-sub-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 4px;
+}
+
+.kds-link-invoice {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
   font-size: 0.75rem;
-  color: var(--text-muted);
-  display: block;
+  font-weight: 600;
+  color: var(--md-sys-color-secondary);
+  transition: color var(--spring-snappy);
+}
+.kds-link-invoice:hover { color: var(--md-sys-color-primary); }
+
+/* --------------------------------------------------------------------------
+   9. PRODUCTS & MENU CATALOG WITH MULTER WORKSHOP (SLOT 12)
+   -------------------------------------------------------------------------- */
+.upload-artisan-card {
+  background: linear-gradient(135deg, #FAF7F2 0%, #F5ECE4 100%);
+  border-radius: var(--md-shape-xl);
+  border: 1px solid #EBDDCF;
+  padding: 24px;
+  margin-bottom: 28px;
 }
 
-.hidden-file-input {
+.upload-artisan-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.upload-icon-circle {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background-color: #FFFFFF;
+  color: var(--md-sys-color-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--md-elevation-1);
+}
+
+.upload-form-box {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.custom-file-target {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #FFFFFF;
+  border: 1px dashed var(--md-sys-color-outline);
+  border-radius: var(--md-shape-full);
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--md-sys-color-primary);
+  transition: all var(--spring-snappy);
+}
+
+.custom-file-target:hover {
+  border-color: var(--md-sys-color-primary);
+  background-color: var(--md-sys-color-primary-container);
+}
+
+.hidden-real-file {
   position: absolute;
   width: 1px;
   height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  border: 0;
+  opacity: 0;
+  pointer-events: none;
 }
 
-.custom-upload-btn {
-  margin-top: 0.5rem;
-  cursor: pointer;
-  background-color: #FFFFFF;
-}
-
-.upload-btn-row {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-.upload-spec-hint {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-}
-
-.artisan-product-thumb {
-  width: 48px;
-  height: 48px;
-  border-radius: var(--radius-sm);
+.product-thumb-img {
+  width: 52px;
+  height: 52px;
+  border-radius: var(--md-shape-md);
   object-fit: cover;
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--md-elevation-1);
 }
 
-.product-title-group {
+.sizes-badge-group {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
-}
-
-.product-main-name {
-  font-weight: 700;
-  color: var(--text-heading);
-}
-
-.bestseller-tag {
-  background-color: #FEF3C7;
-  color: #92400E;
-  font-size: 0.625rem;
-  font-weight: 800;
-  padding: 0.125rem 0.4rem;
-  border-radius: var(--radius-xs);
-  display: inline-flex;
-  align-items: center;
-  gap: 0.2rem;
-  white-space: nowrap;
-}
-
-.product-sub-desc {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  max-width: 320px;
-  line-height: 1.35;
-}
-
-.category-capsule {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-  background-color: #F1F5F9;
-  border: 1px solid var(--border-subtle);
-  padding: 0.2rem 0.55rem;
-  border-radius: var(--radius-full);
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--text-body);
-  white-space: nowrap;
-}
-
-.size-chips-cluster {
-  display: flex;
-  gap: 0.3rem;
+  gap: 6px;
   flex-wrap: wrap;
 }
 
-.size-chip {
-  background-color: #F1F5F9;
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-xs);
-  padding: 0.15rem 0.4rem;
-  font-size: 0.725rem;
-  font-family: var(--font-mono);
-  white-space: nowrap;
-}
-
-.size-letter {
-  font-weight: 800;
-  color: var(--primary);
-  margin-right: 2px;
-}
-
-.calorie-tag {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  white-space: nowrap;
-}
-
-.stock-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  padding: 0.2rem 0.55rem;
-  border-radius: var(--radius-full);
-  font-size: 0.725rem;
+.size-item-pill {
+  font-size: 0.72rem;
   font-weight: 700;
-  white-space: nowrap;
+  padding: 3px 8px;
+  background-color: var(--md-sys-color-surface-container);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--md-shape-sm);
+  color: var(--md-sys-color-on-surface);
 }
 
-.stock-in {
-  background-color: #DCFCE7;
-  color: #15803D;
-}
-
-.stock-out {
-  background-color: #FEE2E2;
-  color: #B91C1C;
-}
-
-.btn-toggle-stock {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-  padding: 0.35rem 0.75rem;
-  border-radius: var(--radius-full);
-  font-size: 0.725rem;
+.stock-toggle-btn {
+  padding: 4px 12px;
+  border-radius: var(--md-shape-full);
+  font-size: 0.75rem;
   font-weight: 700;
   border: none;
   cursor: pointer;
-  white-space: nowrap;
-  transition: all 0.15s ease;
+  transition: all var(--spring-snappy);
 }
 
-.btn-stock-out {
-  background-color: #FEF2F2;
-  color: #DC2626;
-  border: 1px solid #FECACA;
+.stock-toggle-btn.in-stock {
+  background-color: #DCFCE7;
+  color: #166534;
 }
-.btn-stock-out:hover { background-color: #FEE2E2; }
-
-.btn-stock-in {
-  background-color: #F0FDF4;
-  color: #16A34A;
-  border: 1px solid #BBF7D0;
+.stock-toggle-btn.out-stock {
+  background-color: #FEE2E2;
+  color: #991B1B;
 }
-.btn-stock-in:hover { background-color: #DCFCE7; }
 
-/* -------------------------------------------------------------
- * 7. BRANCHES NETWORK VIEW
- * ------------------------------------------------------------- */
-.branches-cards-grid {
+/* --------------------------------------------------------------------------
+   10. DA NANG BRANCHES NETWORK CARDS
+   -------------------------------------------------------------------------- */
+.branches-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 24px;
 }
 
-.store-card {
-  background-color: var(--surface-card);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
+.branch-store-card {
+  background-color: #FFFFFF;
+  border-radius: var(--md-shape-xl);
+  border: 1px solid var(--md-sys-color-outline-variant);
   overflow: hidden;
+  box-shadow: var(--md-elevation-1);
   display: flex;
   flex-direction: column;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  transition: transform var(--spring-snappy), box-shadow var(--spring-snappy);
 }
 
-.store-card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
+.branch-store-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--md-elevation-2);
 }
 
-.store-image-stage {
-  height: 180px;
+.branch-cover-stage {
   position: relative;
-  background-color: #E2E8F0;
+  height: 180px;
+  width: 100%;
+  overflow: hidden;
 }
 
-.store-cover-img {
+.branch-cover-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 600ms cubic-bezier(0.2, 0, 0, 1);
 }
 
-.store-district-overlay {
+.branch-store-card:hover .branch-cover-img {
+  transform: scale(1.04);
+}
+
+.branch-district-tag {
   position: absolute;
-  top: 10px;
-  right: 10px;
-  background-color: rgba(15, 23, 42, 0.85);
+  top: 14px;
+  left: 14px;
+  background: rgba(28, 25, 23, 0.82);
+  backdrop-filter: blur(8px);
   color: #FFFFFF;
-  padding: 0.2rem 0.65rem;
-  border-radius: var(--radius-full);
-  font-size: 0.725rem;
-  font-weight: 700;
-  backdrop-filter: blur(4px);
-  display: inline-flex;
+  padding: 4px 12px;
+  border-radius: var(--md-shape-full);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  display: flex;
   align-items: center;
-  gap: 0.25rem;
+  gap: 6px;
 }
 
-.store-body {
-  padding: 1.35rem;
-  flex: 1;
+.branch-card-body {
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 0.65rem;
+  gap: 14px;
+  flex: 1;
 }
 
-.store-title-row {
+.branch-name-row {
   display: flex;
+  align-items: flex-start;
   justify-content: space-between;
-  align-items: flex-start;
-  gap: 0.5rem;
+  gap: 12px;
 }
 
-.store-name {
-  font-size: 1.1rem;
+.branch-title-text {
+  font-size: 1.2rem;
   font-weight: 800;
-  color: var(--text-heading);
-  line-height: 1.3;
+  color: var(--md-sys-color-primary);
+  line-height: 1.25;
 }
 
-.store-status-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  padding: 0.2rem 0.5rem;
-  border-radius: var(--radius-full);
-  font-size: 0.7rem;
-  font-weight: 800;
-  white-space: nowrap;
+.branch-status-chip {
+  padding: 3px 10px;
+  border-radius: var(--md-shape-full);
+  font-size: 0.72rem;
+  font-weight: 700;
 }
+.status-open { background-color: #DCFCE7; color: #166534; }
+.status-closed { background-color: #FEE2E2; color: #991B1B; }
 
-.status-open {
-  background-color: #DCFCE7;
-  color: #15803D;
-}
-
-.status-closed {
-  background-color: #FEE2E2;
-  color: #B91C1C;
-}
-
-.store-address {
-  font-size: 0.825rem;
-  color: var(--text-body);
+.branch-address-text {
   display: flex;
   align-items: flex-start;
-  gap: 0.35rem;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: var(--md-sys-color-on-surface-variant);
   line-height: 1.4;
 }
 
-.store-specs-list {
-  display: flex;
-  gap: 0.85rem;
-  font-size: 0.775rem;
-  color: var(--text-muted);
-  flex-wrap: wrap;
-}
-
-.store-spec-item {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-}
-
-.store-gps-block {
-  font-size: 0.725rem;
-  color: var(--text-muted);
+.branch-meta-row {
   display: flex;
   align-items: center;
-  gap: 0.3rem;
-  background-color: #F8FAFC;
-  padding: 0.35rem 0.6rem;
-  border-radius: var(--radius-xs);
-  border: 1px solid var(--border-subtle);
+  gap: 16px;
+  font-size: 0.78rem;
+  color: var(--md-sys-color-on-surface-variant);
+  padding: 10px 0;
+  border-top: 1px solid var(--md-sys-color-outline-variant);
+  border-bottom: 1px solid var(--md-sys-color-outline-variant);
 }
 
-.store-gps-block code {
-  font-family: var(--font-mono);
-  font-weight: 600;
-  color: var(--text-heading);
-}
-
-.store-actions-bar {
-  margin-top: auto;
-  padding-top: 0.85rem;
-  border-top: 1px solid #F1F5F9;
-}
-
-.btn-store-kds {
-  width: 100%;
-  display: inline-flex;
+.branch-meta-item {
+  display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 0.4rem;
-  padding: 0.6rem 0.85rem;
-  border-radius: var(--radius-sm);
-  background-color: #CCFBF1;
-  color: #0F766E;
-  font-size: 0.8rem;
-  font-weight: 700;
-  text-decoration: none;
-  transition: all 0.15s ease;
+  gap: 6px;
 }
 
-.btn-store-kds:hover {
-  background-color: #0F766E;
-  color: #FFFFFF;
-}
-
-/* -------------------------------------------------------------
- * 8. FOOTER
- * ------------------------------------------------------------- */
-.app-footer {
-  background-color: #FFFFFF;
-  border-top: 1px solid var(--border-subtle);
-  padding: 1.25rem 1.75rem;
+.branch-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   margin-top: auto;
 }
 
-.footer-inner {
-  max-width: 1440px;
-  margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 1rem;
+/* --------------------------------------------------------------------------
+   11. RESPONSIVE BREAKPOINTS (MOBILE & TABLET ADAPTATION)
+   -------------------------------------------------------------------------- */
+@media (max-width: 1024px) {
+  .m3-shell-wrapper {
+    flex-direction: column;
+  }
+  .m3-sidebar {
+    width: 100%;
+    min-width: 100%;
+    flex-direction: row;
+    align-items: center;
+    padding: 12px 16px;
+    height: auto;
+  }
+  .sidebar-nav-menu {
+    flex-direction: row;
+    overflow-x: auto;
+    margin-top: 0;
+  }
+  .nav-section-label, .sidebar-footer-card {
+    display: none;
+  }
+  .m3-main-stage {
+    padding: 0 12px 12px 12px;
+    height: auto;
+    overflow: visible;
+  }
+  .m3-floating-island {
+    padding: 20px;
+    border-radius: var(--md-shape-xl);
+  }
+  .m3-bento-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
-.footer-brand-side {
-  display: flex;
-  align-items: center;
-  gap: 0.45rem;
+@media (max-width: 640px) {
+  .m3-bento-grid {
+    grid-template-columns: 1fr;
+  }
+  .island-header-bar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .branches-grid {
+    grid-template-columns: 1fr;
+  }
 }
-
-.footer-icon {
-  color: var(--primary);
-}
-
-.footer-copy {
-  font-size: 0.775rem;
-  color: var(--text-muted);
-}
-
-.footer-spec-tags {
-  display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-}
-
-.spec-pill {
-  padding: 0.2rem 0.55rem;
-  border-radius: var(--radius-full);
-  background-color: #F1F5F9;
-  border: 1px solid var(--border-subtle);
-  font-size: 0.7rem;
-  font-weight: 600;
-  color: var(--text-muted);
-}
-
-/* Utility Classes */
-.text-right { text-align: right; }
-.text-center { text-align: center; }
-.text-nowrap { white-space: nowrap; }
-.font-mono { font-family: var(--font-mono); }
-.font-bold { font-weight: 700; }
-.text-muted { color: var(--text-muted); }
-.text-xs { font-size: 0.75rem; }
-.inline-block { display: inline-block; }
-.flex-shrink-0 { flex-shrink: 0; }
