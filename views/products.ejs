@@ -1,4 +1,4 @@
-<!-- Trang Quản Lý Món Ăn & Upload Ảnh Multer (Slot 7 & Slot 12) -->
+<!-- Trang Quản Lý Món Ăn & Upload Ảnh Multer -->
 <div class="page-header">
   <div>
     <h1 class="page-title">Quản Lý Món Ăn & Thực Đơn Đà Nẵng</h1>
@@ -9,7 +9,7 @@
 <!-- Form Thêm Món Ăn Mới Kèm Upload Ảnh Tĩnh Multer -->
 <div class="card-box">
   <h2 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 1.25rem; color: var(--primary-dark);">
-    ➕ Thêm Món Mới Vào Thực Đơn (Upload ảnh qua Multer - Slot 12)
+    Thêm Món Mới Vào Thực Đơn (Upload ảnh qua Multer)
   </h2>
 
   <form method="POST" action="/admin/products" enctype="multipart/form-data">
@@ -50,7 +50,7 @@
       </div>
 
       <div class="form-group">
-        <label class="form-label">📸 Tải lên ảnh món ăn (Multer DiskStorage) *</label>
+        <label class="form-label">Tải lên ảnh món ăn (Multer DiskStorage) *</label>
         <input type="file" name="image" class="form-file" accept="image/*">
         <small style="color: var(--text-muted); font-size: 0.75rem;">Chấp nhận .jpg, .png, .webp (tối đa 5MB). Nếu không chọn sẽ dùng ảnh mặc định.</small>
       </div>
@@ -58,14 +58,14 @@
       <div class="form-group" style="display: flex; flex-direction: row; align-items: center; gap: 0.5rem; margin-top: 1.5rem;">
         <input type="checkbox" name="isBestSeller" id="isBestSeller" value="true">
         <label for="isBestSeller" class="form-label" style="margin-bottom: 0; cursor: pointer;">
-          ⭐ Đánh dấu là Món Bán Chạy (Best Seller)
+          Đánh dấu là Món Bán Chạy (Best Seller)
         </label>
       </div>
     </div>
 
     <div style="margin-top: 1.25rem; display: flex; justify-content: flex-end;">
       <button type="submit" class="btn btn-warning" style="padding: 0.65rem 1.5rem;">
-        🚀 Lưu Món Ăn & Tải Ảnh Lên Server
+        Lưu Món Ăn & Tải Ảnh Lên Server
       </button>
     </div>
   </form>
@@ -75,7 +75,7 @@
 <div class="card-box">
   <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
     <h2 style="font-size: 1.2rem; font-weight: 700; color: var(--primary-dark);">
-      📋 Danh Sách Thực Đơn Hiện Có (<%= products.length %> món)
+      Danh Sách Thực Đơn Hiện Có (<%= products.length %> món)
     </h2>
   </div>
 
@@ -103,7 +103,7 @@
               <strong style="color: var(--primary-dark);"><%= p.name %></strong>
               <% if (p.isBestSeller) { %>
                 <span style="font-size: 0.75rem; background: #fef3c7; color: #b45309; padding: 0.15rem 0.4rem; border-radius: 4px; font-weight: 700; margin-left: 0.25rem;">
-                  ★ Best Seller
+                  Best Seller
                 </span>
               <% } %>
               <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem; max-width: 250px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
@@ -128,7 +128,7 @@
             </td>
             <td>
               <span style="font-size: 0.8rem; padding: 0.25rem 0.6rem; border-radius: 999px; font-weight: 700; background: <%= p.isAvailable ? '#d1fae5' : '#fee2e2' %>; color: <%= p.isAvailable ? '#065f46' : '#991b1b' %>;">
-                <%= p.isAvailable ? '✓ Còn Hàng' : '✕ Hết Hàng' %>
+                <%= p.isAvailable ? 'Còn Hàng' : 'Hết Hàng' %>
               </span>
             </td>
             <td>
@@ -144,4 +144,3 @@
     </table>
   </div>
 </div>
-

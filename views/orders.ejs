@@ -1,4 +1,4 @@
-<!-- Màn Hình KDS Quầy Barista & Bếp (Kitchen Display System - Slot 7 EJS) -->
+<!-- Màn Hình KDS Quầy Barista & Bếp (Kitchen Display System) -->
 <div class="page-header">
   <div>
     <h1 class="page-title">Màn Hình Bếp KDS & Quầy Barista</h1>
@@ -6,7 +6,7 @@
   </div>
   <div style="display: flex; gap: 0.5rem;">
     <a href="/admin/orders" class="btn btn-outline">
-      🔄 Làm Mới Đơn Hàng
+      Làm Mới Đơn Hàng
     </a>
   </div>
 </div>
@@ -54,7 +54,6 @@
 <!-- Lưới Thẻ Đơn Hàng KDS Barista -->
 <% if (!orders || orders.length === 0) { %>
   <div class="card-box" style="text-align: center; padding: 3rem 1rem;">
-    <div style="font-size: 3rem; margin-bottom: 1rem;">☕</div>
     <h3 style="color: var(--primary-dark); font-size: 1.25rem; font-weight: 700;">Không có đơn hàng nào trong danh mục này</h3>
     <p style="color: var(--text-muted); margin-top: 0.5rem;">Khi có khách hàng đặt món Pick-up, đơn hàng sẽ lập tức hiển thị tại đây.</p>
   </div>
@@ -69,7 +68,7 @@
               <%= order.orderCode %>
             </div>
             <div class="kds-pickup-badge">
-              ⏰ Hẹn lấy: <%= order.pickupTime %>
+              Hẹn lấy: <%= order.pickupTime %>
             </div>
           </div>
           <div>
@@ -82,11 +81,11 @@
         <!-- Thông Tin Khách & Chi Nhánh -->
         <div class="kds-customer-info">
           <div>
-            👤 <strong><%= order.userId ? order.userId.fullName : 'Khách vãng lai' %></strong>
+            <strong><%= order.userId ? order.userId.fullName : 'Khách vãng lai' %></strong>
             (<%= order.userId ? order.userId.phone : 'N/A' %>)
           </div>
           <div>
-            📍 <%= order.branchId ? order.branchId.name.split('(')[0] : 'Đà Nẵng' %>
+            <%= order.branchId ? order.branchId.name.split('(')[0] : 'Đà Nẵng' %>
           </div>
         </div>
 
@@ -100,13 +99,13 @@
                 <span class="item-size-badge">Size <%= item.size %></span>
                 
                 <div class="item-options">
-                  🍬 Đường: <strong><%= item.sugarLevel || '100%' %></strong> | 
-                  🧊 Đá: <strong><%= item.iceLevel || '100%' %></strong>
+                  Đường: <strong><%= item.sugarLevel || '100%' %></strong> | 
+                  Đá: <strong><%= item.iceLevel || '100%' %></strong>
                 </div>
 
                 <% if (item.note && item.note.trim() !== '') { %>
                   <div class="item-note">
-                    📝 Dặn dò: <%= item.note %>
+                    Dặn dò: <%= item.note %>
                   </div>
                 <% } %>
               </div>
@@ -139,7 +138,7 @@
               <form method="POST" action="/admin/orders/<%= order._id %>/status" style="flex: 1; display: flex;">
                 <input type="hidden" name="status" value="Preparing">
                 <button type="submit" class="btn btn-info" style="width: 100%;">
-                  ▶ Bắt đầu pha chế (Preparing)
+                  Bắt đầu pha chế (Preparing)
                 </button>
               </form>
               <form method="POST" action="/admin/orders/<%= order._id %>/status">
@@ -152,7 +151,7 @@
               <form method="POST" action="/admin/orders/<%= order._id %>/status" style="flex: 1; display: flex;">
                 <input type="hidden" name="status" value="Ready for Pickup">
                 <button type="submit" class="btn btn-purple" style="width: 100%;">
-                  ☕ Pha chế xong (Ready for Pickup)
+                  Pha chế xong (Ready for Pickup)
                 </button>
               </form>
               <form method="POST" action="/admin/orders/<%= order._id %>/status">
@@ -165,22 +164,22 @@
               <form method="POST" action="/admin/orders/<%= order._id %>/status" style="flex: 1; display: flex;">
                 <input type="hidden" name="status" value="Completed">
                 <button type="submit" class="btn btn-success" style="width: 100%;">
-                  ✅ Giao khách & Thu tiền (Completed)
+                  Giao khách & Thu tiền (Completed)
                 </button>
               </form>
             <% } else if (order.status === 'Completed') { %>
               <div style="flex: 1; text-align: center; color: var(--status-completed); font-weight: 700; font-size: 0.85rem; padding: 0.5rem;">
-                ✓ Đơn đã hoàn tất
+                Đơn đã hoàn tất
               </div>
             <% } else if (order.status === 'Cancelled') { %>
               <div style="flex: 1; text-align: center; color: var(--status-cancelled); font-weight: 700; font-size: 0.85rem; padding: 0.5rem;">
-                ✕ Đơn đã hủy
+                Đơn đã hủy
               </div>
             <% } %>
 
-            <!-- Nút Tải Hóa Đơn Bán Lẻ qua res.download (Slot 12) -->
+            <!-- Nút Tải Hóa Đơn Bán Lẻ -->
             <a href="/api/orders/<%= order._id %>/invoice" class="btn btn-outline" title="Tải file hóa đơn biên nhận về máy">
-              📄 Hóa đơn
+              Hóa đơn
             </a>
           </div>
         </div>
@@ -188,4 +187,3 @@
     <% }); %>
   </div>
 <% } %>
-

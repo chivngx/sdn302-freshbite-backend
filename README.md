@@ -80,7 +80,7 @@ sdn302-freshbite-backend/
 | `PUT` | `/api/branches/:id` | Admin | Cập nhật thông tin chi nhánh |
 | `DELETE` | `/api/branches/:id` | Admin | Xóa chi nhánh (tự động chuyển sang `isActive: false` nếu đã có đơn hàng) |
 
-## API Endpoints (Uploads & File Downloads - Slot 12 - Lê Tự Nhật Thạch)
+## API Endpoints (Uploads & File Downloads - Lê Tự Nhật Thạch)
 
 | Method | Endpoint | Access | Description |
 | :--- | :--- | :--- | :--- |
@@ -90,7 +90,7 @@ sdn302-freshbite-backend/
 | `GET` | `/api/upload/orders/:id/invoice` | Bearer Token | Tải file hóa đơn qua Upload Router qua `res.download()` |
 | `GET` | `/api/reports/shift/export` | Admin | Xuất & tải file báo cáo đối soát ca quầy Barista dạng CSV qua `res.download()` |
 
-## Web Admin SSR & KDS Barista (Slot 7 EJS - Lê Tự Nhật Thạch)
+## Web Admin SSR & KDS Barista (Lê Tự Nhật Thạch)
 
 | Method | URL Web Route | Access | Description |
 | :--- | :--- | :--- | :--- |
@@ -127,7 +127,7 @@ npm run test:thach
 # hoặc: pnpm run test:thach
 ```
 Đạt chuẩn `31/31 PASSED` gồm:
-- 10 test cases cho Multer Upload ảnh tĩnh (`POST /api/upload`), Static File Serving (`/uploads`) và Tải file hóa đơn (`res.download() - Slot 12`).
+- 10 test cases cho Multer Upload ảnh tĩnh (`POST /api/upload`), Static File Serving (`/uploads`) và Tải file hóa đơn (`res.download()`).
 - 8 test cases cho tính toàn vẹn của 3 Script Seed Data Đà Nẵng (`seedData.js`, `testSeed.js` có cờ `isAvailable: false`, `userSeed.js` dùng `User.create()`).
 - 13 test cases cho Giao diện Web Admin SSR EJS (`/admin/dashboard`, màn hình KDS `/admin/orders`, chuyển trạng thái KDS, quản lý món ăn `/admin/products`).
 

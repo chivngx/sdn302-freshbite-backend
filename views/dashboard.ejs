@@ -1,4 +1,4 @@
-<!-- Trang Tổng Quan Thống Kê Quầy Barista (Slot 7 EJS) -->
+<!-- Trang Tổng Quan Thống Kê Quầy Barista -->
 <div class="page-header">
   <div>
     <h1 class="page-title">Bảng Tổng Quan Hoạt Động & Doanh Thu</h1>
@@ -6,7 +6,7 @@
   </div>
   <div>
     <a href="/admin/orders" class="btn btn-warning">
-      ☕ Chuyển tới Màn hình KDS Bếp
+      Chuyển tới Màn hình KDS Bếp
     </a>
   </div>
 </div>
@@ -16,7 +16,6 @@
   <div class="stat-card">
     <div class="stat-header">
       <span>Tổng Doanh Thu</span>
-      <span class="stat-icon" style="background: #fef3c7; color: #b45309;">💰</span>
     </div>
     <div class="stat-value"><%= Number(stats.totalRevenue || 0).toLocaleString('vi-VN') %> đ</div>
     <div class="stat-footer">Doanh thu từ các đơn hàng Completed</div>
@@ -25,7 +24,6 @@
   <div class="stat-card">
     <div class="stat-header">
       <span>Tiền Mặt Tại Quầy</span>
-      <span class="stat-icon" style="background: #d1fae5; color: #047857;">💵</span>
     </div>
     <div class="stat-value"><%= Number(stats.cashRevenue || 0).toLocaleString('vi-VN') %> đ</div>
     <div class="stat-footer">Thanh toán trực tiếp khi nhận món</div>
@@ -34,7 +32,6 @@
   <div class="stat-card">
     <div class="stat-header">
       <span>Thanh Toán Điện Tử</span>
-      <span class="stat-icon" style="background: #dbeafe; color: #1d4ed8;">💳</span>
     </div>
     <div class="stat-value"><%= Number(stats.digitalRevenue || 0).toLocaleString('vi-VN') %> đ</div>
     <div class="stat-footer">MoMo & PayOS cổng thanh toán</div>
@@ -43,7 +40,6 @@
   <div class="stat-card">
     <div class="stat-header">
       <span>Tổng Số Đơn Hàng</span>
-      <span class="stat-icon" style="background: #ede9fe; color: #6d28d9;">📋</span>
     </div>
     <div class="stat-value"><%= stats.totalOrders || 0 %></div>
     <div class="stat-footer">
@@ -55,7 +51,7 @@
 <!-- Mạng Lưới 4 Chi Nhánh Đà Nẵng -->
 <div class="card-box">
   <h2 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; color: var(--primary-dark);">
-    📍 Mạng Lưới 4 Chi Nhánh FreshBite Tại TP. Đà Nẵng
+    Mạng Lưới 4 Chi Nhánh FreshBite Tại TP. Đà Nẵng
   </h2>
   <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem;">
     <% branches.forEach(function(b) { %>
@@ -67,10 +63,10 @@
           </span>
         </div>
         <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.35rem;">
-          📍 <%= b.address %>
+          <%= b.address %>
         </p>
         <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.35rem;">
-          ⏰ <%= b.openingHours %> | 📞 <%= b.phone %>
+          Giờ mở cửa: <%= b.openingHours %> | Hotline: <%= b.phone %>
         </p>
         <div style="font-size: 0.8rem; margin-top: 0.5rem; display: flex; justify-content: space-between; align-items: center;">
           <span style="color: #64748b;">GPS: <%= b.latitude %>, <%= b.longitude %></span>
@@ -89,7 +85,7 @@
 <div class="card-box">
   <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
     <h2 style="font-size: 1.25rem; font-weight: 700; color: var(--primary-dark);">
-      🕒 Đơn Hàng Mới Nhất
+      Đơn Hàng Mới Nhất
     </h2>
     <a href="/admin/orders" style="font-size: 0.875rem; color: var(--accent-color); font-weight: 600; text-decoration: none;">
       Xem toàn bộ màn hình KDS →
@@ -110,7 +106,7 @@
             <th>Số Lượng Món</th>
             <th>Tổng Tiền</th>
             <th>Trạng Thái</th>
-            <th>Hóa Đơn (Slot 12)</th>
+            <th>Hóa Đơn</th>
           </tr>
         </thead>
         <tbody>
@@ -142,7 +138,7 @@
               </td>
               <td>
                 <a href="/api/orders/<%= o._id %>/invoice" class="btn btn-outline" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;">
-                  📄 Tải Hóa Đơn
+                  Tải Hóa Đơn
                 </a>
               </td>
             </tr>
@@ -152,4 +148,3 @@
     </div>
   <% } %>
 </div>
-
