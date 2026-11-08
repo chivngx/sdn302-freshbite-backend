@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>FreshBite - Demo Live Chat Socket.IO (Real-time)</title>
+  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+  <script>
+    if (typeof io === 'undefined') {
+      document.write('<script src="/socket.io/socket.io.js"><\/script>');
+    }
+  </script>
+  <style>
+    * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+    body { background: #F1F5F9; margin: 0; padding: 20px; }
+    .container { max-width: 800px; margin: 0 auto; background: #fff; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); overflow: hidden; }
+    .header { background: #0F766E; color: #fff; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; }
+    .header h2 { margin: 0; font-size: 18px; }
+    .status { font-size: 13px; font-weight: 600; padding: 6px 12px; border-radius: 20px; background: #64748B; color: #fff; transition: all 0.3s ease; }
+    .status-online { background: #10B981 !important; }
+    .status-offline { background: #EF4444 !important; }
+    .tip-box { background: #F0FDFA; color: #0F766E; padding: 10px 20px; font-size: 13px; border-bottom: 1px solid #CCFBF1; display: flex; justify-content: space-between; align-items: center; }
+    .tip-box a { color: #0F766E; font-weight: 700; text-decoration: underline; }
+    .config-panel { padding: 14px 20px; background: #F8FAFC; border-bottom: 1px solid #E2E8F0; display: flex; gap: 14px; align-items: center; font-size: 13px; flex-wrap: wrap; }
+    .config-panel select, .config-panel input { padding: 8px 12px; border: 1px solid #CBD5E1; border-radius: 6px; font-size: 13px; outline: none; }
+    .chat-box { height: 380px; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 12px; background: #FAFAFA; }
+    .msg { max-width: 75%; padding: 10px 14px; border-radius: 12px; font-size: 14px; line-height: 1.4; word-break: break-word; }
+    .msg-customer { align-self: flex-end; background: #0F766E; color: #fff; border-bottom-right-radius: 2px; }
+    .msg-staff { align-self: flex-start; background: #E2E8F0; color: #0F172A; border-bottom-left-radius: 2px; }
+    .msg-meta { font-size: 11px; opacity: 0.85; margin-bottom: 4px; font-weight: 600; }
+    .input-form { padding: 14px 20px; border-top: 1px solid #E2E8F0; display: flex; gap: 10px; background: #fff; margin: 0; }
+    .input-form input { flex: 1; padding: 12px 14px; border: 1px solid #CBD5E1; border-radius: 8px; font-size: 14px; outline: none; }
+    .input-form input:focus { border-color: #0F766E; }
+    .input-form button { background: #0F766E; color: #fff; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+    .input-form button:hover { background: #115E59; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h2>FreshBite Live Chat (Socket.IO Real-time)</h2>
+      <div id="status" class="status">Đang kết nối tới server...</div>
+    </div>
+
+    <div class="tip-box">
+      <span>💡 Hãy mở link này trên <strong>2 tab trình duyệt</strong> (1 tab Khách hàng, 1 tab Quầy Barista) để thấy chat nảy tin nhắn tức thì:</span>
+      <a href="http://localhost:5000/chat-demo.html" target="_blank">http://localhost:5000/chat-demo.html</a>
+    </div>
+
+    <div class="config-panel">
+      <label><strong>Vai trò tab này:</strong></label>
+      <select id="roleSelect" onchange="switchRole()">
+        <option value="customer">Khách hàng (Lê Đức Sơn)</option>
+        <option value="staff">Nhân viên quầy Barista</option>
+      </select>
+      <label><strong>Chi nhánh:</strong></label>
+      <input type="text" id="branchInput" value="6aefe224c9f0c144ae2ef72a" style="width: 230px;" title="Branch ObjectId">
+    </div>
+
+    <div id="chatBox" class="chat-box"></div>
+
+    <form class="input-form" onsubmit="event.preventDefault(); send();">
+      <input type="text" id="messageInput" placeholder="Nhập tin nhắn..." autocomplete="off">
+      <button type="submit">Gửi (Enter)</button>
+    </form>
+  </div>
+
+  <script>
+    const serverUrl = (window.location.protocol.startsWith('http')) 
+      ? window.location.origin 
+      : 'http://localhost:5000';
+
+    const statusEl = document.getElementById('status');
+    const chatBox = document.getElementById('chatBox');
+    const msgInput = document.getElementById('messageInput');
+    const roleSelect = document.getElementById('roleSelect');
+    const branchInput = document.getElementById('branchInput');
+
+    const customerUserId = '6aefe22e6a172677774c318b'; // ID của Lê Đức Sơn
+
+    let socket;
+    try {
+      socket = io(serverUrl, {
+        transports: ['websocket', 'polling'],
+        reconnectionAttempts: 10,
+        reconnectionDelay: 1000
+      });
+
+      socket.on('connect', () => {
+        statusEl.textContent = '🟢 Online (Socket.IO Real-time)';
+        statusEl.className = 'status status-online';
+        joinRoom();
+      });
+
+      socket.on('disconnect', () => {
+        statusEl.textContent = '🔴 Mất kết nối tới ' + serverUrl;
+        statusEl.className = 'status status-offline';
+      });
+
+      socket.on('connect_error', (err) => {
+        statusEl.textContent = '⚠️ Chưa bật server (npm run dev)';
+        statusEl.className = 'status status-offline';
+      });
+
+      socket.on('receive_message', (msg) => {
+        appendMessage(msg);
+      });
+    } catch (e) {
+      statusEl.textContent = '⚠️ Lỗi Socket.IO: ' + e.message;
+      statusEl.className = 'status status-offline';
+    }
+
+    function joinRoom() {
+      if (!socket || !socket.connected) return;
+      const branchId = branchInput.value;
+      socket.emit('join_conversation', { branchId, userId: customerUserId });
+      socket.emit('join_branch', branchId);
+    }
+
+    function appendMessage(msg) {
+      const div = document.createElement('div');
+      const isCustomer = msg.senderRole === 'customer';
+      div.className = 'msg ' + (isCustomer ? 'msg-customer' : 'msg-staff');
+      div.innerHTML = `
+        <div class="msg-meta">${msg.senderName} (${isCustomer ? 'Khách hàng' : 'Quầy Barista'}) • ${new Date(msg.createdAt || Date.now()).toLocaleTimeString()}</div>
+        <div>${msg.content}</div>
+      `;
+      chatBox.appendChild(div);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function switchRole() {
+      msgInput.placeholder = roleSelect.value === 'customer' 
+        ? 'Khách hàng nhắn tin tới quầy...' 
+        : 'Nhân viên quầy trả lời khách...';
+      msgInput.focus();
+    }
+
+    function send() {
+      const content = msgInput.value.trim();
+      if (!content) return;
+
+      if (!socket || !socket.connected) {
+        alert('Chưa kết nối được tới server!\nHãy chắc chắn server đang chạy (npm run dev tại http://localhost:5000)');
+        return;
+      }
+
+      const branchId = branchInput.value;
+      const role = roleSelect.value;
+
+      if (role === 'customer') {
+        socket.emit('send_message', {
+          branchId,
+          userId: customerUserId,
+          senderName: 'Lê Đức Sơn',
+          content
+        });
+      } else {
+        socket.emit('staff_reply', {
+          branchId,
+          targetUserId: customerUserId,
+          senderName: 'Barista FPT City',
+          content
+        });
+      }
+
+      msgInput.value = '';
+      msgInput.focus();
+    }
+
+    async function loadHistory() {
+      try {
+        const branchId = branchInput.value;
+        const res = await fetch(serverUrl + '/api/chats/' + branchId + '/conversations/' + customerUserId);
+        const data = await res.json();
+        if (data.data && Array.isArray(data.data)) {
+          chatBox.innerHTML = '';
+          data.data.forEach(msg => appendMessage(msg));
+        }
+      } catch (e) {}
+    }
+    loadHistory();
+  </script>
+</body>
+</html>

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Message = require('../models/Message');
+const { getIO } = require('../config/socket');
 
 /**
  * Khách gửi tin nhắn tới quầy chi nhánh
@@ -19,6 +20,13 @@ exports.sendMessage = async (req, res) => {
       senderName: req.user.fullName,
       content
     });
+
+    // Phát sự kiện real-time qua Socket.IO tới phòng chat và quầy chi nhánh
+    const io = getIO();
+    if (io) {
+      io.to(`chat_${branchId}_${req.user._id}`).emit('receive_message', message);
+      io.to(`branch_${branchId}`).emit('new_customer_message', message);
+    }
 
     return res.status(201).json({
       success: true,
@@ -58,6 +66,12 @@ exports.staffReply = async (req, res) => {
       senderName: req.user.fullName,
       content
     });
+
+    // Phát sự kiện real-time tới phòng chat của khách hàng
+    const io = getIO();
+    if (io) {
+      io.to(`chat_${branchId}_${targetUserId}`).emit('receive_message', message);
+    }
 
     return res.status(201).json({
       success: true,

@@ -1,15 +1,20 @@
+/**
+ * Module: Upload Middleware (Multer)
+ * Tác giả: Lê Tự Nhật Thạch (Uploads, Seed Data & Web Admin SSR Lead)
+ * Bài học tích hợp: Slot 12 - Xử lý tệp tin tải lên (Multipart/form-data) trong Express
+ */
+
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-const { AppError } = require('./errorMiddleware');
 
-// Thu muc luu tru anh upload
+// Đảm bảo thư mục uploads luôn tồn tại
 const uploadDir = path.join(__dirname, '..', 'uploads');
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
 
-// Cau hinh diskStorage: luu vao thu muc uploads/ va sinh ten file doc nhat
+// 1. Cấu hình diskStorage: Lưu file vào thư mục /uploads và đổi tên tránh trùng lặp
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     if (!fs.existsSync(uploadDir)) {
@@ -18,75 +23,76 @@ const storage = multer.diskStorage({
     cb(null, uploadDir);
   },
   filename: (req, file, cb) => {
-    // Loai bo ky tu dac biet khoi ten goc, them timestamp de tranh trung lap
     const ext = path.extname(file.originalname).toLowerCase();
-    const cleanBaseName = path
+    const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
+    const safeBaseName = path
       .basename(file.originalname, ext)
-      .replace(/[^a-zA-Z0-9_-]/g, '_');
-    const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e6)}`;
-    cb(null, `${cleanBaseName}-${uniqueSuffix}${ext}`);
+      .toLowerCase()
+      .replace(/[^a-z0-9]/g, '-');
+    cb(null, `${safeBaseName}-${uniqueSuffix}${ext}`);
   }
 });
 
-// Bo loc chi chap nhan anh hop le (jpeg, jpg, png, webp, gif)
+// 2. Bộ lọc định dạng file (chỉ cho phép ảnh jpeg, jpg, png, webp, gif)
 const fileFilter = (req, file, cb) => {
-  const allowedMimeTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'];
   const allowedExtensions = ['.jpg', '.jpeg', '.png', '.webp', '.gif'];
   const ext = path.extname(file.originalname).toLowerCase();
+  const allowedMimeTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'];
 
-  if (allowedMimeTypes.includes(file.mimetype) || allowedExtensions.includes(ext)) {
+  if (allowedExtensions.includes(ext) && (allowedMimeTypes.includes(file.mimetype) || file.mimetype.startsWith('image/'))) {
     cb(null, true);
   } else {
-    cb(new AppError('Chỉ chấp nhận các định dạng tệp hình ảnh: JPEG, JPG, PNG, WEBP, GIF!', 400), false);
+    cb(
+      new Error(
+        'Định dạng tệp không được hỗ trợ! Chỉ chấp nhận các định dạng ảnh: .jpg, .jpeg, .png, .webp, .gif'
+      ),
+      false
+    );
   }
 };
 
-// Khoi tao instance multer voi gioi han 5MB
+// 3. Khởi tạo instance multer với giới hạn dung lượng 5MB
 const upload = multer({
   storage,
   fileFilter,
   limits: {
-    fileSize: 5 * 1024 * 1024 // 5MB
+    fileSize: 5 * 1024 * 1024 // 5 Megabytes
   }
 });
 
-// Wrapper middleware ho tro ca fieldName 'image' va 'file' trong 1 luong parse duy nhat
-const uploadSingle = (primaryField = 'image') => {
-  const fields = [
-    { name: primaryField, maxCount: 1 }
-  ];
-  if (primaryField !== 'file') {
-    fields.push({ name: 'file', maxCount: 1 });
-  }
-  if (primaryField !== 'image') {
-    fields.push({ name: 'image', maxCount: 1 });
-  }
-
-  const fieldsParser = upload.fields(fields);
-
-  return (req, res, next) => {
-    fieldsParser(req, res, (err) => {
-      if (err) return next(err);
-      if (req.files) {
-        req.file =
-          (req.files[primaryField] && req.files[primaryField][0]) ||
-          (req.files['image'] && req.files['image'][0]) ||
-          (req.files['file'] && req.files['file'][0]) ||
-          null;
+// 4. Helper middleware bọc xử lý lỗi Multer thân thiện
+const handleMulterError = (multerAction) => (req, res, next) => {
+  multerAction(req, res, (err) => {
+    if (err instanceof multer.MulterError) {
+      if (err.code === 'LIMIT_FILE_SIZE') {
+        return res.status(400).json({
+          success: false,
+          message: 'Dung lượng tệp quá lớn! Giới hạn tối đa là 5MB.'
+        });
       }
-      next();
-    });
-  };
+      return res.status(400).json({
+        success: false,
+        message: `Lỗi upload tệp: ${err.message}`
+      });
+    } else if (err) {
+      return res.status(400).json({
+        success: false,
+        message: err.message
+      });
+    }
+    next();
+  });
 };
 
-// Wrapper middleware upload nhieu anh (toi da 5 anh)
-const uploadMultiple = (fieldName = 'images', maxCount = 5) => {
-  return upload.array(fieldName, maxCount);
+// Upload 1 file đơn lẻ (mặc định field 'image')
+exports.uploadSingle = (fieldName = 'image') => {
+  return handleMulterError(upload.single(fieldName));
 };
 
-module.exports = {
-  upload,
-  uploadSingle,
-  uploadMultiple,
-  uploadDir
+// Upload nhiều files (mặc định field 'images', tối đa 5 file)
+exports.uploadMultiple = (fieldName = 'images', maxCount = 5) => {
+  return handleMulterError(upload.array(fieldName, maxCount));
 };
+
+exports.upload = upload;
+exports.uploadDir = uploadDir;
