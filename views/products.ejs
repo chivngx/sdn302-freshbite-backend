@@ -1,0 +1,146 @@
+<!-- Trang Quản Lý Món Ăn & Thực Đơn -->
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Quản Lý Món Ăn & Thực Đơn Đà Nẵng</h1>
+    <p class="page-subtitle">Kiểm soát danh mục thực đơn và trạng thái phục vụ tại chuỗi chi nhánh</p>
+  </div>
+</div>
+
+<!-- Form Thêm Món Ăn Mới -->
+<div class="card-box">
+  <h2 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 1.25rem; color: var(--primary-dark);">
+    Thêm Món Mới Vào Thực Đơn
+  </h2>
+
+  <form method="POST" action="/admin/products" enctype="multipart/form-data">
+    <div class="form-grid">
+      <div class="form-group">
+        <label class="form-label">Tên món ăn / thức uống *</label>
+        <input type="text" name="name" class="form-input" placeholder="Ví dụ: Cà phê Muối Sơn Trà" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Nhóm Danh Mục *</label>
+        <select name="categoryId" class="form-input" required>
+          <option value="">-- Chọn danh mục --</option>
+          <% categories.forEach(function(c) { %>
+            <option value="<%= c._id %>"><%= c.name %> (<%= c.code %>)</option>
+          <% }); %>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Giá Base Size S (VNĐ) *</label>
+        <input type="number" name="price" class="form-input" placeholder="Ví dụ: 35000" min="0" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Lượng Calo (kcal)</label>
+        <input type="number" name="calories" class="form-input" placeholder="Ví dụ: 180" value="150">
+      </div>
+
+      <div class="form-group" style="grid-column: 1 / -1;">
+        <label class="form-label">Nguyên liệu chính (phân cách bằng dấu phẩy)</label>
+        <input type="text" name="ingredients" class="form-input" placeholder="Ví dụ: Cà phê Robusta Đắk Lắk, Muối hồng Himalaya, Sữa đặc">
+      </div>
+
+      <div class="form-group" style="grid-column: 1 / -1;">
+        <label class="form-label">Mô tả chi tiết món ăn *</label>
+        <textarea name="description" class="form-textarea" rows="2" placeholder="Hương vị đặc trưng chuẩn vị Đà Nẵng..." required></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Hình ảnh món ăn *</label>
+        <input type="file" name="image" class="form-file" accept="image/*">
+        <small style="color: var(--text-muted); font-size: 0.75rem;">Chấp nhận .jpg, .png, .webp (tối đa 5MB).</small>
+      </div>
+
+      <div class="form-group" style="display: flex; flex-direction: row; align-items: center; gap: 0.5rem; margin-top: 1.5rem;">
+        <input type="checkbox" name="isBestSeller" id="isBestSeller" value="true">
+        <label for="isBestSeller" class="form-label" style="margin-bottom: 0; cursor: pointer;">
+          Đánh dấu là Món Bán Chạy (Best Seller)
+        </label>
+      </div>
+    </div>
+
+    <div style="margin-top: 1.25rem; display: flex; justify-content: flex-end;">
+      <button type="submit" class="btn btn-warning" style="padding: 0.65rem 1.5rem;">
+        Lưu Món Ăn
+      </button>
+    </div>
+  </form>
+</div>
+
+<!-- Bảng Danh Sách Món Ăn -->
+<div class="card-box">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+    <h2 style="font-size: 1.2rem; font-weight: 700; color: var(--primary-dark);">
+      Danh Sách Thực Đơn Hiện Có (<%= products.length %> món)
+    </h2>
+  </div>
+
+  <div style="overflow-x: auto;">
+    <table class="custom-table">
+      <thead>
+        <tr>
+          <th>Hình Ảnh</th>
+          <th>Tên Món Ăn</th>
+          <th>Danh Mục</th>
+          <th>Giá Base (Size S)</th>
+          <th>Quy Cách Size M / L</th>
+          <th>Năng Lượng</th>
+          <th>Tình Trạng</th>
+          <th>Thao Tác</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% products.forEach(function(p) { %>
+          <tr>
+            <td>
+              <img src="<%= p.imageUrl %>" alt="<%= p.name %>" class="img-thumb" onerror="this.src='https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=200'">
+            </td>
+            <td>
+              <strong style="color: var(--primary-dark);"><%= p.name %></strong>
+              <% if (p.isBestSeller) { %>
+                <span style="font-size: 0.75rem; background: #fef3c7; color: #b45309; padding: 0.15rem 0.4rem; border-radius: 4px; font-weight: 700; margin-left: 0.25rem;">
+                  Best Seller
+                </span>
+              <% } %>
+              <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem; max-width: 250px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                <%= p.description %>
+              </div>
+            </td>
+            <td>
+              <span style="font-size: 0.8rem; background: #f1f5f9; padding: 0.25rem 0.5rem; border-radius: 4px; font-weight: 600;">
+                <%= p.categoryId ? p.categoryId.name : 'Khác' %>
+              </span>
+            </td>
+            <td>
+              <strong style="color: var(--primary-color);"><%= Number(p.price || 0).toLocaleString('vi-VN') %> đ</strong>
+            </td>
+            <td>
+              <span style="font-size: 0.8rem; color: var(--text-muted);">
+                M: +6.000đ | L: +10.000đ
+              </span>
+            </td>
+            <td>
+              <%= p.calories || 150 %> kcal
+            </td>
+            <td>
+              <span style="font-size: 0.8rem; padding: 0.25rem 0.6rem; border-radius: 999px; font-weight: 700; background: <%= p.isAvailable ? '#d1fae5' : '#fee2e2' %>; color: <%= p.isAvailable ? '#065f46' : '#991b1b' %>;">
+                <%= p.isAvailable ? 'Còn Hàng' : 'Hết Hàng' %>
+              </span>
+            </td>
+            <td>
+              <form method="POST" action="/admin/products/<%= p._id %>/toggle" style="display: inline;">
+                <button type="submit" class="btn btn-outline" style="padding: 0.35rem 0.65rem; font-size: 0.8rem;">
+                  <%= p.isAvailable ? 'Tắt hàng' : 'Bật hàng' %>
+                </button>
+              </form>
+            </td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>
+</div>

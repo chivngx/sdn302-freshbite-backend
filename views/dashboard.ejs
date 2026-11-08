@@ -1,0 +1,150 @@
+<!-- Trang Tổng Quan Thống Kê Quầy Barista -->
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Bảng Tổng Quan Hoạt Động & Doanh Thu</h1>
+    <p class="page-subtitle">Theo dõi luồng đơn hàng Pick-up và tiến độ pha chế tại 4 chi nhánh TP. Đà Nẵng</p>
+  </div>
+  <div>
+    <a href="/admin/orders" class="btn btn-warning">
+      Chuyển tới Màn hình KDS Bếp
+    </a>
+  </div>
+</div>
+
+<!-- Lưới Thẻ Thống Kê Doanh Thu & Đơn Hàng -->
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-header">
+      <span>Tổng Doanh Thu</span>
+    </div>
+    <div class="stat-value"><%= Number(stats.totalRevenue || 0).toLocaleString('vi-VN') %> đ</div>
+    <div class="stat-footer">Doanh thu từ các đơn hàng Completed</div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-header">
+      <span>Tiền Mặt Tại Quầy</span>
+    </div>
+    <div class="stat-value"><%= Number(stats.cashRevenue || 0).toLocaleString('vi-VN') %> đ</div>
+    <div class="stat-footer">Thanh toán trực tiếp khi nhận món</div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-header">
+      <span>Thanh Toán Điện Tử</span>
+    </div>
+    <div class="stat-value"><%= Number(stats.digitalRevenue || 0).toLocaleString('vi-VN') %> đ</div>
+    <div class="stat-footer">MoMo & PayOS cổng thanh toán</div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-header">
+      <span>Tổng Số Đơn Hàng</span>
+    </div>
+    <div class="stat-value"><%= stats.totalOrders || 0 %></div>
+    <div class="stat-footer">
+      Hoàn thành: <strong><%= stats.completedOrders || 0 %></strong> | Đang làm: <strong><%= stats.processingOrders || 0 %></strong>
+    </div>
+  </div>
+</div>
+
+<!-- Mạng Lưới 4 Chi Nhánh Đà Nẵng -->
+<div class="card-box">
+  <h2 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; color: var(--primary-dark);">
+    Mạng Lưới 4 Chi Nhánh FreshBite Tại TP. Đà Nẵng
+  </h2>
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem;">
+    <% branches.forEach(function(b) { %>
+      <div style="border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1rem; background: #fafafa;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
+          <strong style="color: var(--primary-dark); font-size: 1.05rem;"><%= b.name %></strong>
+          <span style="font-size: 0.75rem; padding: 0.2rem 0.5rem; border-radius: 4px; background: <%= b.isActive ? '#d1fae5' : '#fee2e2' %>; color: <%= b.isActive ? '#065f46' : '#991b1b' %>; font-weight: 700;">
+            <%= b.isActive ? 'ĐANG MỞ CỬA' : 'TẠM ĐÓNG' %>
+          </span>
+        </div>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.35rem;">
+          <%= b.address %>
+        </p>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.35rem;">
+          Giờ mở cửa: <%= b.openingHours %> | Hotline: <%= b.phone %>
+        </p>
+        <div style="font-size: 0.8rem; margin-top: 0.5rem; display: flex; justify-content: space-between; align-items: center;">
+          <span style="color: #64748b;">GPS: <%= b.latitude %>, <%= b.longitude %></span>
+          <% if (b.outOfStockProductIds && b.outOfStockProductIds.length > 0) { %>
+            <span style="color: #dc2626; font-weight: 600;">Tạm hết <%= b.outOfStockProductIds.length %> món</span>
+          <% } else { %>
+            <span style="color: #059669; font-weight: 600;">Đủ hàng 100%</span>
+          <% } %>
+        </div>
+      </div>
+    <% }); %>
+  </div>
+</div>
+
+<!-- Bảng Đơn Hàng Gần Đây -->
+<div class="card-box">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+    <h2 style="font-size: 1.25rem; font-weight: 700; color: var(--primary-dark);">
+      Đơn Hàng Mới Nhất
+    </h2>
+    <a href="/admin/orders" style="font-size: 0.875rem; color: var(--accent-color); font-weight: 600; text-decoration: none;">
+      Xem toàn bộ màn hình KDS →
+    </a>
+  </div>
+
+  <% if (!recentOrders || recentOrders.length === 0) { %>
+    <p style="color: var(--text-muted); text-align: center; padding: 2rem;">Chưa có đơn hàng nào được ghi nhận trong hệ thống.</p>
+  <% } else { %>
+    <div style="overflow-x: auto;">
+      <table class="custom-table">
+        <thead>
+          <tr>
+            <th>Mã Đơn</th>
+            <th>Khách Hàng</th>
+            <th>Chi Nhánh</th>
+            <th>Thời Gian Hẹn</th>
+            <th>Số Lượng Món</th>
+            <th>Tổng Tiền</th>
+            <th>Trạng Thái</th>
+            <th>Hóa Đơn</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% recentOrders.forEach(function(o) { %>
+            <tr>
+              <td>
+                <strong style="color: var(--primary-dark);"><%= o.orderCode %></strong>
+              </td>
+              <td>
+                <%= o.userId ? o.userId.fullName : 'Khách vãng lai' %><br>
+                <small style="color: var(--text-muted);"><%= o.userId ? o.userId.phone : '' %></small>
+              </td>
+              <td>
+                <%= o.branchId ? o.branchId.name : 'Chi nhánh Đà Nẵng' %>
+              </td>
+              <td>
+                <span class="kds-pickup-badge"><%= o.pickupTime %></span>
+              </td>
+              <td>
+                <%= o.items.reduce((s, i) => s + i.quantity, 0) %> phần
+              </td>
+              <td>
+                <strong><%= Number(o.totalAmount || 0).toLocaleString('vi-VN') %> đ</strong>
+              </td>
+              <td>
+                <span class="status-badge badge-<%= o.status.replace(/\s+/g, '_') %>">
+                  <%= o.status %>
+                </span>
+              </td>
+              <td>
+                <a href="/api/orders/<%= o._id %>/invoice" class="btn btn-outline" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;">
+                  Tải Hóa Đơn
+                </a>
+              </td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+  <% } %>
+</div>
