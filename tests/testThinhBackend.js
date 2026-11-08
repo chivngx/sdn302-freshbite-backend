@@ -300,6 +300,134 @@ const runTests = async () => {
     logger.error('Kiểm thử ghi log error thành công');
     logger.debug('Kiểm thử ghi log debug thành công');
 
+    // -------------------------------------------------------------
+    // NHÓM 5: KIỂM THỬ BẬT/TẮT TỒN KHO CHI NHÁNH TỨC THỜI (PATCH /api/branches/:id/stock)
+    // -------------------------------------------------------------
+    console.log('\n--- 5. KIỂM THỬ TỒN KHO CHI NHÁNH TỨC THỜI (PATCH /api/branches/:id/stock) ---');
+    const mockProductId = new mongoose.Types.ObjectId();
+
+    // Test 5.1: Không có token bị từ chối 401
+    const resStockNoAuth = await request({
+      method: 'PATCH',
+      path: `/api/branches/${sampleBranchId}/stock`,
+      body: { productId: mockProductId }
+    });
+    assert(resStockNoAuth.statusCode === 401, 'PATCH /api/branches/:id/stock không có token trả về 401 Unauthorized');
+
+    // Test 5.2: Role user thông thường bị từ chối 403
+    const resStockForbidden = await request({
+      method: 'PATCH',
+      path: `/api/branches/${sampleBranchId}/stock`,
+      headers: { Authorization: `Bearer ${userToken}` },
+      body: { productId: mockProductId }
+    });
+    assert(resStockForbidden.statusCode === 403, 'PATCH /api/branches/:id/stock với token thường bị từ chối 403 Forbidden');
+
+    // Test 5.3: Admin/Barista đánh dấu món tạm hết hàng
+    const resStockAdd = await request({
+      method: 'PATCH',
+      path: `/api/branches/${sampleBranchId}/stock`,
+      headers: { Authorization: `Bearer ${adminToken}` },
+      body: { productId: mockProductId, action: 'add' }
+    });
+    assert(resStockAdd.statusCode === 200, 'Barista đánh dấu món hết hàng thành công trả về 200 OK');
+    assert(resStockAdd.data.success === true, 'Response body có success: true');
+    assert(
+      resStockAdd.data.data.outOfStockProductIds.some(id => id.toString() === mockProductId.toString()),
+      'Danh sách outOfStockProductIds đã cập nhật chứa ID món tạm hết'
+    );
+
+    // Test 5.4: Barista gỡ món tạm hết hàng khi đã có nguyên liệu lại
+    const resStockRemove = await request({
+      method: 'PATCH',
+      path: `/api/branches/${sampleBranchId}/stock`,
+      headers: { Authorization: `Bearer ${adminToken}` },
+      body: { productId: mockProductId, action: 'remove' }
+    });
+    assert(resStockRemove.statusCode === 200, 'Barista gỡ trạng thái tạm hết hàng thành công trả về 200 OK');
+    assert(
+      !resStockRemove.data.data.outOfStockProductIds.some(id => id.toString() === mockProductId.toString()),
+      'ID món đã được gỡ khỏi outOfStockProductIds của chi nhánh'
+    );
+
+    // -------------------------------------------------------------
+    // NHÓM 6: KIỂM THỬ MODULE MÃ GIẢM GIÁ (VOUCHERS) (/api/vouchers)
+    // -------------------------------------------------------------
+    console.log('\n--- 6. KIỂM THỬ MODULE MÃ GIẢM GIÁ (VOUCHERS) (/api/vouchers) ---');
+
+    // Test 6.1: Lấy danh sách voucher đang có hiệu lực (Public)
+    const resVouchersActive = await request({ method: 'GET', path: '/api/vouchers/active' });
+    assert(resVouchersActive.statusCode === 200, 'GET /api/vouchers/active trả về mã HTTP 200 OK');
+    assert(resVouchersActive.data.success === true, 'Response body có success: true');
+    assert(Array.isArray(resVouchersActive.data.data) && resVouchersActive.data.data.length >= 1, `Trả về danh sách voucher hoạt động (có ${resVouchersActive.data.data.length} vouchers)`);
+
+    // Test 6.2: Áp dụng voucher hợp lệ FRESHBITE10 (10% giảm giá cho đơn từ 50.000đ)
+    const resApplySuccess = await request({
+      method: 'POST',
+      path: '/api/vouchers/apply',
+      headers: { Authorization: `Bearer ${userToken}` },
+      body: { code: 'FRESHBITE10', orderAmount: 60000 }
+    });
+    assert(resApplySuccess.statusCode === 200, 'POST /api/vouchers/apply mã hợp lệ trả về 200 OK');
+    assert(resApplySuccess.data.data.discount === 6000, 'Tính đúng số tiền chiết khấu 10% (6.000đ)');
+    assert(resApplySuccess.data.data.finalAmount === 54000, 'Tính đúng tổng tiền sau giảm giá (54.000đ)');
+
+    // Test 6.3: Áp dụng voucher khi đơn hàng chưa đạt giá trị tối thiểu (minOrderAmount)
+    const resApplyMinFail = await request({
+      method: 'POST',
+      path: '/api/vouchers/apply',
+      headers: { Authorization: `Bearer ${userToken}` },
+      body: { code: 'FRESHBITE10', orderAmount: 30000 } // yêu cầu tối thiểu 50.000đ
+    });
+    assert(resApplyMinFail.statusCode === 400, 'Đơn hàng chưa đạt giá trị tối thiểu bị từ chối với 400 Bad Request');
+    assert(resApplyMinFail.data.success === false, 'Response body có success: false');
+
+    // Test 6.4: Áp dụng voucher không tồn tại
+    const resApplyNotFound = await request({
+      method: 'POST',
+      path: '/api/vouchers/apply',
+      headers: { Authorization: `Bearer ${userToken}` },
+      body: { code: 'MA_KHONG_TON_TAI_999', orderAmount: 100000 }
+    });
+    assert(resApplyNotFound.statusCode === 404, 'Mã voucher không tồn tại trả về 404 Not Found');
+
+    // Test 6.5: Admin tạo mới voucher khuyến mãi
+    const testVoucherCode = `TEST${Date.now().toString().slice(-4)}`;
+    const resCreateVoucher = await request({
+      method: 'POST',
+      path: '/api/vouchers',
+      headers: { Authorization: `Bearer ${adminToken}` },
+      body: {
+        code: testVoucherCode,
+        title: 'Mã Giảm Giá Test Tự Động',
+        discountType: 'FIXED',
+        discountValue: 15000,
+        minOrderAmount: 40000,
+        endDate: new Date(Date.now() + 86400000 * 30).toISOString()
+      }
+    });
+    assert(resCreateVoucher.statusCode === 201, 'Admin tạo mới voucher thành công trả về 201 Created');
+    assert(resCreateVoucher.data.data.code === testVoucherCode, 'Mã voucher được lưu hoa chữ chuẩn xác');
+    const createdVoucherId = resCreateVoucher.data.data._id;
+
+    // Test 6.6: Admin cập nhật voucher
+    const resUpdateVoucher = await request({
+      method: 'PUT',
+      path: `/api/vouchers/${createdVoucherId}`,
+      headers: { Authorization: `Bearer ${adminToken}` },
+      body: { discountValue: 20000 }
+    });
+    assert(resUpdateVoucher.statusCode === 200, 'Admin cập nhật voucher thành công trả về 200 OK');
+    assert(resUpdateVoucher.data.data.discountValue === 20000, 'Giá trị chiết khấu đã được cập nhật thành 20.000đ');
+
+    // Test 6.7: Admin xóa voucher
+    const resDeleteVoucher = await request({
+      method: 'DELETE',
+      path: `/api/vouchers/${createdVoucherId}`,
+      headers: { Authorization: `Bearer ${adminToken}` }
+    });
+    assert(resDeleteVoucher.statusCode === 200, 'Admin xóa voucher thành công trả về 200 OK');
+
     console.log('\n=============================================================');
     console.log(` KẾT QUẢ KIỂM THỬ: ${passed} PASSED / ${failed} FAILED`);
     console.log('=============================================================\n');

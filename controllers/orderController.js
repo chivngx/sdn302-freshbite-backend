@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const Order = require('../models/Order');
 const Product = require('../models/Product');
 const Branch = require('../models/Branch');
+const Voucher = require('../models/Voucher');
 
 // Hàm sinh mã đơn hàng 'FB-' + 5 chữ số ngẫu nhiên, kiểm tra trùng trong DB tối đa 5 lần
 const generateOrderCode = async () => {
@@ -96,8 +97,36 @@ exports.createOrder = async (req, res, next) => {
       });
     }
 
-    const discount = 0;
-    const totalAmount = subtotal - discount;
+    let discount = 0;
+    let appliedVoucherCode = null;
+
+    if (voucherCode && String(voucherCode).trim()) {
+      const cleanVoucherCode = String(voucherCode).trim().toUpperCase();
+      const voucher = await Voucher.findOne({ code: cleanVoucherCode });
+
+      if (voucher && voucher.isActive) {
+        const now = new Date();
+        const isTimeValid = (!voucher.startDate || now >= voucher.startDate) && (!voucher.endDate || now <= voucher.endDate);
+        const isAmountValid = subtotal >= (voucher.minOrderAmount || 0);
+
+        if (isTimeValid && isAmountValid) {
+          if (voucher.discountType === 'PERCENT') {
+            discount = Math.round(subtotal * (voucher.discountValue / 100));
+            if (voucher.maxDiscount && discount > voucher.maxDiscount) {
+              discount = voucher.maxDiscount;
+            }
+          } else {
+            discount = voucher.discountValue;
+          }
+          if (discount > subtotal) {
+            discount = subtotal;
+          }
+          appliedVoucherCode = voucher.code;
+        }
+      }
+    }
+
+    const totalAmount = Math.max(0, subtotal - discount);
     const orderCode = await generateOrderCode();
 
     const newOrder = await Order.create({
@@ -107,7 +136,7 @@ exports.createOrder = async (req, res, next) => {
       items: verifiedItems,
       subtotal,
       discount,
-      voucherCode: voucherCode ? String(voucherCode).trim().toUpperCase() : null,
+      voucherCode: appliedVoucherCode || (voucherCode ? String(voucherCode).trim().toUpperCase() : null),
       totalAmount,
       pickupTime,
       status: 'Received',

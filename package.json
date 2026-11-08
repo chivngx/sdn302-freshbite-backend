@@ -12,7 +12,11 @@
     "seed:test": "node seeds/testSeed.js",
     "seed:users": "node seeds/userSeed.js",
     "test": "node tests/testThinhBackend.js",
-    "test:thach": "node tests/testThachBackend.js"
+    "test:thinh": "node tests/testThinhBackend.js",
+    "test:thach": "node tests/testThachBackend.js",
+    "test:son": "node tests/testSonBackend.js",
+    "test:vuong": "node tests/testVuongBackend.js",
+    "test:all": "node tests/testSonBackend.js && node tests/testVuongBackend.js && node tests/testThinhBackend.js && node tests/testThachBackend.js"
   },
   "license": "ISC",
   "dependencies": {
