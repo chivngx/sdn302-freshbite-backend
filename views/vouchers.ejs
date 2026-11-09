@@ -1,0 +1,359 @@
+<%- include('partials/header') %>
+
+<!-- Island Header -->
+<div class="island-header-bar">
+  <div class="island-title-block">
+    <div class="island-category-badge">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="5" width="20" height="14" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
+      <span>CHIẾN DỊCH KHUYẾN MÃI</span>
+    </div>
+    <h1 class="island-heading">Quản Lý Voucher & Mã Giảm Giá</h1>
+    <p class="island-description">Thiết lập các mã coupon chiết khấu phần trăm hoặc trừ thẳng tiền mặt cho đơn hàng FreshBite.</p>
+  </div>
+
+  <div class="island-actions-group">
+    <button type="button" onclick="openAddVoucherModal()" class="m3-btn m3-btn-filled">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+      <span>Tạo Voucher Mới</span>
+    </button>
+  </div>
+</div>
+
+<!-- Bento Summary Cards -->
+<div class="m3-bento-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 24px;">
+  <div class="m3-bento-card bento-accent-espresso">
+    <div class="bento-card-top">
+      <div class="bento-icon-box">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
+      </div>
+      <span class="bento-label">TỔNG MÃ KHUYẾN MÃI</span>
+    </div>
+    <div class="bento-value-block">
+      <div class="bento-number"><%= stats.total || 0 %></div>
+    </div>
+    <div class="bento-footnote">
+      <span>Toàn bộ chương trình đã tạo</span>
+    </div>
+  </div>
+
+  <div class="m3-bento-card">
+    <div class="bento-card-top">
+      <div class="bento-icon-box" style="background: var(--md-sys-color-tertiary-container); color: var(--md-sys-color-tertiary);">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+      </div>
+      <span class="bento-label">ĐANG ÁP DỤNG HIỆU LỰC</span>
+    </div>
+    <div class="bento-value-block">
+      <div class="bento-number" style="color: #166534;"><%= stats.active || 0 %></div>
+    </div>
+    <div class="bento-footnote">
+      <span>Khách hàng có thể nhập mã giảm</span>
+    </div>
+  </div>
+
+  <div class="m3-bento-card">
+    <div class="bento-card-top">
+      <div class="bento-icon-box" style="background: #FEE2E2; color: #991B1B;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+      </div>
+      <span class="bento-label">HẾT HẠN / TẠM DỪNG</span>
+    </div>
+    <div class="bento-value-block">
+      <div class="bento-number" style="color: #991B1B;"><%= stats.expired || 0 %></div>
+    </div>
+    <div class="bento-footnote">
+      <span>Đã khóa hoặc quá hạn sử dụng</span>
+    </div>
+  </div>
+</div>
+
+<!-- Vouchers Table Card -->
+<div class="m3-table-card">
+  <div class="table-top-bar">
+    <div>
+      <h2 class="table-top-title">Danh Sách Voucher Hệ Thống (<%= vouchers ? vouchers.length : 0 %> mã)</h2>
+      <p class="table-top-caption">Tự động áp dụng và tính toán giảm trừ trên tổng tiền đơn hàng</p>
+    </div>
+  </div>
+
+  <div class="m3-table-wrapper">
+    <table class="m3-table">
+      <thead>
+        <tr>
+          <th>MÃ VOUCHER</th>
+          <th>TÊN CHƯƠNG TRÌNH</th>
+          <th>MỨC GIẢM</th>
+          <th style="text-align: right;">GIẢM TỐI ĐA</th>
+          <th style="text-align: right;">ĐƠN TỐI THIỂU</th>
+          <th>THỜI HẠN</th>
+          <th>TRẠNG THÁI</th>
+          <th style="text-align: center;">THAO TÁC</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (vouchers && vouchers.length > 0) { %>
+          <% const now = new Date(); %>
+          <% vouchers.forEach(v => { %>
+            <% const isExpired = new Date(v.endDate) < now; %>
+            <tr>
+              <td>
+                <span class="voucher-code-tag"><%= v.code %></span>
+              </td>
+              <td>
+                <div style="font-weight: 700; color: var(--md-sys-color-primary); font-size: 0.85rem;">
+                  <%= v.title %>
+                </div>
+              </td>
+              <td>
+                <% if (v.discountType === 'PERCENT') { %>
+                  <span class="m3-badge badge-bestseller" style="font-size: 0.76rem;">
+                    GIẢM <%= v.discountValue %>%
+                  </span>
+                <% } else { %>
+                  <span class="m3-badge badge-ready" style="font-size: 0.76rem;">
+                    -<%= (v.discountValue || 0).toLocaleString('vi-VN') %>đ
+                  </span>
+                <% } %>
+              </td>
+              <td style="text-align: right; font-family: var(--font-mono); font-size: 0.82rem; color: var(--md-sys-color-primary);">
+                <%= (v.maxDiscount || 0).toLocaleString('vi-VN') %>đ
+              </td>
+              <td style="text-align: right; font-family: var(--font-mono); font-size: 0.82rem; color: var(--md-sys-color-on-surface-variant);">
+                <%= (v.minOrderAmount || 0).toLocaleString('vi-VN') %>đ
+              </td>
+              <td style="font-family: var(--font-mono); font-size: 0.74rem; color: var(--md-sys-color-on-surface-variant); white-space: nowrap;">
+                <%= new Date(v.startDate).toLocaleDateString('vi-VN') %> ➔ <%= new Date(v.endDate).toLocaleDateString('vi-VN') %>
+              </td>
+              <td>
+                <% if (isExpired) { %>
+                  <span class="m3-badge badge-cancelled">Hết Hạn</span>
+                <% } else if (v.isActive) { %>
+                  <span class="m3-badge badge-ready">Đang Bật</span>
+                <% } else { %>
+                  <span class="m3-badge badge-prep">Tạm Tắt</span>
+                <% } %>
+              </td>
+              <td>
+                <div style="display: flex; align-items: center; justify-content: center; gap: 6px;">
+                  <!-- Toggle Active Status -->
+                  <form action="/admin/vouchers/<%= v._id %>/toggle" method="POST" style="margin: 0;">
+                    <button type="submit" class="stock-toggle-btn <%= v.isActive ? 'in-stock' : 'out-stock' %>" title="Bật/Tắt hoạt động">
+                      <%= v.isActive ? 'Bật' : 'Tắt' %>
+                    </button>
+                  </form>
+
+                  <!-- Edit Voucher -->
+                  <button type="button" 
+                          onclick='openEditVoucherModal(<%= JSON.stringify({
+                            id: v._id,
+                            code: v.code,
+                            title: v.title,
+                            discountType: v.discountType,
+                            discountValue: v.discountValue,
+                            maxDiscount: v.maxDiscount,
+                            minOrderAmount: v.minOrderAmount,
+                            startDate: new Date(v.startDate).toISOString().split("T")[0],
+                            endDate: new Date(v.endDate).toISOString().split("T")[0],
+                            isActive: Boolean(v.isActive)
+                          }) %>)'
+                          class="action-mini-btn btn-edit" title="Chỉnh sửa Voucher">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                  </button>
+
+                  <!-- Delete Voucher -->
+                  <form action="/admin/vouchers/<%= v._id %>/delete" method="POST" onsubmit="return confirm('Bạn có chắc muốn xóa mã voucher \'<%= v.code %>\'?')" style="margin: 0;">
+                    <button type="submit" class="action-mini-btn btn-delete" title="Xóa Voucher">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                    </button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+          <% }) %>
+        <% } else { %>
+          <tr>
+            <td colspan="8" style="text-align: center; padding: 36px; color: var(--md-sys-color-on-surface-variant);">
+              Chưa có mã voucher nào được tạo trong hệ thống.
+            </td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Modal 1: Tạo Voucher Mới -->
+<div id="addVoucherModal" class="m3-modal-backdrop" style="display: none;">
+  <div class="m3-modal-dialog">
+    <div class="m3-modal-header">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <div class="m3-modal-icon-circle">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+        </div>
+        <h3 class="m3-modal-title">Tạo Mã Voucher Ưu Đãi Mới</h3>
+      </div>
+      <button type="button" class="m3-modal-close" onclick="closeAddVoucherModal()">&times;</button>
+    </div>
+
+    <form action="/admin/vouchers" method="POST" class="m3-modal-body">
+      <div class="form-row-grid">
+        <div class="form-group-field">
+          <label class="form-label">Mã Code (Tự động in hoa) *</label>
+          <input type="text" name="code" required placeholder="Ví dụ: FRESHBITE20" class="m3-text-input" style="text-transform: uppercase;">
+        </div>
+
+        <div class="form-group-field">
+          <label class="form-label">Tên Chương Trình Ưu Đãi *</label>
+          <input type="text" name="title" required placeholder="Ví dụ: Khai trương chi nhánh Hải Châu" class="m3-text-input">
+        </div>
+
+        <div class="form-group-field">
+          <label class="form-label">Hình Thức Giảm Giá *</label>
+          <select name="discountType" required class="m3-select-custom">
+            <option value="PERCENT">Giảm Theo Phần Trăm (%)</option>
+            <option value="FIXED">Giảm Cố Định Bằng Tiền Mặt (VNĐ)</option>
+          </select>
+        </div>
+
+        <div class="form-group-field">
+          <label class="form-label">Giá Trị Giảm (% hoặc VNĐ) *</label>
+          <input type="number" name="discountValue" required min="1" placeholder="Ví dụ: 20 (cho 20%) hoặc 30000" class="m3-text-input">
+        </div>
+
+        <div class="form-group-field">
+          <label class="form-label">Mức Giảm Tối Đa (VNĐ)</label>
+          <input type="number" name="maxDiscount" min="0" step="1000" value="50000" class="m3-text-input">
+        </div>
+
+        <div class="form-group-field">
+          <label class="form-label">Đơn Hàng Tối Thiểu (VNĐ)</label>
+          <input type="number" name="minOrderAmount" min="0" step="1000" value="0" placeholder="0 = Không giới hạn" class="m3-text-input">
+        </div>
+
+        <div class="form-group-field">
+          <label class="form-label">Ngày Bắt Đầu Áp Dụng</label>
+          <input type="date" name="startDate" value="<%= new Date().toISOString().split('T')[0] %>" class="m3-text-input">
+        </div>
+
+        <div class="form-group-field">
+          <label class="form-label">Ngày Hết Hạn *</label>
+          <input type="date" name="endDate" required class="m3-text-input">
+        </div>
+      </div>
+
+      <div class="m3-modal-footer">
+        <button type="button" class="m3-btn m3-btn-tonal" onclick="closeAddVoucherModal()">Hủy Bỏ</button>
+        <button type="submit" class="m3-btn m3-btn-filled">Lưu Voucher</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal 2: Chỉnh Sửa Voucher -->
+<div id="editVoucherModal" class="m3-modal-backdrop" style="display: none;">
+  <div class="m3-modal-dialog">
+    <div class="m3-modal-header">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <div class="m3-modal-icon-circle">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+        </div>
+        <h3 class="m3-modal-title">Cập Nhật Thông Tin Voucher</h3>
+      </div>
+      <button type="button" class="m3-modal-close" onclick="closeEditVoucherModal()">&times;</button>
+    </div>
+
+    <form id="editVoucherForm" method="POST" class="m3-modal-body">
+      <div class="form-row-grid">
+        <div class="form-group-field">
+          <label class="form-label">Mã Code (Chỉ xem)</label>
+          <input type="text" id="edit_v_code" disabled class="m3-text-input" style="opacity: 0.7; background: var(--md-sys-color-surface-container-high);">
+        </div>
+
+        <div class="form-group-field">
+          <label class="form-label">Tên Chương Trình Ưu Đãi *</label>
+          <input type="text" id="edit_v_title" name="title" required class="m3-text-input">
+        </div>
+
+        <div class="form-group-field">
+          <label class="form-label">Hình Thức Giảm Giá *</label>
+          <select id="edit_v_discountType" name="discountType" required class="m3-select-custom">
+            <option value="PERCENT">Giảm Theo Phần Trăm (%)</option>
+            <option value="FIXED">Giảm Cố Định Bằng Tiền Mặt (VNĐ)</option>
+          </select>
+        </div>
+
+        <div class="form-group-field">
+          <label class="form-label">Giá Trị Giảm (% hoặc VNĐ) *</label>
+          <input type="number" id="edit_v_discountValue" name="discountValue" required min="1" class="m3-text-input">
+        </div>
+
+        <div class="form-group-field">
+          <label class="form-label">Mức Giảm Tối Đa (VNĐ)</label>
+          <input type="number" id="edit_v_maxDiscount" name="maxDiscount" min="0" step="1000" class="m3-text-input">
+        </div>
+
+        <div class="form-group-field">
+          <label class="form-label">Đơn Hàng Tối Thiểu (VNĐ)</label>
+          <input type="number" id="edit_v_minOrderAmount" name="minOrderAmount" min="0" step="1000" class="m3-text-input">
+        </div>
+
+        <div class="form-group-field">
+          <label class="form-label">Ngày Bắt Đầu Áp Dụng</label>
+          <input type="date" id="edit_v_startDate" name="startDate" class="m3-text-input">
+        </div>
+
+        <div class="form-group-field">
+          <label class="form-label">Ngày Hết Hạn *</label>
+          <input type="date" id="edit_v_endDate" name="endDate" required class="m3-text-input">
+        </div>
+
+        <div class="form-group-field" style="grid-column: span 2;">
+          <label class="checkbox-container">
+            <input type="checkbox" id="edit_v_isActive" name="isActive" value="true">
+            <span>Kích hoạt áp dụng mã voucher này ngay</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="m3-modal-footer">
+        <button type="button" class="m3-btn m3-btn-tonal" onclick="closeEditVoucherModal()">Hủy Bỏ</button>
+        <button type="submit" class="m3-btn m3-btn-filled">Lưu Thay Đổi</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  function openAddVoucherModal() {
+    document.getElementById('addVoucherModal').style.display = 'flex';
+  }
+  function closeAddVoucherModal() {
+    document.getElementById('addVoucherModal').style.display = 'none';
+  }
+
+  function openEditVoucherModal(v) {
+    document.getElementById('editVoucherForm').action = '/admin/vouchers/' + v.id + '/edit';
+    document.getElementById('edit_v_code').value = v.code || '';
+    document.getElementById('edit_v_title').value = v.title || '';
+    document.getElementById('edit_v_discountType').value = v.discountType || 'PERCENT';
+    document.getElementById('edit_v_discountValue').value = v.discountValue || 0;
+    document.getElementById('edit_v_maxDiscount').value = v.maxDiscount || 50000;
+    document.getElementById('edit_v_minOrderAmount').value = v.minOrderAmount || 0;
+    document.getElementById('edit_v_startDate').value = v.startDate || '';
+    document.getElementById('edit_v_endDate').value = v.endDate || '';
+    document.getElementById('edit_v_isActive').checked = Boolean(v.isActive);
+    document.getElementById('editVoucherModal').style.display = 'flex';
+  }
+  function closeEditVoucherModal() {
+    document.getElementById('editVoucherModal').style.display = 'none';
+  }
+
+  window.onclick = function(event) {
+    const addVModal = document.getElementById('addVoucherModal');
+    const editVModal = document.getElementById('editVoucherModal');
+    if (event.target === addVModal) addVModal.style.display = 'none';
+    if (event.target === editVModal) editVModal.style.display = 'none';
+  };
+</script>
+
+<%- include('partials/footer') %>

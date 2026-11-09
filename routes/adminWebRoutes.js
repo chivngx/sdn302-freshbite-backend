@@ -16,8 +16,21 @@ const {
   updateOrderStatusWeb,
   getProductsAdmin,
   createProductWeb,
+  updateProductWeb,
+  deleteProductWeb,
   toggleProductAvailability,
-  getBranchesAdmin
+  getBranchesAdmin,
+  getChatsPage,
+  postStaffReplyWeb,
+  getReviewsPage,
+  toggleReviewHideWeb,
+  getReportsPage,
+  exportShiftReportWeb,
+  getVouchersPage,
+  createVoucherWeb,
+  editVoucherWeb,
+  toggleVoucherWeb,
+  deleteVoucherWeb
 } = require('../controllers/adminWebController');
 const { downloadOrderInvoice } = require('../controllers/uploadController');
 const { uploadSingle } = require('../middlewares/uploadMiddleware');
@@ -37,12 +50,33 @@ router.get('/orders', adminWebAuth, getOrdersKDS);
 router.get('/orders/:id/invoice', adminWebAuth, downloadOrderInvoice);
 router.post('/orders/:id/status', adminWebAuth, updateOrderStatusWeb);
 
-// 3. Quản lý thực đơn món ăn (Protected)
+// 3. Quản lý thực đơn & CRUD món ăn (Protected)
 router.get('/products', adminWebAuth, getProductsAdmin);
 router.post('/products', adminWebAuth, uploadSingle('image'), createProductWeb);
+router.post('/products/:id/edit', adminWebAuth, uploadSingle('image'), updateProductWeb);
+router.post('/products/:id/delete', adminWebAuth, deleteProductWeb);
 router.post('/products/:id/toggle', adminWebAuth, toggleProductAvailability);
 
-// 4. Danh sách chi nhánh cửa hàng (Protected)
+// 4. Live Chat CSKH 2 chiều với khách hàng (Protected)
+router.get('/chats', adminWebAuth, getChatsPage);
+router.post('/chats/reply', adminWebAuth, postStaffReplyWeb);
+
+// 5. Quản lý đánh giá món ăn (Protected)
+router.get('/reviews', adminWebAuth, getReviewsPage);
+router.post('/reviews/:id/toggle', adminWebAuth, toggleReviewHideWeb);
+
+// 6. Đối soát ca & Doanh thu quầy Barista (Protected)
+router.get('/reports', adminWebAuth, getReportsPage);
+router.get('/reports/export', adminWebAuth, exportShiftReportWeb);
+
+// 7. Quản lý Voucher & Khuyến mãi (Protected)
+router.get('/vouchers', adminWebAuth, getVouchersPage);
+router.post('/vouchers', adminWebAuth, createVoucherWeb);
+router.post('/vouchers/:id/edit', adminWebAuth, editVoucherWeb);
+router.post('/vouchers/:id/toggle', adminWebAuth, toggleVoucherWeb);
+router.post('/vouchers/:id/delete', adminWebAuth, deleteVoucherWeb);
+
+// 8. Danh sách chi nhánh cửa hàng (Protected)
 router.get('/branches', adminWebAuth, getBranchesAdmin);
 
 module.exports = router;

@@ -16,7 +16,8 @@
     "test:thach": "node tests/testThachBackend.js",
     "test:son": "node tests/testSonBackend.js",
     "test:vuong": "node tests/testVuongBackend.js",
-    "test:all": "node tests/testSonBackend.js && node tests/testVuongBackend.js && node tests/testThinhBackend.js && node tests/testThachBackend.js"
+    "test:screens": "node tests/testNewAdminScreens.js",
+    "test:all": "node tests/testSonBackend.js && node tests/testVuongBackend.js && node tests/testThinhBackend.js && node tests/testThachBackend.js && node tests/testNewAdminScreens.js"
   },
   "license": "ISC",
   "dependencies": {

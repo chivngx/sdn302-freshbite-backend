@@ -1,0 +1,213 @@
+<%- include('partials/header') %>
+
+<!-- Island Header -->
+<div class="island-header-bar">
+  <div class="island-title-block">
+    <div class="island-category-badge">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+      <span>CHĂM SÓC KHÁCH HÀNG REAL-TIME</span>
+    </div>
+    <h1 class="island-heading">Live Chat CSKH & Phản Hồi Quầy</h1>
+    <p class="island-description">Trao đổi 2 chiều trực tiếp giữa Barista/Nhân viên chi nhánh và khách hàng trên ứng dụng FreshBite.</p>
+  </div>
+
+  <div class="island-actions-group">
+    <div class="kds-select-field" style="margin: 0;">
+      <select onchange="window.location.href='/admin/chats?branchId=' + this.value" class="m3-select-custom" style="min-width: 240px;">
+        <% if (branches && branches.length > 0) { %>
+          <% branches.forEach(b => { %>
+            <option value="<%= b._id %>" <%= String(selectedBranchId) === String(b._id) ? 'selected' : '' %>>
+              [<%= b.district %>] <%= b.name %>
+            </option>
+          <% }) %>
+        <% } %>
+      </select>
+    </div>
+  </div>
+</div>
+
+<!-- Live Chat Two-Column Layout -->
+<div class="chat-workspace-grid">
+  <!-- Left Column: Customer Conversations List -->
+  <div class="chat-conversations-pane">
+    <div class="pane-header-box">
+      <h3 style="font-size: 0.95rem; font-weight: 700; color: var(--md-sys-color-primary);">Hội Thoại Khách Hàng</h3>
+      <span class="m3-badge badge-pending" style="font-size: 0.72rem;">
+        <%= conversations ? conversations.length : 0 %> Cuộc Gọi
+      </span>
+    </div>
+
+    <div class="conversations-scroll-list">
+      <% if (conversations && conversations.length > 0) { %>
+        <% conversations.forEach(conv => { %>
+          <a href="/admin/chats?branchId=<%= selectedBranchId %>&userId=<%= conv.userId %>" 
+             class="conversation-item-card <%= String(conv.userId) === String(selectedUserId) ? 'active' : '' %>">
+            <div class="conv-avatar-circle">
+              <%= (conv.customerName || 'KH').substring(0, 2).toUpperCase() %>
+            </div>
+            <div class="conv-info-content">
+              <div class="conv-top-line">
+                <span class="conv-customer-name"><%= conv.customerName || 'Khách Hàng' %></span>
+                <span class="conv-time-text">
+                  <%= conv.lastMessageAt ? new Date(conv.lastMessageAt).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) : '' %>
+                </span>
+              </div>
+              <div class="conv-bottom-line">
+                <p class="conv-snippet-text <%= conv.unreadCount > 0 ? 'unread' : '' %>">
+                  <% if (conv.lastSenderRole === 'staff') { %>
+                    <span style="color: var(--md-sys-color-primary); font-weight: 700;">Bạn: </span>
+                  <% } %>
+                  <%= conv.lastMessage || 'Chưa có tin nhắn' %>
+                </p>
+                <% if (conv.unreadCount > 0) { %>
+                  <span class="conv-unread-pill"><%= conv.unreadCount %></span>
+                <% } %>
+              </div>
+            </div>
+          </a>
+        <% }) %>
+      <% } else { %>
+        <div style="padding: 32px 16px; text-align: center; color: var(--md-sys-color-on-surface-variant); font-size: 0.85rem;">
+          Chưa có cuộc trò chuyện nào tại chi nhánh này
+        </div>
+      <% } %>
+    </div>
+  </div>
+
+  <!-- Right Column: Active Conversation Stream -->
+  <div class="chat-viewport-pane">
+    <% if (selectedUserId && activeCustomer) { %>
+      <!-- Chat Head Bar -->
+      <div class="chat-head-banner">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <div class="user-avatar-circle" style="width: 40px; height: 40px; font-size: 0.95rem; background: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container);">
+            <%= (activeCustomer.fullName || 'KH').substring(0, 2).toUpperCase() %>
+          </div>
+          <div>
+            <div style="font-weight: 700; color: var(--md-sys-color-primary); font-size: 0.95rem;">
+              <%= activeCustomer.fullName %>
+            </div>
+            <div style="font-size: 0.74rem; color: var(--md-sys-color-on-surface-variant);">
+              <%= activeCustomer.phone || activeCustomer.email || 'Khách hàng ứng dụng' %> • <span style="color: #166534; font-weight: 600;">● Đang Trực Tuyến</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Messages Message Scroll Box -->
+      <div id="chatMessagesStream" class="chat-stream-box">
+        <% if (messages && messages.length > 0) { %>
+          <% messages.forEach(msg => { %>
+            <div class="message-bubble-wrapper <%= msg.senderRole === 'staff' ? 'bubble-outgoing' : 'bubble-incoming' %>">
+              <div class="message-sender-name">
+                <%= msg.senderRole === 'staff' ? 'Barista / CSKH (' + msg.senderName + ')' : (activeCustomer.fullName || 'Khách Hàng') %>
+              </div>
+              <div class="message-bubble-body">
+                <%= msg.content %>
+              </div>
+              <div class="message-timestamp">
+                <%= new Date(msg.createdAt).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) %>
+              </div>
+            </div>
+          <% }) %>
+        <% } else { %>
+          <div style="text-align: center; padding: 40px; color: var(--md-sys-color-on-surface-variant); font-size: 0.85rem;">
+            Chưa có tin nhắn trong cuộc trò chuyện này. Hãy gửi lời chào đầu tiên!
+          </div>
+        <% } %>
+      </div>
+
+      <!-- Quick Reply Input Form -->
+      <form id="chatReplyForm" action="/admin/chats/reply" method="POST" class="chat-input-bar">
+        <input type="hidden" name="branchId" value="<%= selectedBranchId %>">
+        <input type="hidden" name="userId" value="<%= selectedUserId %>">
+        
+        <input type="text" id="chatMessageInput" name="content" autocomplete="off" required 
+               placeholder="Nhập phản hồi nhanh tới <%= activeCustomer.fullName %>..." class="m3-chat-input-field">
+        
+        <button type="submit" class="m3-btn m3-btn-filled" style="height: 42px; border-radius: var(--md-shape-full); padding: 0 18px; flex-shrink: 0;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+          <span>Gửi</span>
+        </button>
+      </form>
+    <% } else { %>
+      <div class="empty-chat-state">
+        <div class="empty-chat-icon">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+        </div>
+        <h4 style="font-weight: 700; color: var(--md-sys-color-primary); margin-bottom: 6px;">Chọn một cuộc trò chuyện để bắt đầu</h4>
+        <p style="font-size: 0.85rem; color: var(--md-sys-color-on-surface-variant); max-width: 320px;">
+          Hỗ trợ giải đáp các thắc mắc về đơn hàng, thời gian hẹn lấy tại quầy và công thức món uống.
+        </p>
+      </div>
+    <% } %>
+  </div>
+</div>
+
+<script>
+  // Hàm cuộn tin nhắn xuống đáy khung chat mượt mà và an toàn
+  function scrollToBottom() {
+    const streamBox = document.getElementById('chatMessagesStream');
+    if (streamBox) {
+      streamBox.scrollTop = streamBox.scrollHeight;
+    }
+  }
+
+  scrollToBottom();
+  window.addEventListener('load', scrollToBottom);
+  setTimeout(scrollToBottom, 120);
+
+  // Socket.IO Real-time chat sync
+  if (typeof io !== 'undefined') {
+    const socket = io();
+    const currentBranchId = '<%= selectedBranchId %>';
+    const currentUserId = '<%= selectedUserId %>';
+
+    if (currentBranchId && currentUserId) {
+      socket.emit('join_room', 'chat_' + currentBranchId + '_' + currentUserId);
+      socket.emit('join_room', 'branch_' + currentBranchId);
+
+      socket.on('receive_message', function(msg) {
+        if (String(msg.branchId) === String(currentBranchId) && String(msg.userId) === String(currentUserId)) {
+          appendMessageBubble(msg);
+        }
+      });
+
+      socket.on('new_customer_message', function(msg) {
+        if (String(msg.branchId) === String(currentBranchId) && String(msg.userId) === String(currentUserId)) {
+          // Handled by receive_message
+        }
+      });
+    }
+
+    function appendMessageBubble(msg) {
+      const streamBox = document.getElementById('chatMessagesStream');
+      if (!streamBox) return;
+      const isStaff = msg.senderRole === 'staff';
+      const wrapper = document.createElement('div');
+      wrapper.className = 'message-bubble-wrapper ' + (isStaff ? 'bubble-outgoing' : 'bubble-incoming');
+
+      const senderDiv = document.createElement('div');
+      senderDiv.className = 'message-sender-name';
+      senderDiv.textContent = isStaff ? 'Barista / CSKH (' + msg.senderName + ')' : msg.senderName;
+
+      const bodyDiv = document.createElement('div');
+      bodyDiv.className = 'message-bubble-body';
+      bodyDiv.textContent = msg.content;
+
+      const timeDiv = document.createElement('div');
+      timeDiv.className = 'message-timestamp';
+      const timeStr = new Date(msg.createdAt || Date.now()).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+      timeDiv.textContent = timeStr;
+
+      wrapper.appendChild(senderDiv);
+      wrapper.appendChild(bodyDiv);
+      wrapper.appendChild(timeDiv);
+
+      streamBox.appendChild(wrapper);
+      scrollToBottom();
+    }
+  }
+</script>
+
+<%- include('partials/footer') %>

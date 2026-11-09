@@ -16,6 +16,10 @@
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
       <span>Tải Mẫu CSV</span>
     </a>
+    <button type="button" onclick="openAddProductModal()" class="m3-btn m3-btn-filled">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+      <span>Thêm Món Ăn Mới</span>
+    </button>
   </div>
 </div>
 
@@ -61,11 +65,11 @@
           <th style="width: 56px;">ẢNH</th>
           <th>TÊN THỨC UỐNG</th>
           <th>DANH MỤC</th>
-          <th style="text-align: right;">GIÁ CƠ BẢN</th>
+          <th style="text-align: right;">GIÁ CƠ BẢN (S)</th>
           <th>GIÁ THEO SIZE (S / M / L)</th>
           <th>CALO</th>
           <th>TRẠNG THÁI</th>
-          <th style="text-align: center;">KHO HÀNG</th>
+          <th style="text-align: center;">THAO TÁC</th>
         </tr>
       </thead>
       <tbody>
@@ -77,12 +81,20 @@
                      alt="<%= prod.name %>" class="product-thumb-img">
               </td>
               <td>
-                <div style="font-weight: 700; color: var(--md-sys-color-primary); font-size: 0.88rem;">
-                  <%= prod.name %>
+                <div style="font-weight: 700; color: var(--md-sys-color-primary); font-size: 0.88rem; display: flex; align-items: center; gap: 6px;">
+                  <span><%= prod.name %></span>
+                  <% if (prod.isBestSeller) { %>
+                    <span class="m3-badge badge-bestseller">BESTSELLER</span>
+                  <% } %>
                 </div>
                 <div class="product-desc-clamped">
                   <%= prod.description || 'Thức uống đặc sản pha chế công thức riêng' %>
                 </div>
+                <% if (prod.ingredients && prod.ingredients.length > 0) { %>
+                  <div style="font-size: 0.7rem; color: var(--md-sys-color-on-surface-variant); margin-top: 2px;">
+                    <em>TP: <%= prod.ingredients.join(', ') %></em>
+                  </div>
+                <% } %>
               </td>
               <td>
                 <span style="font-size: 0.76rem; font-weight: 600; color: var(--md-sys-color-secondary); white-space: nowrap;">
@@ -90,20 +102,23 @@
                 </span>
               </td>
               <td style="text-align: right; font-family: var(--font-mono); font-weight: 800; font-size: 0.88rem; color: var(--md-sys-color-primary); white-space: nowrap;">
-                <%= (prod.basePrice || 0).toLocaleString('vi-VN') %>đ
+                <%= (prod.price || prod.basePrice || 0).toLocaleString('vi-VN') %>đ
               </td>
               <td>
-                <% if (prod.sizes && prod.sizes.length > 0) { %>
-                  <div class="sizes-badge-group">
-                    <% prod.sizes.forEach(s => { %>
-                      <span class="size-item-pill">
-                        <strong><%= s.size %>:</strong> <%= (s.price || 0).toLocaleString('vi-VN') %>đ
-                      </span>
-                    <% }) %>
-                  </div>
-                <% } else { %>
-                  <span style="font-size: 0.74rem; color: var(--md-sys-color-on-surface-variant);">Một cỡ</span>
-                <% } %>
+                <div class="sizes-badge-group">
+                  <% const base = prod.price || prod.basePrice || 0; %>
+                  <% const extraM = (prod.sizePricing && prod.sizePricing.M) || 6000; %>
+                  <% const extraL = (prod.sizePricing && prod.sizePricing.L) || 10000; %>
+                  <span class="size-item-pill">
+                    <strong>S:</strong> <%= base.toLocaleString('vi-VN') %>đ
+                  </span>
+                  <span class="size-item-pill">
+                    <strong>M:</strong> <%= (base + extraM).toLocaleString('vi-VN') %>đ
+                  </span>
+                  <span class="size-item-pill">
+                    <strong>L:</strong> <%= (base + extraL).toLocaleString('vi-VN') %>đ
+                  </span>
+                </div>
               </td>
               <td style="font-family: var(--font-mono); font-size: 0.78rem; white-space: nowrap;">
                 <%= prod.calories || 120 %> kcal
@@ -113,12 +128,42 @@
                   <%= prod.isAvailable ? 'Đang Bán' : 'Tạm Hết' %>
                 </span>
               </td>
-              <td style="text-align: center;">
-                <form action="/admin/products/<%= prod._id %>/toggle" method="POST">
-                  <button type="submit" class="stock-toggle-btn <%= prod.isAvailable ? 'in-stock' : 'out-stock' %>">
-                    <%= prod.isAvailable ? 'Bật Bán' : 'Tắt Bán' %>
+              <td>
+                <div style="display: flex; align-items: center; justify-content: center; gap: 6px;">
+                  <!-- Toggle Availability -->
+                  <form action="/admin/products/<%= prod._id %>/toggle" method="POST" style="margin: 0;">
+                    <button type="submit" class="stock-toggle-btn <%= prod.isAvailable ? 'in-stock' : 'out-stock' %>" title="Bật/Tắt còn hàng">
+                      <%= prod.isAvailable ? 'Bật Bán' : 'Tắt Bán' %>
+                    </button>
+                  </form>
+
+                  <!-- Edit Button -->
+                  <button type="button" 
+                          onclick='openEditProductModal(<%= JSON.stringify({
+                            id: prod._id,
+                            name: prod.name,
+                            categoryId: prod.categoryId ? (prod.categoryId._id || prod.categoryId) : "",
+                            price: prod.price || 0,
+                            sizePriceM: (prod.sizePricing && prod.sizePricing.M) || 6000,
+                            sizePriceL: (prod.sizePricing && prod.sizePricing.L) || 10000,
+                            calories: prod.calories || 150,
+                            description: prod.description || "",
+                            ingredients: (prod.ingredients || []).join(", "),
+                            imageUrl: prod.imageUrl || "",
+                            isBestSeller: Boolean(prod.isBestSeller),
+                            isAvailable: Boolean(prod.isAvailable)
+                          }) %>)'
+                          class="action-mini-btn btn-edit" title="Chỉnh sửa món">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
                   </button>
-                </form>
+
+                  <!-- Delete Button -->
+                  <form action="/admin/products/<%= prod._id %>/delete" method="POST" onsubmit="return confirm('Bạn có chắc chắn muốn xóa món \'<%= prod.name %>\' khỏi thực đơn?')" style="margin: 0;">
+                    <button type="submit" class="action-mini-btn btn-delete" title="Xóa món">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                    </button>
+                  </form>
+                </div>
               </td>
             </tr>
           <% }) %>
@@ -133,5 +178,214 @@
     </table>
   </div>
 </div>
+
+<!-- Modal 1: Thêm Món Ăn Mới -->
+<div id="addProductModal" class="m3-modal-backdrop" style="display: none;">
+  <div class="m3-modal-dialog">
+    <div class="m3-modal-header">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <div class="m3-modal-icon-circle">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+        </div>
+        <h3 class="m3-modal-title">Thêm Món Ăn Mới Vào Thực Đơn</h3>
+      </div>
+      <button type="button" class="m3-modal-close" onclick="closeAddProductModal()">&times;</button>
+    </div>
+
+    <form action="/admin/products" method="POST" enctype="multipart/form-data" class="m3-modal-body">
+      <div class="form-row-grid">
+        <div class="form-group-field" style="grid-column: span 2;">
+          <label class="form-label">Tên Món Ăn / Thức Uống *</label>
+          <input type="text" name="name" required placeholder="Ví dụ: Cà Phê Muối Kem Béo Đà Nẵng" class="m3-text-input">
+        </div>
+
+        <div class="form-group-field">
+          <label class="form-label">Danh Mục *</label>
+          <select name="categoryId" required class="m3-select-custom">
+            <% if (categories && categories.length > 0) { %>
+              <% categories.forEach(cat => { %>
+                <option value="<%= cat._id %>"><%= cat.name %></option>
+              <% }) %>
+            <% } %>
+          </select>
+        </div>
+
+        <div class="form-group-field">
+          <label class="form-label">Giá Cơ Bản (Size S - VNĐ) *</label>
+          <input type="number" name="price" required min="1000" step="1000" placeholder="Ví dụ: 35000" class="m3-text-input">
+        </div>
+
+        <div class="form-group-field">
+          <label class="form-label">Phụ Thu Size M (+VNĐ)</label>
+          <input type="number" name="sizePriceM" min="0" step="1000" value="6000" class="m3-text-input">
+        </div>
+
+        <div class="form-group-field">
+          <label class="form-label">Phụ Thu Size L (+VNĐ)</label>
+          <input type="number" name="sizePriceL" min="0" step="1000" value="10000" class="m3-text-input">
+        </div>
+
+        <div class="form-group-field">
+          <label class="form-label">Hàm Lượng Calo (kcal)</label>
+          <input type="number" name="calories" min="0" value="150" class="m3-text-input">
+        </div>
+
+        <div class="form-group-field">
+          <label class="form-label">Nổi Bật / Bán Chạy</label>
+          <label class="checkbox-container">
+            <input type="checkbox" name="isBestSeller" value="true">
+            <span>Đánh dấu món Best Seller</span>
+          </label>
+        </div>
+
+        <div class="form-group-field" style="grid-column: span 2;">
+          <label class="form-label">Ảnh Thức Uống (Upload File qua Multer Slot 12)</label>
+          <input type="file" name="image" accept="image/*" class="m3-text-input" style="padding: 6px;">
+        </div>
+
+        <div class="form-group-field" style="grid-column: span 2;">
+          <label class="form-label">Thành Phần (cách nhau bởi dấu phẩy)</label>
+          <input type="text" name="ingredients" placeholder="Cà phê Robusta Buôn Ma Thuột, Sữa tươi tiệt trùng, Kem béo thực vật" class="m3-text-input">
+        </div>
+
+        <div class="form-group-field" style="grid-column: span 2;">
+          <label class="form-label">Mô Tả Hương Vị & Công Thức *</label>
+          <textarea name="description" required rows="3" placeholder="Hương vị đậm đà nguyên bản hòa quyện lớp kem muối sánh mịn..." class="m3-textarea-input"></textarea>
+        </div>
+      </div>
+
+      <div class="m3-modal-footer">
+        <button type="button" class="m3-btn m3-btn-tonal" onclick="closeAddProductModal()">Hủy Bỏ</button>
+        <button type="submit" class="m3-btn m3-btn-filled">Lưu Món Mới</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal 2: Chỉnh Sửa Món Ăn -->
+<div id="editProductModal" class="m3-modal-backdrop" style="display: none;">
+  <div class="m3-modal-dialog">
+    <div class="m3-modal-header">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <div class="m3-modal-icon-circle">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+        </div>
+        <h3 class="m3-modal-title">Cập Nhật Thông Tin Món Ăn</h3>
+      </div>
+      <button type="button" class="m3-modal-close" onclick="closeEditProductModal()">&times;</button>
+    </div>
+
+    <form id="editProductForm" method="POST" enctype="multipart/form-data" class="m3-modal-body">
+      <div class="form-row-grid">
+        <div class="form-group-field" style="grid-column: span 2;">
+          <label class="form-label">Tên Món Ăn / Thức Uống *</label>
+          <input type="text" id="edit_name" name="name" required class="m3-text-input">
+        </div>
+
+        <div class="form-group-field">
+          <label class="form-label">Danh Mục *</label>
+          <select id="edit_categoryId" name="categoryId" required class="m3-select-custom">
+            <% if (categories && categories.length > 0) { %>
+              <% categories.forEach(cat => { %>
+                <option value="<%= cat._id %>"><%= cat.name %></option>
+              <% }) %>
+            <% } %>
+          </select>
+        </div>
+
+        <div class="form-group-field">
+          <label class="form-label">Giá Cơ Bản (Size S - VNĐ) *</label>
+          <input type="number" id="edit_price" name="price" required min="1000" step="1000" class="m3-text-input">
+        </div>
+
+        <div class="form-group-field">
+          <label class="form-label">Phụ Thu Size M (+VNĐ)</label>
+          <input type="number" id="edit_sizePriceM" name="sizePriceM" min="0" step="1000" class="m3-text-input">
+        </div>
+
+        <div class="form-group-field">
+          <label class="form-label">Phụ Thu Size L (+VNĐ)</label>
+          <input type="number" id="edit_sizePriceL" name="sizePriceL" min="0" step="1000" class="m3-text-input">
+        </div>
+
+        <div class="form-group-field">
+          <label class="form-label">Hàm Lượng Calo (kcal)</label>
+          <input type="number" id="edit_calories" name="calories" min="0" class="m3-text-input">
+        </div>
+
+        <div class="form-group-field">
+          <label class="form-label">Tùy Chọn Khác</label>
+          <label class="checkbox-container" style="margin-bottom: 6px;">
+            <input type="checkbox" id="edit_isBestSeller" name="isBestSeller" value="true">
+            <span>Món Bán Chạy (Best Seller)</span>
+          </label>
+          <label class="checkbox-container">
+            <input type="checkbox" id="edit_isAvailable" name="isAvailable" value="true">
+            <span>Đang Phục Vụ (Còn Hàng)</span>
+          </label>
+        </div>
+
+        <div class="form-group-field" style="grid-column: span 2;">
+          <label class="form-label">Thay Đổi Ảnh Thức Uống (Bỏ trống nếu giữ ảnh cũ)</label>
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <img id="edit_preview_img" src="" alt="preview" style="width: 48px; height: 48px; border-radius: 8px; object-fit: cover; border: 1px solid var(--md-sys-color-outline);">
+            <input type="file" name="image" accept="image/*" class="m3-text-input" style="padding: 6px; flex: 1;">
+          </div>
+        </div>
+
+        <div class="form-group-field" style="grid-column: span 2;">
+          <label class="form-label">Thành Phần (cách nhau bởi dấu phẩy)</label>
+          <input type="text" id="edit_ingredients" name="ingredients" class="m3-text-input">
+        </div>
+
+        <div class="form-group-field" style="grid-column: span 2;">
+          <label class="form-label">Mô Tả Hương Vị & Công Thức *</label>
+          <textarea id="edit_description" name="description" required rows="3" class="m3-textarea-input"></textarea>
+        </div>
+      </div>
+
+      <div class="m3-modal-footer">
+        <button type="button" class="m3-btn m3-btn-tonal" onclick="closeEditProductModal()">Hủy Bỏ</button>
+        <button type="submit" class="m3-btn m3-btn-filled">Lưu Thay Đổi</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  function openAddProductModal() {
+    document.getElementById('addProductModal').style.display = 'flex';
+  }
+  function closeAddProductModal() {
+    document.getElementById('addProductModal').style.display = 'none';
+  }
+
+  function openEditProductModal(prod) {
+    document.getElementById('editProductForm').action = '/admin/products/' + prod.id + '/edit';
+    document.getElementById('edit_name').value = prod.name || '';
+    document.getElementById('edit_categoryId').value = prod.categoryId || '';
+    document.getElementById('edit_price').value = prod.price || 0;
+    document.getElementById('edit_sizePriceM').value = prod.sizePriceM || 6000;
+    document.getElementById('edit_sizePriceL').value = prod.sizePriceL || 10000;
+    document.getElementById('edit_calories').value = prod.calories || 150;
+    document.getElementById('edit_ingredients').value = prod.ingredients || '';
+    document.getElementById('edit_description').value = prod.description || '';
+    document.getElementById('edit_isBestSeller').checked = Boolean(prod.isBestSeller);
+    document.getElementById('edit_isAvailable').checked = Boolean(prod.isAvailable);
+    document.getElementById('edit_preview_img').src = prod.imageUrl || 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=200';
+    document.getElementById('editProductModal').style.display = 'flex';
+  }
+  function closeEditProductModal() {
+    document.getElementById('editProductModal').style.display = 'none';
+  }
+
+  // Close modals when clicking backdrop
+  window.onclick = function(event) {
+    const addModal = document.getElementById('addProductModal');
+    const editModal = document.getElementById('editProductModal');
+    if (event.target === addModal) addModal.style.display = 'none';
+    if (event.target === editModal) editModal.style.display = 'none';
+  };
+</script>
 
 <%- include('partials/footer') %>
